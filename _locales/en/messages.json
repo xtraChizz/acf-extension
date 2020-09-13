@@ -1,0 +1,6 @@
+{
+  "message_action_not_found": {
+    "message": "is not configured",
+    "description": "onMessage action error message"
+  }
+}

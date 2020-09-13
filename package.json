@@ -1,0 +1,46 @@
+{
+  "name": "@dhruv-techapps/acf-extension",
+  "version": "1.0.0",
+  "description": "auto click fill extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
+    "lint": "eslint --cache --format codeframe --ext mjs,js src test",
+    "lint:fix": "eslint src test webpack.config.js --fix",
+    "build": "webpack --mode production",
+    "prepare": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dhruv-Techapps/acf-extension.git"
+  },
+  "keywords": [
+    "auto",
+    "click",
+    "fill",
+    "extension"
+  ],
+  "author": "Dharmesh",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Dhruv-Techapps/acf-extension/issues"
+  },
+  "homepage": "https://github.com/Dhruv-Techapps/acf-extension#readme",
+  "devDependencies": {
+    "@neutrinojs/jest": "^9.4.0",
+    "@neutrinojs/library": "^9.4.0",
+    "@neutrinojs/standardjs": "^9.4.0",
+    "eslint": "^7.9.0",
+    "jest": "^26.4.2",
+    "jest-chrome": "^0.7.0",
+    "neutrino": "^9.4.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "@dhruv-techapps/acf-common": "^1.0.2",
+    "@dhruv-techapps/core-extension": "^1.0.0"
+  }
+}

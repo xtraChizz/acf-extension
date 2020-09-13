@@ -1,0 +1,8 @@
+{
+ "name": "Data Entry [DEV]",
+ "short_name": "Data Entry [DEV]",
+ "version": "1.0.0",
+ "config": {
+  "options_page_url": "http://localhost:3000"
+ }
+}

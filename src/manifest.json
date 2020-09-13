@@ -1,0 +1,64 @@
+{
+  "name": "Auto Clicker - AutoFill LITE",
+  "short_name": "Auto Clicker - AutoFill LITE",
+  "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click spped test",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "default_locale": "en",
+  "permissions": [
+    "notifications",
+    "contextMenus",
+    "downloads",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "config": {
+    "uninstall_url": "https://forms.gle/J2iXx49dQNiZYvLK9",
+    "tracking_id": "UA-111423401-8",
+    "options_page_url": "https://getautoclicker.com/options_page_lite/index.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{086b15b2-fe93-49bb-937a-83e366362a66}"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "64": "assets/icons/icon64.png",
+    "96": "assets/icons/icon96.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "assets/icons/icon64.png"
+  },
+  "background": {
+    "scripts": [
+      "background.min.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content_scripts.min.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "http://localhost:*/*",
+      "https://getautoclicker.com/*"
+    ]
+  },
+  "web_accessible_resources": [
+    "assets/*"
+  ],
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+}

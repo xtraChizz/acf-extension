@@ -1,0 +1,8 @@
+{
+ "name": "Data Entry [BETA]",
+ "short_name": "Data Entry [BETA]",
+ "version": "1.0.1",
+ "config": {
+  "options_page_url": "https://getdataentry.com/options_page_beta/index.html"
+ }
+}
