@@ -35,7 +35,7 @@
   },
   "background": {
     "scripts": [
-      "background.min.js"
+      "background.js"
     ]
   },
   "content_scripts": [
@@ -45,7 +45,7 @@
         "https://*/*"
       ],
       "js": [
-        "content_scripts.min.js"
+        "content_scripts.js"
       ],
       "run_at": "document_start",
       "all_frames": true

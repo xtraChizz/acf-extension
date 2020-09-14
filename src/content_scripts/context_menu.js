@@ -1,4 +1,4 @@
-import { Runtime } from 'common-extension'
+import { Runtime } from '@dhruv-techapps/core-extension'
 import { CONTEXT_MENU_ID } from '../background'
 
 export class ContextMenuSetup {

@@ -1,5 +1,5 @@
-import { SystemError } from '../../../../error/system-error'
-import { ConfigError } from '../../../../error/config-error'
+import { SystemError } from './../../../../error/system-error'
+import { ConfigError } from './../../../../error/config-error'
 
 export default class CommonEvents {
   constructor (nodes) {

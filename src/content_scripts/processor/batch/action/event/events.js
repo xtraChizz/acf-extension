@@ -1,7 +1,7 @@
 import CommonEvents from './common-events'
-import { ConfigError } from '../../../../error/config-error'
+import { ConfigError } from './../../../../error/config-error'
 import { FORM_ELEMENT_NODENAME, FORM_CLEAR_ELEMENT_NODENAME } from '../../../../common/regex'
-import { SystemError } from '../../../../error/system-error'
+import { SystemError } from './../../../../error/system-error'
 
 export const EVENTS = {
   BLUR: 'blur',

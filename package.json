@@ -7,8 +7,8 @@
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
-    "lint": "eslint --cache --format codeframe --ext mjs,js src test",
-    "lint:fix": "eslint src test webpack.config.js --fix",
+    "lint": "eslint --cache --format codeframe --ext mjs,js src",
+    "lint:fix": "eslint src webpack.config.js .neutrinorc.js --fix",
     "build": "webpack --mode production",
     "prepare": "webpack --mode production"
   },
@@ -29,15 +29,22 @@
   },
   "homepage": "https://github.com/Dhruv-Techapps/acf-extension#readme",
   "devDependencies": {
+    "@neutrinojs/copy": "^9.4.0",
     "@neutrinojs/jest": "^9.4.0",
     "@neutrinojs/library": "^9.4.0",
     "@neutrinojs/standardjs": "^9.4.0",
     "eslint": "^7.9.0",
     "jest": "^26.4.2",
     "jest-chrome": "^0.7.0",
+    "merge-jsons-webpack-plugin": "^1.0.21",
     "neutrino": "^9.4.0",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "zip-webpack-plugin": "^3.0.0"
+  },
+  "peerDependencies": {
+    "@dhruv-techapps/acf-common": "^1.0.2",
+    "@dhruv-techapps/core-extension": "^1.0.0"
   },
   "dependencies": {
     "@dhruv-techapps/acf-common": "^1.0.2",

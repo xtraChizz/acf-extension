@@ -1,0 +1,9 @@
+{
+  "name": "Auto Clicker - AutoFill LITE",
+  "short_name": "Auto Clicker - AutoFill LITE",
+  "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click spped test",
+  "version": "1.0.0",
+  "config": {
+    "options_page_url": "https://getautoclicker.com/options_page_lite/index.html"
+  }
+}

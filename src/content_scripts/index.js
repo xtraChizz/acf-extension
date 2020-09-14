@@ -1,8 +1,8 @@
-import { LocalStorage, LocalStorageKey, Runtime, LocalStorageType, DataStore } from 'common-extension'
+import { LocalStorage, LocalStorageKey, Runtime, LocalStorageType, DataStore } from '@dhruv-techapps/core-extension'
 import { onError } from './common/error'
 import { getConfig } from './config'
 import { ContextMenuSetup } from './context_menu'
-import { LoadTypeModel, defaultSetting } from '../model/setting-model'
+import { LoadTypeModel, defaultSetting } from '@dhruv-techapps/acf-common'
 import SystemError from './error/system-error'
 import ConfigError from './error/config-error'
 

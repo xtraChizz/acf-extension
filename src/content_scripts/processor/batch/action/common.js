@@ -1,6 +1,6 @@
 /* global chrome */
 
-import { Notifications, DataStore } from 'common-extension'
+import { Notifications, DataStore } from '@dhruv-techapps/core-extension'
 import { LocalStorageKey, RetryOption } from '@dhruv-techapps/acf-common'
 import ConfigError from '../../../error/config-error'
 
