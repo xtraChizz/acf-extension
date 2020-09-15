@@ -10,6 +10,7 @@
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
     "lint:fix": "eslint src webpack.config.js .neutrinorc.js --fix",
     "build": "webpack --mode production",
+    "watch": "webpack --mode production --watch",
     "prepare": "webpack --mode production"
   },
   "repository": {
@@ -29,25 +30,27 @@
   },
   "homepage": "https://github.com/Dhruv-Techapps/acf-extension#readme",
   "devDependencies": {
-    "@neutrinojs/copy": "^9.4.0",
-    "@neutrinojs/jest": "^9.4.0",
-    "@neutrinojs/library": "^9.4.0",
-    "@neutrinojs/standardjs": "^9.4.0",
+    "@babel/preset-env": "^7.11.5",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.1.0",
     "eslint": "^7.9.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.4.2",
     "jest-chrome": "^0.7.0",
     "merge-jsons-webpack-plugin": "^1.0.21",
-    "neutrino": "^9.4.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "zip-webpack-plugin": "^3.0.0"
   },
-  "peerDependencies": {
-    "@dhruv-techapps/acf-common": "^1.0.2",
-    "@dhruv-techapps/core-extension": "^1.0.0"
-  },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^1.0.2",
-    "@dhruv-techapps/core-extension": "^1.0.0"
+    "@dhruv-techapps/acf-common": "^1.0.3",
+    "@dhruv-techapps/core-common": "^1.1.6",
+    "@dhruv-techapps/core-extension": "^1.0.11"
   }
 }
