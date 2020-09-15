@@ -1,5 +1,5 @@
 import { Common, Addon, ScrollTo, Fill, ExecCommand, LocationCommand } from './action/index'
-import { ClickEvents, FormEvents } from './action/event'
+import { ClickEvents, Events } from './action/event'
 import { Logger } from '@dhruv-techapps/core-extension'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
@@ -77,8 +77,8 @@ export default class Action extends Common {
         new ScrollTo(this._nodes, this.value).then(this.successFunc).catch(this.error)
       } else if (/^clickevents::/gi.test(this.value)) {
         new ClickEvents(this._nodes, this.value).then(this.successFunc).catch(this.error)
-      } else if (/^formevents::/gi.test(this.value)) {
-        new FormEvents(this._nodes, this.value).then(this.successFunc).catch(this.error)
+      } else if (/^events::/gi.test(this.value)) {
+        new Events(this._nodes, this.value).then(this.successFunc).catch(this.error)
       } else if (/^execcommand::/gi.test(this.value)) {
         new ExecCommand(this._value).then(this.successFunc).catch(this.error)
       } else if (/^locationcommand::/gi.test(this.value)) {
@@ -91,7 +91,7 @@ export default class Action extends Common {
     }
   }
 
- successFunc = () => {
-   this.success(`${this.xpath} action executed Successfully!`)
- }
+  successFunc () {
+    this.success(`${this.xpath} action executed Successfully!`)
+  }
 }

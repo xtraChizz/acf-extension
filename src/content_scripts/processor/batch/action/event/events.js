@@ -1,7 +1,7 @@
 import CommonEvents from './common-events'
-import { ConfigError } from './../../../../error/config-error'
 import { FORM_ELEMENT_NODENAME, FORM_CLEAR_ELEMENT_NODENAME } from '../../../../common/regex'
-import { SystemError } from './../../../../error/system-error'
+import ConfigError from '../../../../error/config-error'
+import SystemError from '../../../../error/system-error'
 
 export const EVENTS = {
   BLUR: 'blur',
@@ -39,7 +39,7 @@ export default class Events extends CommonEvents {
           if (node instanceof HTMLFormElement) {
             node.submit()
           } else if (FORM_ELEMENT_NODENAME.test(node.nodeName)) {
-            node.form?.submit()
+            node.form.submit()
           } else {
             throw new ConfigError('Invalid Element for submit', `Xpath element is not instance of ${FORM_ELEMENT_NODENAME}`)
           }

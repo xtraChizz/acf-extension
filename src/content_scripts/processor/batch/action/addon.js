@@ -1,7 +1,7 @@
 import Common from './common'
 import CustomError from '../../../error/custom-error'
 import { RADIO_CHECKBOX_NODENAME, SELECT_TEXTAREA_NODENAME } from '../../../common/regex'
-import { RetryOption } from '@dhruv-techapps/acf-common'
+import { RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 export default class Addon extends Common {
   process (data) {
     this.condition = data.condition
@@ -32,7 +32,7 @@ export default class Addon extends Common {
         }
         if (this.checkCondition(value)) {
           return `Condition Success! xPathValue:${value} ${this.condition} value:${this.value}`
-        } else if (this._settings.retryOption === RetryOption.SKIP) {
+        } else if (this._settings.retryOption === RETRY_OPTIONS.SKIP) {
           return 'Addon Skipped!'
         } else {
           throw new CustomError('Condition Failed!', `xPathValue:${value} ~ ${this.condition} ~ value:${this.value}`, Addon.name)

@@ -13,7 +13,7 @@ export class ContextMenuSetup {
   }
 
   setxPathAndURL (xpath, event) {
-    Runtime.sendMessage({ action: CONTEXT_MENU_ID, url: event?.view?.document.URL, xpath: xpath })
+    Runtime.sendMessage({ action: CONTEXT_MENU_ID, url: event.view.document.URL, xpath: xpath })
   }
 
   getPathTo (node) {
@@ -25,7 +25,7 @@ export class ContextMenuSetup {
         return `html/${node.tagName.toLowerCase()}`
       }
       var index = 1
-      var siblings = node?.parentNode?.childNodes
+      var siblings = node.parentNode.childNodes
       if (siblings) {
         for (var i = 0; i < siblings.length; i++) {
           var sibling = siblings[i]

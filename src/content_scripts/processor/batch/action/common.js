@@ -1,7 +1,7 @@
 /* global chrome */
 
 import { Notifications, DataStore } from '@dhruv-techapps/core-extension'
-import { LocalStorageKey, RetryOption } from '@dhruv-techapps/acf-common'
+import { LocalStorageKey, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 import ConfigError from '../../../error/config-error'
 
 export default class Common {
@@ -71,9 +71,9 @@ export default class Common {
   };
 
   _checkRetryOption (xpath) {
-    if (this._settings.retryOption === RetryOption.SKIP) {
+    if (this._settings.retryOption === RETRY_OPTIONS.SKIP) {
       return 'Action skipped!'
-    } else if (this._settings.retryOption === RetryOption.RELOAD) {
+    } else if (this._settings.retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         location.reload()
       } else {
@@ -85,13 +85,13 @@ export default class Common {
     throw new ConfigError(xpath)
   };
 
- notify = (error, title, query) => {
-   chrome.runtime.sendMessage({
-     action: Notifications.name,
-     notificationOptions: { title: title || 'Error', message: error, requireInteraction: true },
-     extras: { options_page: true, query: query }
-   })
- }
+  notify (error, title, query) {
+    chrome.runtime.sendMessage({
+      action: Notifications.name,
+      notificationOptions: { title: title || 'Error', message: error, requireInteraction: true },
+      extras: { options_page: true, query: query }
+    })
+  }
 }
 
 function sleep (ms) {

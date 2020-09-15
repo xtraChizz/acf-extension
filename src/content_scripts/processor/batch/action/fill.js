@@ -1,4 +1,5 @@
-import Common, { RADIO_CHECKBOX_TYPE } from './common'
+import Common from './common'
+import { RADIO_CHECKBOX_NODENAME } from './../../../common/regex'
 import { ClickEvents } from './event'
 
 export default class Fill extends Common {
@@ -22,7 +23,7 @@ export default class Fill extends Common {
 
   checkNode (node, value) {
     if (node) {
-      if (node.nodeName === 'SELECT' || node.nodeName === 'TEXTAREA' || (node.nodeName === 'INPUT' && !RADIO_CHECKBOX_TYPE.test(node.type))) {
+      if (node.nodeName === 'SELECT' || node.nodeName === 'TEXTAREA' || (node.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODENAME.test(node.type))) {
         node.value = value
         return this.dispatchEvent(node)
       } else {

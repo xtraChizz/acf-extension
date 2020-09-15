@@ -1,12 +1,12 @@
-import { SystemError } from './../../../../error/system-error'
-import { ConfigError } from './../../../../error/config-error'
+import ConfigError from '../../../../error/config-error'
+import SystemError from '../../../../error/system-error'
 
 export default class CommonEvents {
   constructor (nodes) {
     this._nodes = nodes
   }
 
-  _getVerifiedEvents = (verifiedEvents, events) => {
+  _getVerifiedEvents (verifiedEvents, events) {
     if (!events) {
       throw new SystemError('Event is blank!', 'Event cant be blank | null | undefined')
     }

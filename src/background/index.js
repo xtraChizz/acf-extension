@@ -1,5 +1,8 @@
+/* eslint-disable no-new */
 
-import { Manifest, Tabs, LocalStorage, LocalStorageKey, ContextMenus, DateUtil, GoogleAnalytics, Runtime, BrowserAction, Rate } from '@dhruv-techapps/core-extension'
+import { LocalStorage, DateUtil } from '@dhruv-techapps/core-common'
+import { LocalStorageKey } from '@dhruv-techapps/acf-common'
+import { Manifest, Tabs, ContextMenus, GoogleAnalytics, Runtime, BrowserAction, Rate } from '@dhruv-techapps/core-extension'
 import Config from './config'
 
 export const CONTEXT_MENU_ID = 'xpath-selection';
@@ -43,8 +46,8 @@ export const CONTEXT_MENU_ID = 'xpath-selection';
   */
   Runtime.onInstalled(() => {
     if (!LocalStorage.getItem(LocalStorageKey.INSTALL_DATE, null)) {
-      LocalStorage.setItem(LocalStorageKey.INSTALL_DATE, DateUtil.getCurrentDate().toJSON())
-      Tabs({ url: optionsPageUrl })
+      LocalStorage.setItem(LocalStorageKey.INSTALL_DATE, DateUtil.getDateWithoutTime().toJSON())
+      new Tabs({ url: optionsPageUrl })
     }
   })
 
@@ -56,7 +59,7 @@ export const CONTEXT_MENU_ID = 'xpath-selection';
   /**
   * setup Google Analytics
   */
-  GoogleAnalytics(trackingId)
+  window.ga = new GoogleAnalytics(trackingId)
 
   /**
   * Setup Unintall action
