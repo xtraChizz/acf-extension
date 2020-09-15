@@ -1,11 +1,10 @@
 /* eslint-disable no-new */
 
 import { LocalStorage, DateUtil } from '@dhruv-techapps/core-common'
-import { LocalStorageKey } from '@dhruv-techapps/acf-common'
+import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
 import { Manifest, Tabs, ContextMenus, GoogleAnalytics, Runtime, BrowserAction, Rate } from '@dhruv-techapps/core-extension'
 import Config from './config'
-
-export const CONTEXT_MENU_ID = 'xpath-selection';
+import { CONTEXT_MENU_ID } from '../common/constant'
 
 (() => {
   const {
@@ -36,8 +35,8 @@ export const CONTEXT_MENU_ID = 'xpath-selection';
   new ContextMenus({ id: CONTEXT_MENU_ID, title: String(name) }).onClicked(({ menuItemId }) => {
     if (menuItemId === CONTEXT_MENU_ID) {
       // Tab.getInst().openOptionsPage({ xpath: LocalStorage.getItem(LocalStorageKey.XPATH), url: LocalStorage.getItem(LocalStorageKey.URL) });
-      LocalStorage.removeItem(LocalStorageKey.XPATH)
-      LocalStorage.removeItem(LocalStorageKey.URL)
+      LocalStorage.removeItem(LOCAL_STORAGE_KEY.XPATH)
+      LocalStorage.removeItem(LOCAL_STORAGE_KEY.URL)
     }
   })
 
@@ -45,8 +44,8 @@ export const CONTEXT_MENU_ID = 'xpath-selection';
   * On initial install setup basic configuration
   */
   Runtime.onInstalled(() => {
-    if (!LocalStorage.getItem(LocalStorageKey.INSTALL_DATE, null)) {
-      LocalStorage.setItem(LocalStorageKey.INSTALL_DATE, DateUtil.getDateWithoutTime().toJSON())
+    if (!LocalStorage.getItem(LOCAL_STORAGE_KEY.INSTALL_DATE, null)) {
+      LocalStorage.setItem(LOCAL_STORAGE_KEY.INSTALL_DATE, DateUtil.getDateWithoutTime().toJSON())
       new Tabs({ url: optionsPageUrl })
     }
   })
@@ -66,8 +65,9 @@ export const CONTEXT_MENU_ID = 'xpath-selection';
   */
   Runtime.setUninstallURL(uninstallUrl)
 
+  console.log(externallyConnectable)
   /**
   * Setting up port to listen between content_script and popup
   */
-  Runtime.onConnectExternal(externallyConnectable, { [Config.name]: new Config() })
+  Runtime.onMessageExternal(externallyConnectable, { [Config.name]: new Config() })
 })()

@@ -22,7 +22,7 @@ module.exports = {
     background: './src/background/index.js'
   },
   stats: {
-    children: false, logging: 'verbose'
+    children: false, logging: 'warn'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -33,6 +33,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js'], modules: ['src', 'node_modules']
+  },
+  devServer: {
+    contentBase: './dist',
+    hot: true
   },
   module: {
     rules: [{

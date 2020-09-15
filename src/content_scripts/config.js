@@ -1,13 +1,12 @@
 import Processor from './processor'
-import { Runtime, DataStore } from '@dhruv-techapps/core-extension'
-import Config from '../background/config'
+import { DataStore } from '@dhruv-techapps/core-extension'
 
 const dataStore = DataStore.getInst()
 // const DATA_ENTRY_INDEX = 'data-entry-index'
 export const DATA_STORE_SHEETS = 'sheets'
 
 const getConfig = () => {
-  Runtime.sendMessage({ action: Config.name, URL: document.location.href, frameElement: window.frameElement }, (record) => {
+  chrome.runtime.sendMessage({ action: 'config', URL: document.location.href, frameElement: window.frameElement }, (record) => {
     if (record) {
       dataStore.setItem(DATA_STORE_SHEETS, record.sheets)
       // if (processIndex(response.record)) {

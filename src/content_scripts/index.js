@@ -1,24 +1,25 @@
-import { LocalStorage, LocalStorageKey, Runtime, LocalStorageType, DataStore } from '@dhruv-techapps/core-extension'
+import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSetting } from '@dhruv-techapps/acf-common'
+import { LocalStorage, LOCAL_STORAGE_TYPES, DataStore } from '@dhruv-techapps/core-extension'
 import { onError } from './common/error'
 import { getConfig } from './config'
 import { ContextMenuSetup } from './context_menu'
-import { LoadTypeModel, defaultSetting } from '@dhruv-techapps/acf-common'
+
 import SystemError from './error/system-error'
 import ConfigError from './error/config-error'
 
 export const DATA_STORE_SETTINGS = 'settings'
 document.addEventListener('DOMContentLoaded', function () {
-  loadSettings(LoadTypeModel.document)
+  loadSettings(LOAD_TYPES.document)
 })
 
 window.addEventListener('load', function () {
-  loadSettings(LoadTypeModel.window)
+  loadSettings(LOAD_TYPES.window)
 })
 
 function loadSettings (loadType) {
   try {
-    const request = { action: LocalStorage.name, type: LocalStorageType.GET, key: LocalStorageKey.SETTINGS, fallback: defaultSetting }
-    Runtime.sendMessage(request, (setting) => {
+    const request = { action: LocalStorage.name, type: LOCAL_STORAGE_TYPES.GET, key: LOCAL_STORAGE_KEY.SETTINGS, fallback: defaultSetting }
+    chrome.runtime.sendMessage(request, (setting) => {
       DataStore.getInst().setItem(DATA_STORE_SETTINGS, setting)
       if (setting.loadType === loadType) {
         getConfig()

@@ -49,8 +49,8 @@
     "zip-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^1.0.3",
-    "@dhruv-techapps/core-common": "^1.1.6",
-    "@dhruv-techapps/core-extension": "^1.0.11"
+    "@dhruv-techapps/acf-common": "^1.0.4",
+    "@dhruv-techapps/core-common": "^1.1.22",
+    "@dhruv-techapps/core-extension": "^1.0.16"
   }
 }

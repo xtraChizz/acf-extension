@@ -1,12 +1,13 @@
 /* global chrome */
 
-import { Notifications, DataStore } from '@dhruv-techapps/core-extension'
-import { LocalStorageKey, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
+import { DataStore } from '@dhruv-techapps/core-extension'
+import { RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
+import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 import ConfigError from '../../../error/config-error'
 
 export default class Common {
   constructor (xpath) {
-    this._settings = DataStore.getInst().getItem(LocalStorageKey.SETTINGS)
+    this._settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     this._setNodes(xpath)
     if (this._nodes.snapshotLength === 0) {
       this._checkIframe(xpath)
@@ -87,7 +88,7 @@ export default class Common {
 
   notify (error, title, query) {
     chrome.runtime.sendMessage({
-      action: Notifications.name,
+      action: RUNTIME_MESSAGE.NOTIFICATIONS,
       notificationOptions: { title: title || 'Error', message: error, requireInteraction: true },
       extras: { options_page: true, query: query }
     })

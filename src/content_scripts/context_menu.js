@@ -1,5 +1,5 @@
 import { Runtime } from '@dhruv-techapps/core-extension'
-import { CONTEXT_MENU_ID } from '../background'
+import { CONTEXT_MENU_ID } from '../common/constant'
 
 export class ContextMenuSetup {
   constructor () {
