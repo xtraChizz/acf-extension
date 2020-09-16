@@ -1,6 +1,6 @@
 import { Common, Addon, ScrollTo, Fill, ExecCommand, LocationCommand } from './action/index'
 import { ClickEvents, Events } from './action/event'
-import { Logger } from '@dhruv-techapps/core-extension'
+import { Logger } from '@dhruv-techapps/core-common'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 

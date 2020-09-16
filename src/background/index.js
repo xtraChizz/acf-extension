@@ -2,7 +2,7 @@
 
 import { LocalStorage, DateUtil } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { Manifest, Tabs, ContextMenus, GoogleAnalytics, Runtime, BrowserAction, Rate } from '@dhruv-techapps/core-extension'
+import { Manifest, Tabs, ContextMenus, GoogleAnalytics, Runtime, BrowserAction } from '@dhruv-techapps/core-extension'
 import Config from './config'
 import { CONTEXT_MENU_ID } from '../common/constant'
 
@@ -23,7 +23,7 @@ import { CONTEXT_MENU_ID } from '../common/constant'
   /**
   * Browser Action set to open option page / configuration page
   */
-  BrowserAction.onClicked(() => { Tabs({ url: optionsPageUrl }) })
+  BrowserAction.onClicked(() => { new Tabs({ url: optionsPageUrl }) })
   /**
   * If an update is available it will auto update
   */
@@ -34,7 +34,7 @@ import { CONTEXT_MENU_ID } from '../common/constant'
   */
   new ContextMenus({ id: CONTEXT_MENU_ID, title: String(name) }).onClicked(({ menuItemId }) => {
     if (menuItemId === CONTEXT_MENU_ID) {
-      // Tab.getInst().openOptionsPage({ xpath: LocalStorage.getItem(LocalStorageKey.XPATH), url: LocalStorage.getItem(LocalStorageKey.URL) });
+      new Tabs({ xpath: LocalStorage.getItem(LOCAL_STORAGE_KEY.XPATH), url: LocalStorage.getItem(LOCAL_STORAGE_KEY.URL) })
       LocalStorage.removeItem(LOCAL_STORAGE_KEY.XPATH)
       LocalStorage.removeItem(LOCAL_STORAGE_KEY.URL)
     }
@@ -53,7 +53,7 @@ import { CONTEXT_MENU_ID } from '../common/constant'
   /**
   * On start up check for rate
   */
-  Runtime.onStartup(() => new Rate('', 5))
+  // Runtime.onStartup(() => new Rate('', 5))
 
   /**
   * setup Google Analytics
@@ -65,7 +65,6 @@ import { CONTEXT_MENU_ID } from '../common/constant'
   */
   Runtime.setUninstallURL(uninstallUrl)
 
-  console.log(externallyConnectable)
   /**
   * Setting up port to listen between content_script and popup
   */

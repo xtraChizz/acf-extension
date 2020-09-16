@@ -1,5 +1,5 @@
 import Processor from './processor'
-import { DataStore } from '@dhruv-techapps/core-extension'
+import { DataStore } from '@dhruv-techapps/core-common'
 
 const dataStore = DataStore.getInst()
 // const DATA_ENTRY_INDEX = 'data-entry-index'

@@ -1,4 +1,3 @@
-import { Runtime } from '@dhruv-techapps/core-extension'
 import { CONTEXT_MENU_ID } from '../common/constant'
 
 export class ContextMenuSetup {
@@ -13,7 +12,7 @@ export class ContextMenuSetup {
   }
 
   setxPathAndURL (xpath, event) {
-    Runtime.sendMessage({ action: CONTEXT_MENU_ID, url: event.view.document.URL, xpath: xpath })
+    chrome.runtime.sendMessage({ action: CONTEXT_MENU_ID, url: event.view.document.URL, xpath: xpath })
   }
 
   getPathTo (node) {

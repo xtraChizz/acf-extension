@@ -1,7 +1,6 @@
 /* global chrome */
 
-import { DataStore } from '@dhruv-techapps/core-extension'
-import { RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
+import { RUNTIME_MESSAGE, DataStore } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 import ConfigError from '../../../error/config-error'
 
