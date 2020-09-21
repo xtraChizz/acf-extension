@@ -9,15 +9,15 @@ const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 const Action = ((Common) => {
   let nodes
   const start = async (action) => {
-    Logger.log('Action - start')
+    Logger.log('\t\t\t\t Action - start')
     await wait(action.initWait)
-    nodes = await Common.start(action.element)
     await Addon.start(action.addon)
+    nodes = await Common.start(action.element)
     _checkAction(action.value)
   }
 
   const _setValue = (value) => {
-    Logger.log('Action - _setValue')
+    Logger.log('\t\t\t\t Action - _setValue')
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
@@ -44,7 +44,7 @@ const Action = ((Common) => {
   }
 
   const _checkAction = (value) => {
-    Logger.log('Action - _checkAction')
+    Logger.log('\t\t\t\t Action - _checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
         ScrollToEvents.start(nodes, value)

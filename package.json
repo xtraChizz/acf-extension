@@ -11,7 +11,7 @@
     "lint:fix": "eslint src webpack.config.js .neutrinorc.js --fix",
     "build": "webpack --mode production",
     "build:babel": "babel src -d lib",
-    "watch": "webpack --mode production --watch",
+    "watch": "webpack --watch --env.srcDir=_dev",
     "prepare": "webpack --mode production"
   },
   "repository": {

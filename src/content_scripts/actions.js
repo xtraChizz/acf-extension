@@ -3,7 +3,7 @@ import Action from './action'
 
 const Actions = (() => {
   const start = async (actions) => {
-    Logger.log('Actions - start')
+    Logger.log('\t\t\t Actions - start')
     for (let i = 0; i < actions.length; i++) {
       await Action.start(actions[i])
     }

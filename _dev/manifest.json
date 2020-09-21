@@ -1,8 +1,8 @@
 {
- "name": "Data Entry [DEV]",
- "short_name": "Data Entry [DEV]",
- "version": "1.0.0",
- "config": {
-  "options_page_url": "http://localhost:3000"
- }
+  "name": "Auto Clicker - AutoFill [DEV]",
+  "short_name": "Auto Clicker - AutoFill [DEV]",
+  "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click spped test",
+  "config": {
+    "options_page_url": "http://localhost:3000"
+  }
 }

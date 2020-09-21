@@ -29,7 +29,7 @@ export const ContextMenu = (() => {
         for (var i = 0; i < siblings.length; i++) {
           var sibling = siblings[i]
           if (sibling === node) {
-            return this.getPathTo(node.parentNode) + `/${node.tagName.toLowerCase()}[${index}]`
+            return _getPathTo(node.parentNode) + `/${node.tagName.toLowerCase()}[${index}]`
           }
           if (sibling.nodeType === 1 && sibling.tagName === node.tagName) {
             index++

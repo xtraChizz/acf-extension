@@ -7,7 +7,7 @@ const FORM_EVENTS = ['blur', 'click', 'focus', 'select', 'submit', 'remove', 'cl
 
 export const FormEvents = ((CommonEvents) => {
   const start = (nodes, action) => {
-    Logger.log('FormEvents - start')
+    Logger.log('\t\t\t\t\t FormEvents - start')
     const events = this._getVerifiedEvents(FORM_EVENTS, action)
     CommonEvents.loopNodes(nodes, events, _dispatchEvent)
   }

@@ -6,7 +6,7 @@ import Batch from './batch'
 const Config = (() => {
   let config
   const getConfig = () => {
-    Logger.log('Config - getConfig')
+    Logger.log('\t Config - getConfig')
     Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement }, _result => {
       if (_result) {
         config = _result.config
@@ -21,7 +21,7 @@ const Config = (() => {
   }
 
   const _checkStartTime = () => {
-    Logger.log('Config - _checkStartTime')
+    Logger.log('\t Config - _checkStartTime')
     if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
       _schedule()
     } else {
@@ -30,18 +30,19 @@ const Config = (() => {
   }
 
   const _startBatch = async () => {
-    Logger.log('Config - _startBatch')
+    Logger.log('\t Config - _startBatch')
     await wait(config.initWait)
     Batch.start(config.batch, config.actions)
   }
 
-  const _schedule = () => {
-    Logger.log('Config - _schedule')
+  const _schedule = async () => {
+    Logger.log('\t Config - _schedule')
     var rDate = new Date()
     rDate.setHours(Number(config.startTime.split(':')[0]))
     rDate.setMinutes(Number(config.startTime.split(':')[1]))
     rDate.setSeconds(Number(config.startTime.split(':')[2]))
-    setTimeout(() => { _startBatch() }, rDate.getTime() - new Date().getTime())
+    await new Promise(resolve => setTimeout(resolve, rDate.getTime() - new Date().getTime()))
+    _startBatch()
   }
 
   return { getConfig }

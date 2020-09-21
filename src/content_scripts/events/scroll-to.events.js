@@ -5,7 +5,7 @@ const SCROLL_COORDINATES = ['Top', 'Bottom', 'Left', 'Right', 'TopLeft', 'Bottom
 
 export const ScrollToEvents = ((CommonEvents) => {
   const start = (nodes, value) => {
-    Logger.log('ScrollToEvents - start')
+    Logger.log('\t\t\t\t\t ScrollToEvents - start')
     if (/xpath/gi.test(value)) {
       _scrollToNode(nodes)
     } else {
