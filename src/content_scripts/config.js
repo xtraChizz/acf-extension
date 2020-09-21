@@ -4,11 +4,12 @@ import { wait } from './util'
 import Batch from './batch'
 
 const Config = (() => {
+  let config
   const getConfig = () => {
     Logger.log('Config - getConfig')
-    Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement }).then((_config) => {
-      if (_config) {
-        this.config = _config
+    Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement }, _result => {
+      if (_result) {
+        config = _result.config
         // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
         // if (processIndex(response.record)) {
         _checkStartTime()
@@ -16,12 +17,12 @@ const Config = (() => {
       Logger.warn("All index are process Refresh page to start from first");
      } */
       }
-    })
+    }, Logger.error)
   }
 
   const _checkStartTime = () => {
     Logger.log('Config - _checkStartTime')
-    if (this.config.startTime && this.config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
+    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
       _schedule()
     } else {
       _startBatch()
@@ -30,17 +31,17 @@ const Config = (() => {
 
   const _startBatch = async () => {
     Logger.log('Config - _startBatch')
-    await wait(this.config.initWait)
-    Batch.start(this.config.batch, this.config.actions)
+    await wait(config.initWait)
+    Batch.start(config.batch, config.actions)
   }
 
   const _schedule = () => {
     Logger.log('Config - _schedule')
     var rDate = new Date()
-    rDate.setHours(Number(this.config.startTime.split(':')[0]))
-    rDate.setMinutes(Number(this.config.startTime.split(':')[1]))
-    rDate.setSeconds(Number(this.config.startTime.split(':')[2]))
-    setTimeout(_startBatch.bind(this), rDate.getTime() - new Date().getTime())
+    rDate.setHours(Number(config.startTime.split(':')[0]))
+    rDate.setMinutes(Number(config.startTime.split(':')[1]))
+    rDate.setSeconds(Number(config.startTime.split(':')[2]))
+    setTimeout(() => { _startBatch() }, rDate.getTime() - new Date().getTime())
   }
 
   return { getConfig }

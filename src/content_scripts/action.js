@@ -7,10 +7,11 @@ import { ExecCommandEvents, FormEvents, LocationCommandEvents, MouseEvents, Plai
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 
 const Action = ((Common) => {
+  let nodes
   const start = async (action) => {
     Logger.log('Action - start')
     await wait(action.initWait)
-    await Common.start.call(this, action.element)
+    nodes = await Common.start(action.element)
     await Addon.start(action.addon)
     _checkAction(action.value)
   }
@@ -46,20 +47,20 @@ const Action = ((Common) => {
     Logger.log('Action - _checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
-        ScrollToEvents.start(this._nodes, value)
+        ScrollToEvents.start(nodes, value)
       } else if (/^clickevents::/gi.test(value)) {
-        MouseEvents.start(this._nodes, value)
+        MouseEvents.start(nodes, value)
       } else if (/^events::/gi.test(value)) {
-        FormEvents.start(this._nodes, value)
+        FormEvents.start(nodes, value)
       } else if (/^execcommand::/gi.test(value)) {
-        ExecCommandEvents.start(this._nodes, value)
+        ExecCommandEvents.start(nodes, value)
       } else if (/^locationcommand::/gi.test(value)) {
         LocationCommandEvents.start(this._nodes, value)
       } else {
-        PlainEvents.start(this._nodes, value)
+        PlainEvents.start(nodes, value)
       }
     } else {
-      MouseEvents.start(this._nodes, 'ClickEvents::click')
+      MouseEvents.start(nodes, 'ClickEvents::click')
     }
   }
 
