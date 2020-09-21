@@ -1,21 +1,21 @@
 import { CONTEXT_MENU_ID } from '../common/constant'
 
-export class ContextMenuSetup {
-  constructor () {
-    document.addEventListener('mousedown', this.mouseDownEvent, true)
+export const ContextMenu = (() => {
+  const setup = () => {
+    document.addEventListener('mousedown', _mouseDownEvent, true)
   }
 
-  mouseDownEvent (event) {
+  const _mouseDownEvent = (event) => {
     if (event.button === 2) {
-      this.setxPathAndURL(this.getPathTo(event.target), event)
+      _setxPathAndURL(_getPathTo(event.target), event)
     }
   }
 
-  setxPathAndURL (xpath, event) {
+  const _setxPathAndURL = (xpath, event) => {
     chrome.runtime.sendMessage({ action: CONTEXT_MENU_ID, url: event.view.document.URL, xpath: xpath })
   }
 
-  getPathTo (node) {
+  const _getPathTo = (node) => {
     if (node) {
       if (node.id !== '') {
         return `//*[@id="${node.id}"]`
@@ -39,4 +39,5 @@ export class ContextMenuSetup {
     }
     return ''
   }
-}
+  return { setup }
+})()

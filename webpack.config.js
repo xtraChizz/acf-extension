@@ -26,10 +26,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    library: '@dhruv-techapps/acf-extension',
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    filename: '[name].js'
   },
   resolve: {
     extensions: ['.js'], modules: ['src', 'node_modules']
@@ -50,10 +47,6 @@ module.exports = {
         emitError: true,
         failOnError: true
       }
-    }, {
-      test: /\.js$/,
-      include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'test')],
-      loader: 'babel-loader'
     }]
   },
   plugins: [

@@ -4,21 +4,19 @@ import { LocalStorage, DateUtil } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
 import { Manifest, Tabs, ContextMenus, GoogleAnalytics, Runtime, BrowserAction } from '@dhruv-techapps/core-extension'
 import Config from './config'
-import { CONTEXT_MENU_ID } from '../common/constant'
+import { CONTEXT_MENU_ID, RUNTIME_MESSAGE_ACF } from '../common/constant'
 
 (() => {
   const {
     name,
     'config.uninstall_url': uninstallUrl,
     'config.tracking_id': trackingId,
-    'config.options_page_url': optionsPageUrl,
-    'externally_connectable.matches': externallyConnectable
+    'config.options_page_url': optionsPageUrl
   } = Manifest.values([
     'name',
     'config.uninstall_url',
     'config.tracking_id',
-    'config.options_page_url',
-    'externally_connectable.matches'])
+    'config.options_page_url'])
 
   /**
   * Browser Action set to open option page / configuration page
@@ -68,5 +66,6 @@ import { CONTEXT_MENU_ID } from '../common/constant'
   /**
   * Setting up port to listen between content_script and popup
   */
-  Runtime.onMessageExternal(externallyConnectable, { [Config.name]: new Config() })
+  Runtime.onMessageExternal({ [RUNTIME_MESSAGE_ACF.CONFIG]: new Config() })
+  Runtime.onMessage({ [RUNTIME_MESSAGE_ACF.CONFIG]: new Config() })
 })()

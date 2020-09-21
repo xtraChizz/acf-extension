@@ -1,16 +1,17 @@
-import { LocalStorage, Logger, BrowserAction } from '@dhruv-techapps/core-extension'
+import { LocalStorage, Logger } from '@dhruv-techapps/core-common'
+import { BrowserAction } from '@dhruv-techapps/core-extension'
 
 export default class Config {
-  processPortMessage ({ URL, frameElement }) {
+  processPortMessage ({ href, frameElement }) {
     try {
       const data = LocalStorage.getItem('configs')
-      const sheets = LocalStorage.getItem('sheets')
       for (const index in data) {
-        const record = data[index]
-        if (record && typeof record === 'object' && !Array.isArray(record)) {
-          if (record.enable && record.url && (record.url === URL || new RegExp(this.escape(record.url)).test(URL) || URL.indexOf(record.url) !== -1)) {
+        const config = data[index]
+        if (config && typeof config === 'object' && !Array.isArray(config)) {
+          if (config.enable && config.url && this._urlMatcher(config.url, href)) {
             BrowserAction.setIcon({ path: 'assets/icons/icon64.png' })
-            return Promise.resolve({ record, sheets })
+            const sheets = LocalStorage.getItem('sheets')
+            return { config, sheets }
           }
         }
       }
@@ -22,11 +23,15 @@ export default class Config {
       BrowserAction.setIcon({ path: 'assets/icons/icon64.png' })
     }
 
-    Logger.log(`No Records Found ${URL}`)
-    return Promise.resolve()
+    Logger.log(`No configs Found ${URL}`)
+    return null
   }
 
-  escape (url) {
+  _urlMatcher (url, href) {
+    return url === href || new RegExp(this._escape(url)).test(href) || href.indexOf(url) !== -1
+  }
+
+  _escape (url) {
     return url.replace(/[?]/g, '\\$&')
   }
 }

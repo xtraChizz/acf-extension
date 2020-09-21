@@ -1,4 +1,6 @@
-defaults
+> 1%
 not IE 11
 not IE_Mob 11
-maintained node versions
+not samsung 12
+not last 2 safari version
+not last 5 ios version

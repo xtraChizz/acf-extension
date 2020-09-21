@@ -1,4 +1,4 @@
-export default class CustomError extends Error {
+export class CustomError extends Error {
   constructor (title, ...params) {
     // Pass remaining arguments (including vendor specific ones) to parent constructor
     super(...params)

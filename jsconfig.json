@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "umd",
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*",
+    "node_modules/@dhruv-techapps/**/*"
+  ]
+}

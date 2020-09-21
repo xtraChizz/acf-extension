@@ -1,39 +1,36 @@
 import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSetting } from '@dhruv-techapps/acf-common'
-import { RUNTIME, LOCAL_STORAGE_TYPES, DataStore } from '@dhruv-techapps/core-common'
-import { onError } from './common/error'
-import { getConfig } from './config'
-import { ContextMenuSetup } from './context_menu'
+import { DataStore, Logger, StorageService } from '@dhruv-techapps/core-common'
+import { SystemError, ConfigError } from './error'
 
-import SystemError from './error/system-error'
-import ConfigError from './error/config-error'
+import Config from './config'
+import { ContextMenu } from './context_menu'
 
-export const DATA_STORE_SETTINGS = 'settings'
 document.addEventListener('DOMContentLoaded', function () {
-  loadSettings(LOAD_TYPES.document)
+  loadSettings(LOAD_TYPES.DOCUMENT)
 })
 
 window.addEventListener('load', function () {
-  loadSettings(LOAD_TYPES.window)
+  loadSettings(LOAD_TYPES.WINDOW)
 })
 
 function loadSettings (loadType) {
   try {
-    const request = { action: RUNTIME.LOCAL_STORAGE, type: LOCAL_STORAGE_TYPES.GET, key: LOCAL_STORAGE_KEY.SETTINGS, fallback: defaultSetting }
-    chrome.runtime.sendMessage(request, (setting) => {
-      DataStore.getInst().setItem(DATA_STORE_SETTINGS, setting)
+    Logger.log('INDEX', loadType)
+    StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSetting).then(setting => {
+      DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
       if (setting.loadType === loadType) {
-        getConfig()
+        Config.getConfig()
       }
     })
   } catch (e) {
     if (e instanceof SystemError) {
-      onError(e)
+      console.error(e)
     } else if (e instanceof ConfigError) {
-      console.error(e.name + ': ' + e.message)
+      console.error(e)
     } else {
-      console.error(e.name + ': ' + e.message)
+      console.error(e)
     }
   }
 }
 
-ContextMenuSetup()
+ContextMenu.setup()

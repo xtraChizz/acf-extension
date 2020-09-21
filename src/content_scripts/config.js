@@ -1,22 +1,50 @@
-import Processor from './processor'
-import { DataStore } from '@dhruv-techapps/core-common'
+import { RUNTIME_MESSAGE_ACF } from '../common/constant'
+import { Logger, Service } from '@dhruv-techapps/core-common'
+import { wait } from './util'
+import Batch from './batch'
 
-const dataStore = DataStore.getInst()
-// const DATA_ENTRY_INDEX = 'data-entry-index'
-export const DATA_STORE_SHEETS = 'sheets'
+const Config = (() => {
+  const getConfig = () => {
+    Logger.log('Config - getConfig')
+    Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement }).then((_config) => {
+      if (_config) {
+        this.config = _config
+        // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
+        // if (processIndex(response.record)) {
+        _checkStartTime()
+        /* } else {
+      Logger.warn("All index are process Refresh page to start from first");
+     } */
+      }
+    })
+  }
 
-const getConfig = () => {
-  chrome.runtime.sendMessage({ action: 'config', URL: document.location.href, frameElement: window.frameElement }, (record) => {
-    if (record) {
-      dataStore.setItem(DATA_STORE_SHEETS, record.sheets)
-      // if (processIndex(response.record)) {
-      Processor(record.config)
-      /* } else {
-    Logger.warn("All index are process Refresh page to start from first");
-   } */
+  const _checkStartTime = () => {
+    Logger.log('Config - _checkStartTime')
+    if (this.config.startTime && this.config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
+      _schedule()
+    } else {
+      _startBatch()
     }
-  })
-}
+  }
+
+  const _startBatch = async () => {
+    Logger.log('Config - _startBatch')
+    await wait(this.config.initWait)
+    Batch.start(this.config.batch, this.config.actions)
+  }
+
+  const _schedule = () => {
+    Logger.log('Config - _schedule')
+    var rDate = new Date()
+    rDate.setHours(Number(this.config.startTime.split(':')[0]))
+    rDate.setMinutes(Number(this.config.startTime.split(':')[1]))
+    rDate.setSeconds(Number(this.config.startTime.split(':')[2]))
+    setTimeout(_startBatch.bind(this), rDate.getTime() - new Date().getTime())
+  }
+
+  return { getConfig }
+})()
 
 // :TODO: Need to check later
 /* const _processIndex = (record) => {
@@ -38,4 +66,4 @@ const getConfig = () => {
   return true
 } */
 
-export { getConfig }
+export default Config
