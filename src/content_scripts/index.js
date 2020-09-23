@@ -19,15 +19,15 @@ async function loadSettings (loadType) {
     const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSetting)
     DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
     if (setting.loadType === loadType) {
-      Config.getConfig()
+      await Config.getConfig()
     }
   } catch (e) {
     if (e instanceof SystemError) {
-      console.error(e)
+      console.error('INDEX', e)
     } else if (e instanceof ConfigError) {
-      console.error(e)
+      console.warn('INDEX', e)
     } else {
-      console.error(e)
+      console.error('INDEX', e)
     }
   }
 }

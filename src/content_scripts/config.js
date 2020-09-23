@@ -5,34 +5,29 @@ import Batch from './batch'
 
 const Config = (() => {
   let config
-  const getConfig = () => {
+  const getConfig = async () => {
     Logger.log('\t Config - getConfig')
-    Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement }, _result => {
-      if (_result) {
-        config = _result.config
-        // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
-        // if (processIndex(response.record)) {
-        _checkStartTime()
-        /* } else {
+
+    const result = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
+    if (result) {
+      config = result.config
+      // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
+      // if (processIndex(response.record)) {
+      await _checkStartTime()
+      /* } else {
       Logger.warn("All index are process Refresh page to start from first");
      } */
-      }
-    }, Logger.error)
-  }
-
-  const _checkStartTime = () => {
-    Logger.log('\t Config - _checkStartTime')
-    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
-      _schedule()
-    } else {
-      _startBatch()
     }
   }
 
-  const _startBatch = async () => {
-    Logger.log('\t Config - _startBatch')
-    await wait(config.initWait)
-    Batch.start(config.batch, config.actions)
+  const _checkStartTime = async () => {
+    Logger.log('\t Config - _checkStartTime')
+    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
+      await _schedule()
+    } else {
+      await wait(config.initWait)
+    }
+    await Batch.start(config.batch, config.actions)
   }
 
   const _schedule = async () => {
@@ -42,7 +37,6 @@ const Config = (() => {
     rDate.setMinutes(Number(config.startTime.split(':')[1]))
     rDate.setSeconds(Number(config.startTime.split(':')[2]))
     await new Promise(resolve => setTimeout(resolve, rDate.getTime() - new Date().getTime()))
-    _startBatch()
   }
 
   return { getConfig }

@@ -13,7 +13,9 @@ const Action = ((Common) => {
     await wait(action.initWait)
     await Addon.start(action.addon)
     nodes = await Common.start(action.element)
-    _checkAction(action.value)
+    if (nodes && nodes.snapshotLength !== 0) {
+      _checkAction(action.value)
+    }
   }
 
   const _setValue = (value) => {

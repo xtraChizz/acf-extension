@@ -4,65 +4,55 @@ import { ConfigError } from './error/config-error'
 import { wait } from './util'
 
 const Common = (() => {
-  let _settings, nodes
-  const start = (element) => {
+  const start = async (element) => {
     Logger.log('Common - start')
-    _settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
-    _setNodes(element)
-    if (nodes.snapshotLength === 0) {
-      _checkIframe(element)
-    }
-    if (nodes.snapshotLength === 0) {
-      _checkRetryOption(element)
+    const { retryOption, retryInterval, retry } = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
+    const nodes = await _setNodes(element, retry, retryInterval)
+    if (!nodes || nodes.snapshotLength === 0) {
+      _checkRetryOption(retryOption, element)
     }
     return nodes
   }
 
-  const _setNodes = (element) => {
+  const _setNodes = async (element, retry, retryInterval) => {
     Logger.log('Common - _setNodes')
-    try {
-      const _nodes = document.evaluate(element, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-      if (_nodes.snapshotLength === 0) {
-        retryFunc(element)
-      } else {
-        nodes = _nodes
-      }
-    } catch (error) {
-      throw new ConfigError(element)
-    }
+    const _nodes = document.evaluate(element, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+    return _nodes.snapshotLength ? _nodes : await retryFunc(element, retry, retryInterval)
   }
 
-  const retryFunc = async (element) => {
+  const retryFunc = async (element, retry, retryInterval) => {
     Logger.log('Common - retryFunc')
-    if (_settings.retry > 0) {
-      _settings.retry--
-      await wait(_settings.retryInterval)
-      _setNodes(element)
+    if (retry > 0) {
+      retry--
+      await wait(retryInterval)
+      return await _setNodes(element, retry, retryInterval)
+    } else {
+      return _checkIframe(element)
     }
   }
 
   const _checkIframe = (element) => {
     Logger.log('Common - _checkIframe')
     const iframes = document.getElementsByTagName('iframe')
+    let _nodes
     for (let index = 0; index < iframes.length; index++) {
-      if (nodes.snapshotLength !== 0) {
+      if (_nodes && _nodes.snapshotLength !== 0) {
         break
       }
 
       const contentDocument = iframes[index].contentDocument
       if (contentDocument) {
-        nodes = document.evaluate(element, contentDocument, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+        _nodes = document.evaluate(element, contentDocument, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
       } else {
         throw new Error('contentDocument is null for iframe')
       }
     }
+    return _nodes
   }
 
-  const _checkRetryOption = (element) => {
+  const _checkRetryOption = (retryOption, element) => {
     Logger.log('Common - _checkRetryOption')
-    if (_settings.retryOption === RETRY_OPTIONS.SKIP) {
-      return 'Action skipped!'
-    } else if (_settings.retryOption === RETRY_OPTIONS.RELOAD) {
+    if (retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         location.reload()
       } else {
@@ -70,8 +60,11 @@ const Common = (() => {
           location.reload()
         })
       }
+    } else if (retryOption === RETRY_OPTIONS.STOP) {
+      throw new ConfigError(`${element} not found and process is STOPPED`)
+    } else {
+      Logger.info('Element not found and action is SKIP')
     }
-    throw new ConfigError(element)
   }
 
   return { start }
