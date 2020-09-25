@@ -1,22 +1,29 @@
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
-import { Logger, Service } from '@dhruv-techapps/core-common'
+import { Logger, NotificationsService, Service } from '@dhruv-techapps/core-common'
 import { wait } from './util'
 import Batch from './batch'
+import { ConfigError } from './error'
 
 const Config = (() => {
   let config
   const getConfig = async () => {
     Logger.debug('\t Config >> getConfig')
-
-    const result = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
-    if (result) {
-      config = result.config
-      // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
-      // if (processIndex(response.record)) {
-      await _checkStartTime()
-      /* } else {
-      Logger.warn("All index are process Refresh page to start from first");
-     } */
+    try {
+      config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
+      if (config) {
+        // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
+        // if (processIndex(response.record)) {
+        await _checkStartTime()
+        /* } else {
+        Logger.warn("All index are process Refresh page to start from first");
+       } */
+      }
+    } catch (e) {
+      if (e instanceof ConfigError) {
+        NotificationsService.create({ title: e.title, message: `url : ${config.url}\n${e.message}` }, '')
+      } else {
+        throw e
+      }
     }
   }
 

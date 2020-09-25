@@ -1,6 +1,6 @@
 import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSetting } from '@dhruv-techapps/acf-common'
 import { DataStore, Logger, StorageService } from '@dhruv-techapps/core-common'
-import { SystemError, ConfigError } from './error'
+import { SystemError } from './error'
 
 import Config from './config'
 import { ContextMenu } from './context_menu'
@@ -23,13 +23,10 @@ async function loadSettings (loadType) {
     }
   } catch (e) {
     if (e instanceof SystemError) {
-      console.error('INDEX', e.name, e.message, e.stack)
-    } else if (e instanceof ConfigError) {
-      console.warn('INDEX', e.name, e.message)
+      Logger.error('INDEX', e.name, e.message, e.stack)
     } else {
-      console.error('UNKNOWN ERROR INDEX', e)
+      Logger.error('UNKNOWN ERROR INDEX', e)
     }
   }
 }
-
 ContextMenu.setup()

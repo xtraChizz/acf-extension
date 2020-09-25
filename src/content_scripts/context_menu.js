@@ -1,4 +1,5 @@
-import { CONTEXT_MENU_ID } from '../common/constant'
+import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
+import { StorageService } from '@dhruv-techapps/core-common'
 
 export const ContextMenu = (() => {
   const setup = () => {
@@ -12,7 +13,8 @@ export const ContextMenu = (() => {
   }
 
   const _setxPathAndURL = (xpath, event) => {
-    chrome.runtime.sendMessage({ action: CONTEXT_MENU_ID, url: event.view.document.URL, xpath: xpath })
+    StorageService.setItem(LOCAL_STORAGE_KEY.URL, event.view.document.URL)
+    StorageService.setItem(LOCAL_STORAGE_KEY.XPATH, xpath)
   }
 
   const _getPathTo = (node) => {

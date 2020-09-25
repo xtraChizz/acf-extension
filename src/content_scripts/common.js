@@ -40,10 +40,10 @@ const Common = (() => {
           }
         }
       } catch (e) {
-        throw new ConfigError(e.message.split(':')[1])
+        throw new ConfigError(`elementFinder: ${e.message.split(':')[1]}`, 'Invalid Xpath')
       }
     } else {
-      throw new ConfigError(`Not a valid elementFinder ${elementFinder}`)
+      throw new ConfigError(`elementFinder: ${elementFinder}`, 'Invalid Element Finder')
     }
     return elements.length ? elements : await retryFunc(elementFinder, retry, retryInterval)
   }
@@ -89,7 +89,7 @@ const Common = (() => {
         })
       }
     } else if (retryOption === RETRY_OPTIONS.STOP) {
-      throw new ConfigError(`${element} not found and process is STOPPED`)
+      throw new ConfigError(`elementFinder: ${element}`, 'Not Found')
     } else {
       Logger.info('Element not found and action is SKIP')
     }

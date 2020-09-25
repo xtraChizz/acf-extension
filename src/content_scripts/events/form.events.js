@@ -14,7 +14,7 @@ export const FormEvents = ((CommonEvents) => {
 
   const _dispatchEvent = (element, events) => {
     if (!(element instanceof HTMLElement)) {
-      throw new ConfigError('Not HTMLElement', 'XPath element is not instanceof HTMLElement')
+      throw new ConfigError(`elementFinder: ${element}`, 'Not HTMLElement')
     }
     events.forEach(event => {
       switch (typeof event === 'string' ? event : event.type) {
@@ -33,7 +33,7 @@ export const FormEvents = ((CommonEvents) => {
           } else if (FORM_ELEMENT_NODENAME.test(element.nodeName)) {
             element.form.submit()
           } else {
-            throw new ConfigError('Invalid Element for submit', `Xpath element is not instance of ${FORM_ELEMENT_NODENAME}`)
+            throw new ConfigError(`elementFinder: ${element}`, 'Invalid Element for submit')
           }
           break
         case 'select':
@@ -46,7 +46,7 @@ export const FormEvents = ((CommonEvents) => {
           if (FORM_CLEAR_ELEMENT_NODENAME.test(element.nodeName)) {
             element.value = ''
           } else {
-            throw new ConfigError('Invalid Element for clear', `Xpath element is not instance of ${FORM_CLEAR_ELEMENT_NODENAME}`)
+            throw new ConfigError(`elementFinder: ${element}`, 'Invalid Element for clear')
           }
           break
         default:

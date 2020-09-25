@@ -3,20 +3,15 @@ import { BrowserAction } from '@dhruv-techapps/core-extension'
 
 export default class Config {
   processPortMessage ({ href, frameElement }) {
-    try {
-      const data = LocalStorage.getItem('configs')
-      for (const index in data) {
-        const config = data[index]
-        if (config && typeof config === 'object' && !Array.isArray(config)) {
-          if (config.enable && config.url && this._urlMatcher(config.url, href)) {
-            BrowserAction.setIcon({ path: 'assets/icons/icon64.png' })
-            const sheets = LocalStorage.getItem('sheets')
-            return { config, sheets }
-          }
+    const data = LocalStorage.getItem('configs')
+    for (const index in data) {
+      const config = data[index]
+      if (config && typeof config === 'object' && !Array.isArray(config)) {
+        if (config.enable && config.url && this._urlMatcher(config.url, href)) {
+          BrowserAction.setIcon({ path: 'assets/icons/icon64.png' })
+          return { result: config }
         }
       }
-    } catch (error) {
-      Logger.error(error)
     }
 
     if (!frameElement) {
@@ -24,7 +19,7 @@ export default class Config {
     }
 
     Logger.log(`No configs Found ${URL}`)
-    return null
+    return {}
   }
 
   _urlMatcher (url, href) {

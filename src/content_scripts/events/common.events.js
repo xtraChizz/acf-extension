@@ -24,7 +24,7 @@ const CommonEvents = (() => {
     if (result) {
       return result
     } else {
-      throw new ConfigError('Invalid Events', `${events} are not compatible by extension`)
+      throw new ConfigError(`value: ${events}`, 'Invalid Events')
     };
   }
 
