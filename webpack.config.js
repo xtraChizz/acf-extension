@@ -6,7 +6,7 @@ const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 
 module.exports = env => {
-  const srcDir = env.srcDir || '_prod'
+  const srcDir = env ? env.srcDir || '_prod' : '_prod'
   const manifest = require(`./${srcDir}/manifest.json`)
 
   return {

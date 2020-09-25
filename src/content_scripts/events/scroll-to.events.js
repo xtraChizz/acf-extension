@@ -4,10 +4,10 @@ import CommonEvents from './common.events'
 const SCROLL_COORDINATES = ['Top', 'Bottom', 'Left', 'Right', 'TopLeft', 'BottomLeft', 'BottomRight', 'TopRight', 'XPath']
 
 export const ScrollToEvents = ((CommonEvents) => {
-  const start = (nodes, value) => {
-    Logger.log('\t\t\t\t\t ScrollToEvents - start')
+  const start = (elements, value) => {
+    Logger.debug('\t\t\t\t\t ScrollToEvents >> start')
     if (/xpath/gi.test(value)) {
-      _scrollToNode(nodes)
+      _scrollToElement(elements)
     } else {
       const scrollCoordinates = CommonEvents.getVerifiedEvents(SCROLL_COORDINATES, value)[0]
       _scrollToCoordinates(scrollCoordinates)
@@ -25,8 +25,8 @@ export const ScrollToEvents = ((CommonEvents) => {
     window.scrollTo(xAxis, yAxis)
   }
 
-  const _scrollToNode = (nodes) => {
-    nodes.snapshotItem(0).scrollIntoView()
+  const _scrollToElement = (elements) => {
+    elements[0].scrollIntoView()
   }
   return { start }
 })(CommonEvents)

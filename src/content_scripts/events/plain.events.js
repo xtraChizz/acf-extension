@@ -3,24 +3,24 @@ import { RADIO_CHECKBOX_NODENAME } from '../util'
 import CommonEvents from './common.events'
 
 export const PlainEvents = ((CommonEvents) => {
-  const start = (nodes, value) => {
-    Logger.log('\t\t\t\t\t PlainEvents - start')
+  const start = (elements, value) => {
+    Logger.debug('\t\t\t\t\t PlainEvents >> start')
     value = _checkEmptyValue(value)
-    CommonEvents.loopNodes(nodes, value, _checkNode)
+    CommonEvents.loopElements(elements, value, _checkNode)
   }
 
   const _checkEmptyValue = (value) => {
     return value === '::empty' ? '' : value
   }
 
-  const _checkNode = (node, value) => {
-    if (node.nodeName === 'SELECT' || node.nodeName === 'TEXTAREA' || (node.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODENAME.test(node.type))) {
-      node.value = value
-      node.dispatchEvent(CommonEvents.getFillEvent())
+  const _checkNode = (element, value) => {
+    if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODENAME.test(element.type))) {
+      element.value = value
+      element.dispatchEvent(CommonEvents.getFillEvent())
     } else {
-      node.dispatchEvent(CommonEvents.getMouseEvent())
+      element.dispatchEvent(CommonEvents.getMouseEvent())
     }
-    node.focus()
+    element.focus()
   }
 
   return { start }

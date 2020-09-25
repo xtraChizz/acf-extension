@@ -6,7 +6,7 @@ import Batch from './batch'
 const Config = (() => {
   let config
   const getConfig = async () => {
-    Logger.log('\t Config - getConfig')
+    Logger.debug('\t Config >> getConfig')
 
     const result = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
     if (result) {
@@ -21,7 +21,7 @@ const Config = (() => {
   }
 
   const _checkStartTime = async () => {
-    Logger.log('\t Config - _checkStartTime')
+    Logger.debug('\t Config >> _checkStartTime')
     if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
       await _schedule()
     } else {
@@ -31,7 +31,7 @@ const Config = (() => {
   }
 
   const _schedule = async () => {
-    Logger.log('\t Config - _schedule')
+    Logger.debug('\t Config >> _schedule')
     var rDate = new Date()
     rDate.setHours(Number(config.startTime.split(':')[0]))
     rDate.setMinutes(Number(config.startTime.split(':')[1]))

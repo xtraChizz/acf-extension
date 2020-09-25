@@ -6,7 +6,7 @@ import Common from './common'
 
 const Addon = ((Common) => {
   const start = async ({ element, value, condition }) => {
-    Logger.log('\t\t\t\t\t Addon - start')
+    Logger.debug('\t\t\t\t\t Addon >> start')
     if (element && value && condition) {
       await Common.call(this, element)
       const nodeValue = _getNodeValue()
@@ -15,7 +15,7 @@ const Addon = ((Common) => {
   }
 
   const _getNodeValue = () => {
-    Logger.log('\t\t\t\t\t Addon - _getNodeValue')
+    Logger.debug('\t\t\t\t\t Addon >> _getNodeValue')
     const node = this._nodes.snapshotItem(0)
     let value
     if (SELECT_TEXTAREA_NODENAME.test(node.nodeName)) {
@@ -33,7 +33,7 @@ const Addon = ((Common) => {
   }
 
   const _compare = (nodeValue, condition, value) => {
-    Logger.log('\t\t\t\t\t Addon - _compare')
+    Logger.debug('\t\t\t\t\t Addon >> _compare')
     switch (condition) {
       case ADDON_CONDITIONS['= Equals']:
         return new RegExp(`^${value}$`, 'gi').test(nodeValue)

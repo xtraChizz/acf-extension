@@ -20,6 +20,7 @@ import { CONTEXT_MENU_ID, RUNTIME_MESSAGE_ACF } from '../common/constant'
 
   /**
   * Browser Action set to open option page / configuration page
+  * ? Do check if clicking this it dont open eveytime on new tab
   */
   BrowserAction.onClicked(() => { new Tabs({ url: optionsPageUrl }) })
   /**
@@ -29,6 +30,7 @@ import { CONTEXT_MENU_ID, RUNTIME_MESSAGE_ACF } from '../common/constant'
 
   /**
   * Set Context Menu for right click
+  * TODO Need to check this is not working
   */
   new ContextMenus({ id: CONTEXT_MENU_ID, title: String(name) }).onClicked(({ menuItemId }) => {
     if (menuItemId === CONTEXT_MENU_ID) {
@@ -50,11 +52,13 @@ import { CONTEXT_MENU_ID, RUNTIME_MESSAGE_ACF } from '../common/constant'
 
   /**
   * On start up check for rate
+  * TODO Need to make this up and available
   */
   // Runtime.onStartup(() => new Rate('', 5))
 
   /**
   * setup Google Analytics
+  * TODO Need to check this as well
   */
   window.ga = new GoogleAnalytics(trackingId)
 

@@ -28,11 +28,9 @@ const CommonEvents = (() => {
     };
   }
 
-  const loopNodes = (nodes, events, trigger) => {
-    let i = 0
-    while (i < nodes.snapshotLength) {
-      const node = nodes.snapshotItem(i++)
-      trigger(node, events)
+  const loopElements = (elements, events, trigger) => {
+    for (const element of elements) {
+      trigger(element, events)
     }
   }
 
@@ -46,7 +44,7 @@ const CommonEvents = (() => {
     return new MouseEvent('click', { screenX: 10, screenY: 10, clientX: 10, clientY: 10, bubbles: true, cancelable: true, view: window })
   }
 
-  return { getFillEvent, getMouseEvent, loopNodes, getVerifiedEvents }
+  return { getFillEvent, getMouseEvent, loopElements, getVerifiedEvents }
 })()
 
 export default CommonEvents

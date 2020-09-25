@@ -4,35 +4,63 @@ import { ConfigError } from './error/config-error'
 import { wait } from './util'
 
 const Common = (() => {
-  const start = async (element) => {
-    Logger.log('Common - start')
+  const start = async (elementFinder) => {
+    Logger.debug('Common >> start')
     const { retryOption, retryInterval, retry } = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
-    const nodes = await _setNodes(element, retry, retryInterval)
+    const nodes = await _getElements(document, elementFinder, retry, retryInterval)
     if (!nodes || nodes.snapshotLength === 0) {
-      _checkRetryOption(retryOption, element)
+      _checkRetryOption(retryOption, elementFinder)
     }
     return nodes
   }
 
-  const _setNodes = async (element, retry, retryInterval) => {
-    Logger.log('Common - _setNodes')
-    const _nodes = document.evaluate(element, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-    return _nodes.snapshotLength ? _nodes : await retryFunc(element, retry, retryInterval)
+  const _getElements = async (document, elementFinder, retry, retryInterval) => {
+    Logger.debug('Common >> _getElements')
+
+    let elements = []
+    if (/^(id::|#)/gi.test(elementFinder)) {
+      elements = [document.getElementById(elementFinder.replace(/^(id::|#)/gi, ''))]
+    } else if (/^ClassName::/gi.test(elementFinder)) {
+      elements = document.getElementsByClassName(elementFinder.replace(/^ClassName::/gi, ''))
+    } else if (/^Name::/gi.test(elementFinder)) {
+      elements = document.getElementsByName(elementFinder.replace(/^Name::/gi, ''))
+    } else if (/^TagName::/gi.test(elementFinder)) {
+      elements = document.getElementsByTagName(elementFinder.replace(/^TagName::/gi, ''))
+    } else if (/^Selector::/gi.test(elementFinder)) {
+      elements = [document.querySelector(elementFinder.replace(/^Selector::/gi, ''))]
+    } else if (/^SelectorAll::/gi.test(elementFinder)) {
+      elements = document.querySelectorAll(elementFinder.replace(/^SelectorAll::/gi, ''))
+    } else if (/^\/\//gi.test(elementFinder)) {
+      try {
+        const nodes = document.evaluate(elementFinder, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+        if (nodes.snapshotLength !== 0) {
+          let i = 0
+          while (i < nodes.snapshotLength) {
+            elements.push(nodes.snapshotItem(i++))
+          }
+        }
+      } catch (e) {
+        throw new ConfigError(e.message.split(':')[1])
+      }
+    } else {
+      throw new ConfigError(`Not a valid elementFinder ${elementFinder}`)
+    }
+    return elements.length ? elements : await retryFunc(elementFinder, retry, retryInterval)
   }
 
   const retryFunc = async (element, retry, retryInterval) => {
-    Logger.log('Common - retryFunc')
+    Logger.debug('Common >> retryFunc')
     if (retry > 0) {
       retry--
       await wait(retryInterval)
-      return await _setNodes(element, retry, retryInterval)
+      return await _getElements(document, element, retry, retryInterval)
     } else {
       return _checkIframe(element)
     }
   }
 
   const _checkIframe = (element) => {
-    Logger.log('Common - _checkIframe')
+    Logger.debug('Common >> _checkIframe')
     const iframes = document.getElementsByTagName('iframe')
     let _nodes
     for (let index = 0; index < iframes.length; index++) {
@@ -51,7 +79,7 @@ const Common = (() => {
   }
 
   const _checkRetryOption = (retryOption, element) => {
-    Logger.log('Common - _checkRetryOption')
+    Logger.debug('Common >> _checkRetryOption')
     if (retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         location.reload()

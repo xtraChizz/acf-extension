@@ -15,7 +15,7 @@ window.addEventListener('load', function () {
 
 async function loadSettings (loadType) {
   try {
-    Logger.log('INDEX', loadType)
+    Logger.debug('INDEX')
     const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSetting)
     DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
     if (setting.loadType === loadType) {
@@ -23,11 +23,11 @@ async function loadSettings (loadType) {
     }
   } catch (e) {
     if (e instanceof SystemError) {
-      console.error('INDEX', e)
+      console.error('INDEX', e.name, e.message, e.stack)
     } else if (e instanceof ConfigError) {
-      console.warn('INDEX', e)
+      console.warn('INDEX', e.name, e.message)
     } else {
-      console.error('INDEX', e)
+      console.error('UNKNOWN ERROR INDEX', e)
     }
   }
 }

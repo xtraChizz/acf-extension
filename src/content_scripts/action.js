@@ -7,19 +7,19 @@ import { ExecCommandEvents, FormEvents, LocationCommandEvents, MouseEvents, Plai
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 
 const Action = ((Common) => {
-  let nodes
+  let elements
   const start = async (action) => {
-    Logger.log('\t\t\t\t Action - start')
+    Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait)
     await Addon.start(action.addon)
-    nodes = await Common.start(action.element)
-    if (nodes && nodes.snapshotLength !== 0) {
+    elements = await Common.start(action.elementFinder)
+    if (elements) {
       _checkAction(action.value)
     }
   }
 
   const _setValue = (value) => {
-    Logger.log('\t\t\t\t Action - _setValue')
+    Logger.debug('\t\t\t\t Action >> _setValue')
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
@@ -46,23 +46,23 @@ const Action = ((Common) => {
   }
 
   const _checkAction = (value) => {
-    Logger.log('\t\t\t\t Action - _checkAction')
+    Logger.debug('\t\t\t\t Action >> _checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
-        ScrollToEvents.start(nodes, value)
+        ScrollToEvents.start(elements, value)
       } else if (/^clickevents::/gi.test(value)) {
-        MouseEvents.start(nodes, value)
+        MouseEvents.start(elements, value)
       } else if (/^events::/gi.test(value)) {
-        FormEvents.start(nodes, value)
+        FormEvents.start(elements, value)
       } else if (/^execcommand::/gi.test(value)) {
-        ExecCommandEvents.start(nodes, value)
+        ExecCommandEvents.start(elements, value)
       } else if (/^locationcommand::/gi.test(value)) {
-        LocationCommandEvents.start(this._nodes, value)
+        LocationCommandEvents.start(elements, value)
       } else {
-        PlainEvents.start(nodes, value)
+        PlainEvents.start(elements, value)
       }
     } else {
-      MouseEvents.start(nodes, 'ClickEvents::click')
+      MouseEvents.start(elements, 'ClickEvents::click')
     }
   }
 
