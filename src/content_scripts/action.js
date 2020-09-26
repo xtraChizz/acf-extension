@@ -11,10 +11,11 @@ const Action = ((Common) => {
   const start = async (action) => {
     Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait)
-    await Addon.start(action.addon)
-    elements = await Common.start(action.elementFinder)
-    if (elements) {
-      _checkAction(action.value)
+    if (await Addon.check(action.addon)) {
+      elements = await Common.start(action.elementFinder)
+      if (elements) {
+        _checkAction(action.value)
+      }
     }
   }
 
