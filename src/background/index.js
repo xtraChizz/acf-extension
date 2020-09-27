@@ -1,12 +1,15 @@
-/* eslint-disable no-new */
+/* eslint-disable no-new, no-use-before-define */
 
-import { DateUtil, LocalStorage, Logger, Manifest } from '@dhruv-techapps/core-common'
+import { DateUtil, LocalStorage, Logger, Manifest, RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { GoogleAnalytics, Runtime, BrowserAction } from '@dhruv-techapps/core-extension'
+import { Runtime, BrowserAction, GoogleAnalytics } from '@dhruv-techapps/core-extension'
 
 import registerContextMenus from './context-menu'
 import registerNotifications from './notifications'
 import { TabsMessenger } from './tab'
+import { RUNTIME_MESSAGE_ACF } from '../common/constant'
+import Sound from './sound'
+import Config from './config'
 
 (() => {
   try {
@@ -40,7 +43,8 @@ import { TabsMessenger } from './tab'
    * setup Google Analytics
    * TODO Need to check this as well
    */
-    window.ga = new GoogleAnalytics(trackingId)
+    new GoogleAnalytics(trackingId)
+    GoogleAnalytics.pageView([], console.log)
 
     /**
    * Setup Unintall action
@@ -58,12 +62,17 @@ import { TabsMessenger } from './tab'
     */
     Runtime.onUpdateAvailable(Runtime.reload)
 
-  /**
+    /**
   * On start up check for rate
   * TODO Need to make this up and available
   */
-  // Runtime.onStartup(() => new Rate('', 5))
+    // Runtime.onStartup(() => new Rate('', 5))
+
+    const onMessageListener = { [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(), [RUNTIME_MESSAGE.SOUND]: new Sound() }
+    Runtime.onMessageExternal(onMessageListener)
+    Runtime.onMessage(onMessageListener)
   } catch (error) {
     Logger.error(error)
+    // GoogleAnalytics.error({ name: 'background', stack: error.stack })
   }
 })()

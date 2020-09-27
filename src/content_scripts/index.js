@@ -1,6 +1,5 @@
 import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSetting } from '@dhruv-techapps/acf-common'
-import { DataStore, Logger, StorageService } from '@dhruv-techapps/core-common'
-import { SystemError } from './error'
+import { DataStore, GAService, Logger, StorageService } from '@dhruv-techapps/core-common'
 
 import Config from './config'
 import { ContextMenu } from './context_menu'
@@ -19,14 +18,11 @@ async function loadSettings (loadType) {
     const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSetting)
     DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
     if (setting.loadType === loadType) {
-      await Config.getConfig()
+      await Config.getConfig(setting.notifications)
     }
   } catch (e) {
-    if (e instanceof SystemError) {
-      Logger.error('INDEX', e.name, e.message, e.stack)
-    } else {
-      Logger.error('UNKNOWN ERROR INDEX', e)
-    }
+    Logger.error(e)
+    GAService.error({ name: e.name, stack: e.stack })
   }
 }
 ContextMenu.setup()

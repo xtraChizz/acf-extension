@@ -37,7 +37,7 @@
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.1.1",
-    "eslint": "^7.9.0",
+    "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.0",
@@ -53,8 +53,8 @@
     "zip-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^1.0.6",
-    "@dhruv-techapps/core-common": "^1.1.47",
-    "@dhruv-techapps/core-extension": "^1.0.34"
+    "@dhruv-techapps/acf-common": "^1.0.7",
+    "@dhruv-techapps/core-common": "^1.1.56",
+    "@dhruv-techapps/core-extension": "^1.0.39"
   }
 }

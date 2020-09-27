@@ -3,10 +3,11 @@ import { Logger, NotificationsService, Service } from '@dhruv-techapps/core-comm
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
+import { SoundService } from '@dhruv-techapps/core-common/src/services/sound.service'
 
 const Config = (() => {
   let config
-  const getConfig = async () => {
+  const getConfig = async (notifications) => {
     Logger.debug('\t Config >> getConfig')
     try {
       config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
@@ -14,13 +15,23 @@ const Config = (() => {
         // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
         // if (processIndex(response.record)) {
         await _checkStartTime()
+        if (notifications.onConfig) {
+          NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
+          notifications.sound && new SoundService()
+        }
         /* } else {
         Logger.warn("All index are process Refresh page to start from first");
        } */
       }
     } catch (e) {
       if (e instanceof ConfigError) {
-        NotificationsService.create({ title: e.title, message: `url : ${config.url}\n${e.message}` }, '')
+        const error = { title: e.title, message: `url : ${config.url}\n${e.message}` }
+        if (notifications.onError) {
+          NotificationsService.create(error)
+          notifications.sound && new SoundService()
+        } else {
+          Logger.error(error)
+        }
       } else {
         throw e
       }
@@ -29,6 +40,7 @@ const Config = (() => {
 
   const _checkStartTime = async () => {
     Logger.debug('\t Config >> _checkStartTime')
+
     if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
       await _schedule()
     } else {

@@ -70,6 +70,7 @@ module.exports = env => {
       new CopyPlugin({
         patterns: [
           { from: './_locales', to: './_locales' },
+          { from: './sounds', to: './sounds' },
           { from: `./${srcDir}/assets`, to: './assets' }
         ]
       })

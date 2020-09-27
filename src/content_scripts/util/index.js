@@ -8,7 +8,7 @@ export const wait = async (initWait) => {
     let waitTime = Number(initWait) * 1000
     if (/\d+e\d+/.test(initWait.toString())) {
       const range = initWait.toString().split('e')
-      waitTime = Math.floor(Math.random() * 1000 * parseInt(range[1])) + parseInt(range[0]) * 1000
+      waitTime = (Math.floor(Math.random() * parseInt(range[1])) + parseInt(range[0])) * 1000
     }
     Logger.debug(`waiting... ${waitTime / 1000} sec`)
     await sleep(waitTime)

@@ -8,13 +8,13 @@ const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 
 const Action = ((Common) => {
   let elements
-  const start = async (action) => {
+  const start = async (action, actionIndex, batchIndex) => {
     Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait)
     if (await Addon.check(action.addon)) {
-      elements = await Common.start(action.elementFinder)
+      elements = await Common.start(action.elementFinder.replaceAll('<batchIndex>', batchIndex).replaceAll('<actionIndex>', actionIndex))
       if (elements) {
-        _checkAction(action.value)
+        _checkAction(action.value.replaceAll('<batchIndex>', batchIndex).replaceAll('<actionIndex>', actionIndex))
       }
     }
   }
@@ -58,7 +58,7 @@ const Action = ((Common) => {
       } else if (/^execcommand::/gi.test(value)) {
         ExecCommandEvents.start(elements, value)
       } else if (/^locationcommand::/gi.test(value)) {
-        LocationCommandEvents.start(elements, value)
+        LocationCommandEvents.start(value)
       } else {
         PlainEvents.start(elements, value)
       }

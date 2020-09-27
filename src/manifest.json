@@ -2,7 +2,7 @@
   "name": "Auto Clicker - AutoFill LITE",
   "short_name": "Auto Clicker - AutoFill LITE",
   "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click spped test",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [
@@ -14,7 +14,7 @@
   ],
   "config": {
     "uninstall_url": "https://forms.gle/J2iXx49dQNiZYvLK9",
-    "tracking_id": "UA-111423401-8",
+    "tracking_id": "UA-111423401-5",
     "options_page_url": "https://getautoclicker.com/options_page_lite/index.html"
   },
   "browser_specific_settings": {
@@ -60,5 +60,5 @@
   "web_accessible_resources": [
     "assets/*"
   ],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://www.google-analytics.com/analytics.js; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

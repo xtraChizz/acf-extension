@@ -2,7 +2,7 @@ import { Logger } from '@dhruv-techapps/core-common'
 import { SystemError } from '../error'
 import CommonEvents from './common.events'
 
-const LOCATION_COMMANDS = ['reload', 'href']
+const LOCATION_COMMANDS = ['reload', 'href', 'replace']
 
 export const LocationCommandEvents = ((CommonEvents) => {
   const start = (value) => {
@@ -18,7 +18,10 @@ export const LocationCommandEvents = ((CommonEvents) => {
           location.reload()
           break
         case 'href':
-          location.href = value.split('::')[2]
+          window.location.href = value.split('::')[2]
+          break
+        case 'replace':
+          window.location.replace(value.split('::')[2])
           break
         default:
           throw new SystemError('Unhandled Event', event)
