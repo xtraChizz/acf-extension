@@ -6,6 +6,9 @@ import { wait } from './util'
 const Common = (() => {
   const start = async (elementFinder) => {
     Logger.debug('Common >> start')
+    if (!elementFinder) {
+      throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
+    }
     const { retryOption, retryInterval, retry } = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     const nodes = await _getElements(document, elementFinder, retry, retryInterval)
     if (!nodes || nodes.snapshotLength === 0) {
@@ -19,7 +22,8 @@ const Common = (() => {
 
     let elements = []
     if (/^(id::|#)/gi.test(elementFinder)) {
-      elements = [document.getElementById(elementFinder.replace(/^(id::|#)/gi, ''))]
+      const element = document.getElementById(elementFinder.replace(/^(id::|#)/gi, ''))
+      elements = element ? [element] : []
     } else if (/^ClassName::/gi.test(elementFinder)) {
       elements = document.getElementsByClassName(elementFinder.replace(/^ClassName::/gi, ''))
     } else if (/^Name::/gi.test(elementFinder)) {
@@ -27,7 +31,8 @@ const Common = (() => {
     } else if (/^TagName::/gi.test(elementFinder)) {
       elements = document.getElementsByTagName(elementFinder.replace(/^TagName::/gi, ''))
     } else if (/^Selector::/gi.test(elementFinder)) {
-      elements = [document.querySelector(elementFinder.replace(/^Selector::/gi, ''))]
+      const element = document.querySelector(elementFinder.replace(/^Selector::/gi, ''))
+      elements = element ? [element] : []
     } else if (/^SelectorAll::/gi.test(elementFinder)) {
       elements = document.querySelectorAll(elementFinder.replace(/^SelectorAll::/gi, ''))
     } else if (/^\/\//gi.test(elementFinder)) {

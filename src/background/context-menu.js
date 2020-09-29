@@ -8,9 +8,8 @@ export default function registerContextMenus (title, optionsPageUrl) {
   new ContextMenus({ id: CONTEXT_MENU_ID, title, contexts: ['all'] })
 
   chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
-    console.log(menuItemId, CONTEXT_MENU_ID)
     if (menuItemId === CONTEXT_MENU_ID) {
-      const url = encodeURI(`${optionsPageUrl}?url=${LocalStorage.getItem(LOCAL_STORAGE_KEY.URL)}&xpath=${LocalStorage.getItem(LOCAL_STORAGE_KEY.XPATH)}`)
+      const url = encodeURI(`${optionsPageUrl}?url=${LocalStorage.getItem(LOCAL_STORAGE_KEY.URL)}&elementFinder=${LocalStorage.getItem(LOCAL_STORAGE_KEY.XPATH)}`)
       TabsMessenger.optionsTab({ url })
       LocalStorage.removeItem(LOCAL_STORAGE_KEY.XPATH)
       LocalStorage.removeItem(LOCAL_STORAGE_KEY.URL)
