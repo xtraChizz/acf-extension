@@ -10,7 +10,7 @@
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
     "lint:fix": "eslint src webpack.config.js .neutrinorc.js --fix",
     "build": "webpack",
-    "build:babel": "babel src -d lib",
+    "build:beta": "webpack --env.srcDir=_beta",
     "watch": "webpack --watch --env.srcDir=_dev",
     "prepare": "npm run build"
   },
