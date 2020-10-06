@@ -1,9 +1,10 @@
+import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
 import { LocalStorage, Logger } from '@dhruv-techapps/core-common'
 import { BrowserAction } from '@dhruv-techapps/core-extension'
 
 export default class Config {
   processPortMessage ({ href, frameElement }) {
-    const data = LocalStorage.getItem('configs')
+    const data = LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS)
     for (const index in data) {
       const config = data[index]
       if (config && typeof config === 'object' && !Array.isArray(config)) {

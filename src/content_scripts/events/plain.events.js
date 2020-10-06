@@ -1,4 +1,3 @@
-import { Logger } from '@dhruv-techapps/core-common'
 import { RADIO_CHECKBOX_NODENAME } from '../util'
 import CommonEvents from './common.events'
 

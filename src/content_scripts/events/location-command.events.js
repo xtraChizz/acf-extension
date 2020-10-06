@@ -1,4 +1,3 @@
-import { Logger } from '@dhruv-techapps/core-common'
 import { SystemError } from '../error'
 import CommonEvents from './common.events'
 

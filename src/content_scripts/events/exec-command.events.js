@@ -1,4 +1,3 @@
-import { Logger } from '@dhruv-techapps/core-common'
 import CommonEvents from './common.events'
 
 const EXEC_COMMANDS = ['cut', 'copy', 'delete', 'paste', 'selectAll']

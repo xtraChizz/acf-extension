@@ -1,4 +1,3 @@
-import { Logger } from '@dhruv-techapps/core-common'
 import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
@@ -36,7 +35,6 @@ const Action = ((Common) => {
           this.notify(`Invalid column letter "${sheetCol[0]}" in value:${value}`)
           this.error(`Invalid column letter "${sheetCol[0]}" in value:${value}`)
         } else {
-          Logger.log(value, sheetName, rowIndex, colIndex)
           value = window.sheets[sheetName][rowIndex][colIndex]
         }
       } catch (error) {

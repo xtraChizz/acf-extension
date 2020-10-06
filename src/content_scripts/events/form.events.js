@@ -1,7 +1,6 @@
 import { FORM_ELEMENT_NODENAME, FORM_CLEAR_ELEMENT_NODENAME } from '../util'
 import { SystemError, ConfigError } from '../error'
 import CommonEvents from './common.events'
-import { Logger } from '@dhruv-techapps/core-common'
 
 const FORM_EVENTS = ['blur', 'click', 'focus', 'select', 'submit', 'remove', 'clear']
 

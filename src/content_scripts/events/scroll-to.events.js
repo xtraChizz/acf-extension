@@ -1,4 +1,3 @@
-import { Logger } from '@dhruv-techapps/core-common'
 import CommonEvents from './common.events'
 
 const SCROLL_COORDINATES = ['Top', 'Bottom', 'Left', 'Right', 'TopLeft', 'BottomLeft', 'BottomRight', 'TopRight', 'XPath']

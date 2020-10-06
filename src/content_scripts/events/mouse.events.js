@@ -1,4 +1,3 @@
-import { Logger } from '@dhruv-techapps/core-common'
 import CommonEvents from './common.events'
 
 export const MOUSE_EVENTS = ['contextmenu', 'mousedown', 'mouseup', 'pointerdown', 'pointerup', 'dblclick', 'click']

@@ -1,7 +1,6 @@
 import { RADIO_CHECKBOX_NODENAME, SELECT_TEXTAREA_NODENAME, wait } from './util'
 import { ADDON_CONDITIONS } from '@dhruv-techapps/acf-common'
 import { SystemError } from './error'
-import { Logger } from '@dhruv-techapps/core-common'
 import Common from './common'
 
 const Addon = ((Common) => {

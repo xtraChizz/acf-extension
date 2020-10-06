@@ -1,6 +1,6 @@
 /* eslint-disable no-new, no-use-before-define */
 
-import { DateUtil, LocalStorage, Logger, Manifest, RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
+import { DateUtil, LocalStorage, Manifest, RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
 import { Runtime, BrowserAction, GoogleAnalytics } from '@dhruv-techapps/core-extension'
 
@@ -10,6 +10,7 @@ import { TabsMessenger } from './tab'
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 import Sound from './sound'
 import Config from './config'
+import { UpdateData } from './update-data'
 
 (() => {
   try {
@@ -34,15 +35,16 @@ import Config from './config'
      *  On initial install setup basic configuration
      */
     Runtime.onInstalled(() => {
+      UpdateData.checkConfig()
+      UpdateData.checkSettings()
       if (!LocalStorage.getItem(LOCAL_STORAGE_KEY.INSTALL_DATE)) {
         localStorage.setItem(LOCAL_STORAGE_KEY.INSTALL_DATE, DateUtil.getDateWithoutTime().toJSON())
         TabsMessenger.optionsTab({ url: optionsPageUrl })
       }
     })
     /**
-   * setup Google Analytics
-   * TODO Need to check this as well
-   */
+    * Setup Google Analytics
+    */
     new GoogleAnalytics(trackingId)
     GoogleAnalytics.pageView([], console.log)
 
@@ -63,16 +65,18 @@ import Config from './config'
     Runtime.onUpdateAvailable(Runtime.reload)
 
     /**
-  * On start up check for rate
-  * TODO Need to make this up and available
-  */
-    // Runtime.onStartup(() => new Rate('', 5))
+    * On start up check for rate
+    * TODO Need to implement rate us feature
+    */
+    Runtime.onStartup(() => {
+      UpdateData.checkConfig()
+      UpdateData.checkSettings()
+    })
 
     const onMessageListener = { [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(), [RUNTIME_MESSAGE.SOUND]: new Sound() }
     Runtime.onMessageExternal(onMessageListener)
     Runtime.onMessage(onMessageListener)
   } catch (error) {
-    Logger.error(error)
-    // GoogleAnalytics.error({ name: 'background', stack: error.stack })
+    GoogleAnalytics.error({ name: 'Background', stack: error.stack })
   }
 })()
