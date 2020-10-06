@@ -6,14 +6,14 @@ import Common from './common'
 
 const Addon = ((Common) => {
   const _start = async ({ elementFinder, value, condition, retry, retryInterval, valueExtractor }) => {
-    Logger.debug('\t\t\t\t\t Addon >> _start')
+    // Logger.debug('\t\t\t\t\t Addon >> _start')
     const elements = await Common.start(elementFinder)
     const nodeValue = _getNodeValue(elements, valueExtractor)
     return _compare(nodeValue, condition, value) || await _retryFunc({ elementFinder, value, condition, retry, retryInterval, valueExtractor })
   }
 
   const _retryFunc = async ({ elementFinder, value, condition, retry, retryInterval, valueExtractor }) => {
-    Logger.debug('\t\t\t\t\t Addon >> _retryFunc')
+    // Logger.debug('\t\t\t\t\t Addon >> _retryFunc')
     if (retry > 0) {
       retry--
       await wait(retryInterval)
@@ -24,7 +24,7 @@ const Addon = ((Common) => {
   }
 
   const check = async ({ elementFinder, value, condition, ...props }) => {
-    Logger.debug('\t\t\t\t\t Addon >> check')
+    // Logger.debug('\t\t\t\t\t Addon >> check')
     if (elementFinder && value && condition) {
       return await _start({ elementFinder, value, condition, ...props })
     }
@@ -32,7 +32,7 @@ const Addon = ((Common) => {
   }
 
   const _getNodeValue = (elements, valueExtractor) => {
-    Logger.debug('\t\t\t\t\t Addon >> _getNodeValue')
+    // Logger.debug('\t\t\t\t\t Addon >> _getNodeValue')
     const element = elements[0]
     let value
     if (SELECT_TEXTAREA_NODENAME.test(element.nodeName)) {
@@ -54,7 +54,7 @@ const Addon = ((Common) => {
   }
 
   const _compare = (nodeValue, condition, value) => {
-    Logger.debug('\t\t\t\t\t Addon >> _compare')
+    // Logger.debug('\t\t\t\t\t Addon >> _compare')
     switch (condition) {
       case ADDON_CONDITIONS['= Equals']:
         return new RegExp(`^${value}$`, 'gi').test(nodeValue)

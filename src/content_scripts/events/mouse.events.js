@@ -5,7 +5,7 @@ export const MOUSE_EVENTS = ['contextmenu', 'mousedown', 'mouseup', 'pointerdown
 
 export const MouseEvents = ((CommonEvents) => {
   const start = (elements, event) => {
-    Logger.debug('\t\t\t\t\t MouseEvents >> start')
+    // Logger.debug('\t\t\t\t\t MouseEvents >> start')
     const events = CommonEvents.getVerifiedEvents(MOUSE_EVENTS, event)
     CommonEvents.loopElements(elements, events, _dispatchEvent)
   }

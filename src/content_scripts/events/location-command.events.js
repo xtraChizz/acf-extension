@@ -6,7 +6,7 @@ const LOCATION_COMMANDS = ['reload', 'href', 'replace']
 
 export const LocationCommandEvents = ((CommonEvents) => {
   const start = (value) => {
-    Logger.debug('\t\t\t\t\t LocationCommandEvents >> start')
+    // Logger.debug('\t\t\t\t\t LocationCommandEvents >> start')
     const commands = CommonEvents.getVerifiedEvents(LOCATION_COMMANDS, value)
     _execCommand(commands, value)
   }

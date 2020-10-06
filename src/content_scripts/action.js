@@ -9,7 +9,7 @@ const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 const Action = ((Common) => {
   let elements
   const start = async (action, actionIndex, batchIndex) => {
-    Logger.debug('\t\t\t\t Action >> start')
+    // Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait)
     if (await Addon.check(action.addon)) {
       elements = await Common.start(action.elementFinder.replaceAll('<batchIndex>', batchIndex).replaceAll('<actionIndex>', actionIndex))
@@ -20,7 +20,7 @@ const Action = ((Common) => {
   }
 
   const _setValue = (value) => {
-    Logger.debug('\t\t\t\t Action >> _setValue')
+    // Logger.debug('\t\t\t\t Action >> _setValue')
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
@@ -47,7 +47,7 @@ const Action = ((Common) => {
   }
 
   const _checkAction = (value) => {
-    Logger.debug('\t\t\t\t Action >> _checkAction')
+    // Logger.debug('\t\t\t\t Action >> _checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
         ScrollToEvents.start(elements, value)

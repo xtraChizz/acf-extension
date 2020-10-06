@@ -14,7 +14,7 @@ window.addEventListener('load', function () {
 
 async function loadSettings (loadType) {
   try {
-    Logger.debug('INDEX')
+    // Logger.debug('INDEX')
     const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSetting)
     DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
     if (setting.loadType === loadType) {

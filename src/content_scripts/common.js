@@ -5,7 +5,7 @@ import { wait } from './util'
 
 const Common = (() => {
   const start = async (elementFinder) => {
-    Logger.debug('Common >> start')
+    // Logger.debug('Common >> start')
     if (!elementFinder) {
       throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
     }
@@ -18,7 +18,7 @@ const Common = (() => {
   }
 
   const _getElements = async (document, elementFinder, retry, retryInterval) => {
-    Logger.debug('Common >> _getElements')
+    // Logger.debug('Common >> _getElements')
 
     let elements = []
     if (/^(id::|#)/gi.test(elementFinder)) {
@@ -54,7 +54,7 @@ const Common = (() => {
   }
 
   const retryFunc = async (element, retry, retryInterval) => {
-    Logger.debug('Common >> retryFunc')
+    // Logger.debug('Common >> retryFunc')
     if (retry > 0) {
       retry--
       await wait(retryInterval)
@@ -65,7 +65,7 @@ const Common = (() => {
   }
 
   const _checkIframe = (element) => {
-    Logger.debug('Common >> _checkIframe')
+    // Logger.debug('Common >> _checkIframe')
     const iframes = document.getElementsByTagName('iframe')
     let _nodes
     for (let index = 0; index < iframes.length; index++) {
@@ -84,7 +84,7 @@ const Common = (() => {
   }
 
   const _checkRetryOption = (retryOption, element) => {
-    Logger.debug('Common >> _checkRetryOption')
+    // Logger.debug('Common >> _checkRetryOption')
     if (retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         location.reload()

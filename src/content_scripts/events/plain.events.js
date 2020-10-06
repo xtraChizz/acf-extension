@@ -4,7 +4,7 @@ import CommonEvents from './common.events'
 
 export const PlainEvents = ((CommonEvents) => {
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t PlainEvents >> start')
+    // Logger.debug('\t\t\t\t\t PlainEvents >> start')
     value = _checkEmptyValue(value)
     CommonEvents.loopElements(elements, value, _checkNode)
   }

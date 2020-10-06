@@ -6,7 +6,7 @@ const WINDOW_COMMANDS = ['open']
 
 export const WindowCommandEvents = ((CommonEvents) => {
   const start = (value) => {
-    Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
+    // Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
     const commands = CommonEvents.getVerifiedEvents(WINDOW_COMMANDS, value)
     _execCommand(commands, value)
   }

@@ -7,7 +7,7 @@ import { wait } from './util'
 const Batch = (() => {
   let batch, actions
   const start = async (_batch, _actions) => {
-    Logger.debug('\t\t Batch >> start')
+    // Logger.debug('\t\t Batch >> start')
     batch = _batch
     actions = _actions
     await Actions.start(_actions, 1)
@@ -19,7 +19,7 @@ const Batch = (() => {
   }
 
   const _refresh = () => {
-    Logger.debug('\t\t Batch >> _refresh')
+    // Logger.debug('\t\t Batch >> _refresh')
     if (document.readyState === 'complete') {
       location.reload()
     } else {
@@ -30,7 +30,7 @@ const Batch = (() => {
   }
 
   const _checkRepeat = async () => {
-    Logger.debug('\t\t Batch >> _checkRepeat')
+    // Logger.debug('\t\t Batch >> _checkRepeat')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     if (batch.repeat) {
       for (let i = 0; i < batch.repeat; i++) {

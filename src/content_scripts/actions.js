@@ -5,7 +5,7 @@ import Action from './action'
 
 const Actions = (() => {
   const start = async (actions, batchIndex) => {
-    Logger.debug('\t\t\t Actions >> start')
+    // Logger.debug('\t\t\t Actions >> start')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     for (let i = 0; i < actions.length; i++) {
       await Action.start(actions[i], i + 1, batchIndex)

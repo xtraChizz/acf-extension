@@ -8,7 +8,7 @@ import { SoundService } from '@dhruv-techapps/core-common/src/services/sound.ser
 const Config = (() => {
   let config
   const getConfig = async (notifications) => {
-    Logger.debug('\t Config >> getConfig')
+    // Logger.debug('\t Config >> getConfig')
     try {
       config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
       if (config) {
@@ -39,9 +39,9 @@ const Config = (() => {
   }
 
   const _checkStartTime = async () => {
-    Logger.debug('\t Config >> _checkStartTime')
+    // Logger.debug('\t Config >> _checkStartTime')
 
-    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}$/)) {
+    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{2}$/)) {
       await _schedule()
     } else {
       await wait(config.initWait)
@@ -50,11 +50,12 @@ const Config = (() => {
   }
 
   const _schedule = async () => {
-    Logger.debug('\t Config >> _schedule')
+    // Logger.debug('\t Config >> _schedule')
     var rDate = new Date()
     rDate.setHours(Number(config.startTime.split(':')[0]))
     rDate.setMinutes(Number(config.startTime.split(':')[1]))
     rDate.setSeconds(Number(config.startTime.split(':')[2]))
+    rDate.setMilliseconds(Number(config.startTime.split(':')[3]))
     await new Promise(resolve => setTimeout(resolve, rDate.getTime() - new Date().getTime()))
   }
 
