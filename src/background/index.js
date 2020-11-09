@@ -24,9 +24,8 @@ import { UpdateData } from './update-data'
       'config.tracking_id',
       'config.options_page_url'])
     /**
-  * Browser Action set to open option page / configuration page
-  * ? Do check if clicking this it dont open eveytime on new tab
-  */
+    * Browser Action set to open option page / configuration page
+    */
     BrowserAction.onClicked(() => {
       TabsMessenger.optionsTab({ url: optionsPageUrl })
     })

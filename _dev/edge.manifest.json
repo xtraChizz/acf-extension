@@ -1,0 +1,10 @@
+{
+  "name": "Auto Clicker - AutoFill [DEV]",
+  "short_name": "Auto Clicker Edge",
+  "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click spped test",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyBW4jw/OUhZsNYgr40eTORDhV+DfP0kQkSJw6pB0O9+x825fTEn31iMeZMH0q+4vxa/LXlLsCREbMocBduSc/inOCwCfOuoVql6CPeJ5bTL0eTIamszUyuWdSR5KKYu3J37rRHoZvieOgzrk1Zr6Rg9Rza9hc0SYJz5SRvpJHjyBf2b14vZj62E9k3tUHZK+re+ii356bXFDc8eYIFUyPhVS9b0LOSsum0GgQNwcGO59bazmYlQ6VNuFi9aVz+Azkf2QJkG2/V07dWQGgH3PiMi018GQQjDfX4b3RJktk07VEGNkF5qm0WwFQIja3AWSJqshQOeLM7+RIx5bYFEuJwIDAQAB",
+  "version": "3.1.0",
+  "config": {
+    "options_page_url": "https://getautoclicker.com/options_page_dev/index.html"
+  }
+}

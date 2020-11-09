@@ -5,7 +5,6 @@
   "version": "3.0.0",
   "manifest_version": 2,
   "default_locale": "en",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjeqmo6bMN+jknab19l7ZmNOi4EStRTc9es7mV3HfrRhN48AD5VLWx34nbdeiqtWktuYC32WWGrtjQGJHEEtb/svmbXcH5uOf8FiAcqAH1pJfH2jJgX14Q802Wz++Zoas+JTqJvX59vAyXT2SGJkzcqZ/tx6nr0Ucvf3ZpBr8EFWgXu661LMbIpZ7sr9gal3nrQ18tcI466euXgtL/3rSUCLtelsyrUqGbQW0LN1bqY9Xdg+jj5ahPf7ywVKvD036GAjdPuZXa0dWhOIwW+Swe9v6gi50g0XiWf9BBm6SIBXT8N2dRbSixaC3GhQI9oDgChR7z+PpqL6xBb3RCKdkuQIDAQAB",
   "permissions": [
     "notifications",
     "contextMenus",

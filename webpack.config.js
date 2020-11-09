@@ -7,7 +7,8 @@ const ZipPlugin = require('zip-webpack-plugin')
 
 module.exports = env => {
   const srcDir = env ? env.srcDir || '_prod' : '_prod'
-  const manifest = require(`./${srcDir}/manifest.json`)
+  const browser = env ? env.browser || 'chrome' : 'chrome'
+  const manifest = require(`./${srcDir}/${browser}.manifest.json`)
 
   return {
     mode: 'production',
@@ -54,14 +55,14 @@ module.exports = env => {
       new MergeJsonWebpackPlugin({
         files: [
           './src/manifest.json',
-        `./${srcDir}/manifest.json`
+        `./${srcDir}/${browser}.manifest.json`
         ],
         output: {
           fileName: './manifest.json'
         }
       }),
       new ZipPlugin({
-        path: './../build/chrome',
+        path: `./../build/${browser}`,
         filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`,
         zipOptions: {
           forceZip64Format: false

@@ -8,11 +8,14 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
-    "lint:fix": "eslint src webpack.config.js .neutrinorc.js --fix",
+    "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
     "build": "webpack",
     "build:beta": "webpack --env.srcDir=_beta",
+    "build:dev:chrome": "webpack --env.srcDir=_dev --end.browser=chrome",
+    "build:dev:edge": "webpack --env.srcDir=_dev --end.browser=edge",
+    "build:dev": "webpack --env.srcDir=_dev",
     "watch": "webpack --watch --env.srcDir=_dev",
-    "prepare": "npm run build"
+    "prepare": "npm run lint:fix && npm run build"
   },
   "repository": {
     "type": "git",
@@ -31,20 +34,20 @@
   },
   "homepage": "https://github.com/Dhruv-Techapps/acf-extension#readme",
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.1.1",
-    "eslint": "^7.10.0",
+    "copy-webpack-plugin": "^6.2.1",
+    "eslint": "^7.11.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "jest": "^26.4.2",
+    "jest": "^26.6.0",
     "jest-chrome": "^0.7.0",
     "loadash": "^1.0.0",
     "merge-jsons-webpack-plugin": "^1.0.21",
@@ -54,7 +57,7 @@
   },
   "dependencies": {
     "@dhruv-techapps/acf-common": "^1.0.7",
-    "@dhruv-techapps/core-common": "^1.1.56",
+    "@dhruv-techapps/core-common": "^1.1.57",
     "@dhruv-techapps/core-extension": "^1.0.41"
   }
 }
