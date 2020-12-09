@@ -9,11 +9,10 @@
     "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
     "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
-    "build": "webpack",
-    "build:beta": "webpack --env.srcDir=_beta",
+    "build:beta:chrome": "webpack --env.srcDir=_beta --env.browser=chrome",
+    "build:beta:edge": "webpack --env.srcDir=_beta --env.browser=edge",
     "build:dev:chrome": "webpack --env.srcDir=_dev --env.browser=chrome",
     "build:dev:edge": "webpack --env.srcDir=_dev --env.browser=edge",
-    "build:dev": "webpack --env.srcDir=_dev",
     "watch": "webpack --watch --env.srcDir=_dev",
     "prepare": "npm run lint:fix && npm run build"
   },
