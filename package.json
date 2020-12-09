@@ -11,8 +11,8 @@
     "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
     "build": "webpack",
     "build:beta": "webpack --env.srcDir=_beta",
-    "build:dev:chrome": "webpack --env.srcDir=_dev --end.browser=chrome",
-    "build:dev:edge": "webpack --env.srcDir=_dev --end.browser=edge",
+    "build:dev:chrome": "webpack --env.srcDir=_dev --env.browser=chrome",
+    "build:dev:edge": "webpack --env.srcDir=_dev --env.browser=edge",
     "build:dev": "webpack --env.srcDir=_dev",
     "watch": "webpack --watch --env.srcDir=_dev",
     "prepare": "npm run lint:fix && npm run build"
@@ -58,6 +58,6 @@
   "dependencies": {
     "@dhruv-techapps/acf-common": "^1.0.7",
     "@dhruv-techapps/core-common": "^1.1.57",
-    "@dhruv-techapps/core-extension": "^1.0.41"
+    "@dhruv-techapps/core-extension": "^1.0.42"
   }
 }

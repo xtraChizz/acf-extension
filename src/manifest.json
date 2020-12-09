@@ -54,7 +54,7 @@
   "externally_connectable": {
     "matches": [
       "http://localhost:*/*",
-      "https://getautoclicker.com/*"
+      "https://*.getautoclicker.com/*"
     ]
   },
   "web_accessible_resources": [
