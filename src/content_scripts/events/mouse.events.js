@@ -1,6 +1,6 @@
 import CommonEvents from './common.events'
 
-export const MOUSE_EVENTS = ['contextmenu', 'mousedown', 'mouseup', 'pointerdown', 'pointerup', 'dblclick', 'click']
+export const MOUSE_EVENTS = ['contextmenu', 'mousedown', 'mouseup', 'pointerdown', 'pointerup', 'dblclick', 'click', 'mouseover', 'mouseout', 'mouseenter', 'mouseleave', 'mousemove']
 
 export const MouseEvents = ((CommonEvents) => {
   const start = (elements, event) => {
@@ -11,9 +11,9 @@ export const MouseEvents = ((CommonEvents) => {
   const _dispatchEvent = (element, events) => {
     events.forEach(event => {
       if (typeof event === 'string') {
-        element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEvent()))
+        element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
       } else {
-        element.dispatchEvent(new MouseEvent(event.type, { ...CommonEvents.getMouseEvent(), ...event }))
+        element.dispatchEvent(new MouseEvent(event.type, { ...CommonEvents.getMouseEventProperties(), ...event }))
       }
     })
   }

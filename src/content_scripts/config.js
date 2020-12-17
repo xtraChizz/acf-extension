@@ -1,9 +1,8 @@
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
-import { Logger, NotificationsService, Service } from '@dhruv-techapps/core-common'
+import { Logger, NotificationsService, Service, SoundService } from '@dhruv-techapps/core-common'
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
-import { SoundService } from '@dhruv-techapps/core-common/src/services/sound.service'
 
 const Config = (() => {
   let config
@@ -17,7 +16,7 @@ const Config = (() => {
         await _checkStartTime()
         if (notifications.onConfig) {
           NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
-          notifications.sound && new SoundService()
+          notifications.sound && SoundService.play()
         }
         /* } else {
         Logger.warn("All index are process Refresh page to start from first");
@@ -28,7 +27,7 @@ const Config = (() => {
         const error = { title: e.title, message: `url : ${config.url}\n${e.message}` }
         if (notifications.onError) {
           NotificationsService.create(error)
-          notifications.sound && new SoundService()
+          notifications.sound && SoundService.play()
         } else {
           Logger.error(error)
         }

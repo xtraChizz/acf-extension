@@ -41,10 +41,12 @@ const CommonEvents = (() => {
   }
 
   const getMouseEvent = () => {
-    return new MouseEvent('click', { screenX: 10, screenY: 10, clientX: 10, clientY: 10, bubbles: true, cancelable: true, view: window })
+    return new MouseEvent('click', getMouseEventProperties())
   }
 
-  return { getFillEvent, getMouseEvent, loopElements, getVerifiedEvents }
+  const getMouseEventProperties = () => ({ screenX: 10, screenY: 10, clientX: 10, clientY: 10, bubbles: true, cancelable: true, view: window })
+
+  return { getFillEvent, getMouseEvent, getMouseEventProperties, loopElements, getVerifiedEvents }
 })()
 
 export default CommonEvents

@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@dhruv-techapps/acf-common": "^1.0.7",
-    "@dhruv-techapps/core-common": "^1.1.57",
+    "@dhruv-techapps/core-common": "^1.1.59",
     "@dhruv-techapps/core-extension": "^1.0.42"
   }
 }

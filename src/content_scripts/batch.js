@@ -1,6 +1,5 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { DataStore, NotificationsService } from '@dhruv-techapps/core-common'
-import { SoundService } from '@dhruv-techapps/core-common/src/services/sound.service'
+import { DataStore, NotificationsService, SoundService } from '@dhruv-techapps/core-common'
 import Actions from './actions'
 import { wait } from './util'
 
@@ -40,7 +39,7 @@ const Batch = (() => {
         await Actions.start(actions, i + 2)
         if (settings.notifications.onBatch) {
           NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` })
-          settings.notifications.sound && new SoundService()
+          settings.notifications.sound && SoundService.play()
         }
       }
     }
