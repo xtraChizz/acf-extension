@@ -4,6 +4,7 @@
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
+    "watch": "webpack --watch --env.srcDir=_dev",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
@@ -13,7 +14,6 @@
     "build:beta:edge": "webpack --env.srcDir=_beta --env.browser=edge",
     "build:dev:chrome": "webpack --env.srcDir=_dev --env.browser=chrome",
     "build:dev:edge": "webpack --env.srcDir=_dev --env.browser=edge",
-    "watch": "webpack --watch --env.srcDir=_dev",
     "prepare": "npm run lint:fix && npm run build"
   },
   "repository": {

@@ -4,12 +4,12 @@ import { ConfigError } from './error/config-error'
 import { wait } from './util'
 
 const Common = (() => {
-  const start = async (elementFinder) => {
+  const start = async (elementFinder, settings = {}) => {
     // Logger.debug('Common >> start')
     if (!elementFinder) {
       throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
     }
-    const { retryOption, retryInterval, retry } = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
+    const { retryOption, retryInterval, retry } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
     const nodes = await _getElements(document, elementFinder, retry, retryInterval)
     if (!nodes || nodes.snapshotLength === 0) {
       _checkRetryOption(retryOption, elementFinder)

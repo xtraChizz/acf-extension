@@ -22,7 +22,7 @@ const Addon = ((Common) => {
     }
   }
 
-  const check = async ({ elementFinder, value, condition, ...props }) => {
+  const check = async ({ elementFinder, value, condition, ...props } = {}) => {
     // Logger.debug('\t\t\t\t\t Addon >> check')
     if (elementFinder && value && condition) {
       return await _start({ elementFinder, value, condition, ...props })
