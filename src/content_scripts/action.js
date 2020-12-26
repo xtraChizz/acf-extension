@@ -10,7 +10,7 @@ const Action = ((Common) => {
   const start = async (action, actionIndex, batchIndex) => {
     // Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait)
-    if (await Addon.check(action.addon)) {
+    if (await Addon.check(action.addon, action.settings)) {
       const elementFinder = action.elementFinder.replaceAll('<batchIndex>', batchIndex).replaceAll('<actionIndex>', actionIndex)
       elements = await Common.start(elementFinder, action.settings)
       if (elements) {

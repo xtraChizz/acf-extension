@@ -1,24 +1,38 @@
 import { RADIO_CHECKBOX_NODENAME, SELECT_TEXTAREA_NODENAME, wait } from './util'
-import { ADDON_CONDITIONS } from '@dhruv-techapps/acf-common'
-import { SystemError } from './error'
+import { ADDON_CONDITIONS, RECHECK_OPTIONS } from '@dhruv-techapps/acf-common'
+import { ConfigError, SystemError } from './error'
 import Common from './common'
+import { Logger } from '@dhruv-techapps/core-common'
 
 const Addon = ((Common) => {
-  const _start = async ({ elementFinder, value, condition, retry, retryInterval, valueExtractor }) => {
+  const _start = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings) => {
     // Logger.debug('\t\t\t\t\t Addon >> _start')
-    const elements = await Common.start(elementFinder)
+    const elements = await Common.start(elementFinder, settings)
     const nodeValue = _getNodeValue(elements, valueExtractor)
-    return _compare(nodeValue, condition, value) || await _retryFunc({ elementFinder, value, condition, retry, retryInterval, valueExtractor })
+    return _compare(nodeValue, condition, value) || await _recheckFunc({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings)
   }
 
-  const _retryFunc = async ({ elementFinder, value, condition, retry, retryInterval, valueExtractor }) => {
-    // Logger.debug('\t\t\t\t\t Addon >> _retryFunc')
-    if (retry > 0) {
-      retry--
-      await wait(retryInterval)
-      return await _start({ elementFinder, value, condition, retry, retryInterval, valueExtractor })
+  const _recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings = {}) => {
+    // Logger.debug('\t\t\t\t\t Addon >> _recheckFunc')
+    if (recheck > 0) {
+      recheck--
+      await wait(recheckInterval)
+      return await _start({ elementFinder, value, condition, recheck, recheckInterval, valueExtractor })
     } else {
-      return false
+      if (recheckOption === RECHECK_OPTIONS.RELOAD) {
+        if (document.readyState === 'complete') {
+          location.reload()
+        } else {
+          window.addEventListener('load', function () {
+            location.reload()
+          })
+        }
+      } else if (recheckOption === RECHECK_OPTIONS.STOP) {
+        throw new ConfigError(`elementFinder: ${elementFinder}\nvalue: ${value}\ncondition: ${condition}`, 'Not Matched')
+      } else {
+        Logger.info('Value not matched and action is SKIP')
+        return false
+      }
     }
   }
 

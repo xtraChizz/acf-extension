@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSetting } from '@dhruv-techapps/acf-common'
+import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSettings } from '@dhruv-techapps/acf-common'
 import { DataStore, GAService, Logger, StorageService } from '@dhruv-techapps/core-common'
 
 import Config from './config'
@@ -15,7 +15,7 @@ window.addEventListener('load', function () {
 async function loadSettings (loadType) {
   try {
     // Logger.debug('INDEX')
-    const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSetting)
+    const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
     DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
     if (setting.loadType === loadType) {
       await Config.getConfig(setting.notifications)
