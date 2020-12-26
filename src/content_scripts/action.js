@@ -50,7 +50,7 @@ const Action = ((Common) => {
     if (value) {
       if (/^scrollto::/gi.test(value)) {
         ScrollToEvents.start(elements, value)
-      } else if (/^clickevents::/gi.test(value)) {
+      } else if (/^clickevents::/gi.test(value) || /^mouseevents::/gi.test(value)) {
         MouseEvents.start(elements, value)
       } else if (/^events::/gi.test(value)) {
         FormEvents.start(elements, value)
