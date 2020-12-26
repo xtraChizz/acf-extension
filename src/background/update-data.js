@@ -29,10 +29,14 @@ export class UpdateData {
               delete action.xpath
             }
             // Addon Process
-            if (action.addon && action.addon.xpath) {
+            if (action.addon && (action.addon.xpath || action.addon.retry)) {
               isModified = true
               action.addon.elementFinder = action.addon.xpath
+              action.addon.recheck = action.addon.retry
+              action.addon.recheckInterval = action.addon.retryInterval
               delete action.addon.xpath
+              delete action.addon.retry
+              delete action.addon.retryInterval
             }
             return action
           })
@@ -40,7 +44,6 @@ export class UpdateData {
       }
     }
     if (isModified) {
-      console.log(configs)
       LocalStorage.setItem(LOCAL_STORAGE_KEY.CONFIGS, configs)
     }
   }
@@ -74,7 +77,6 @@ export class UpdateData {
       }
     }
     if (isModified) {
-      console.log(settings)
       LocalStorage.setItem(LOCAL_STORAGE_KEY.SETTINGS, settings)
     }
   }
