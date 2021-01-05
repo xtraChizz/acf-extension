@@ -2,7 +2,7 @@ import { RADIO_CHECKBOX_NODENAME, SELECT_TEXTAREA_NODENAME, wait } from './util'
 import { ADDON_CONDITIONS, RECHECK_OPTIONS } from '@dhruv-techapps/acf-common'
 import { ConfigError, SystemError } from './error'
 import Common from './common'
-import { Logger } from '@dhruv-techapps/core-common'
+import { BrowserActionService, Logger } from '@dhruv-techapps/core-common'
 
 const Addon = ((Common) => {
   const _start = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings) => {
@@ -16,7 +16,9 @@ const Addon = ((Common) => {
     // Logger.debug('\t\t\t\t\t Addon >> _recheckFunc')
     if (recheck > 0) {
       recheck--
-      await wait(recheckInterval)
+      BrowserActionService.setBadgeBackgroundColor({ color: [13, 202, 240, 1] })
+      BrowserActionService.setBadgeText({ text: 'Recheck' })
+      await wait(recheckInterval, 'Addon Recheck')
       return await _start({ elementFinder, value, condition, recheck, recheckInterval, valueExtractor })
     } else {
       if (recheckOption === RECHECK_OPTIONS.RELOAD) {

@@ -34,7 +34,7 @@ const Batch = (() => {
     if (batch.repeat) {
       for (let i = 0; i < batch.repeat; i++) {
         if (batch.repeatInterval) {
-          await wait(batch.repeatInterval)
+          await wait(batch.repeatInterval, 'Batch Repeat')
         }
         await Actions.start(actions, i + 2)
         if (settings.notifications.onBatch) {

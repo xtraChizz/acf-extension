@@ -1,4 +1,4 @@
-import { DataStore, Logger } from '@dhruv-techapps/core-common'
+import { BrowserActionService, DataStore, Logger } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 import { ConfigError } from './error/config-error'
 import { wait } from './util'
@@ -57,7 +57,9 @@ const Common = (() => {
     // Logger.debug('Common >> retryFunc')
     if (retry > 0) {
       retry--
-      await wait(retryInterval)
+      BrowserActionService.setBadgeBackgroundColor({ color: [102, 16, 242, 1] })
+      BrowserActionService.setBadgeText({ text: 'Retry' })
+      await wait(retryInterval, 'Retry')
       return await _getElements(document, element, retry, retryInterval)
     } else {
       return _checkIframe(element)
