@@ -6,15 +6,18 @@ import { ExecCommandEvents, FormEvents, LocationCommandEvents, MouseEvents, Plai
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 
 const Action = ((Common) => {
-  let elements
-  const start = async (action, actionIndex, batchIndex) => {
+  let elements, repeat, repeatInterval
+  const start = async (action, batchIndex) => {
     // Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait, 'Action Wait')
     if (await Addon.check(action.addon, action.settings)) {
-      const elementFinder = action.elementFinder.replaceAll('<batchIndex>', batchIndex).replaceAll('<actionIndex>', actionIndex)
+      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchIndex)
       elements = await Common.start(elementFinder, action.settings)
       if (elements) {
-        _checkAction(action.value.replaceAll('<batchIndex>', batchIndex).replaceAll('<actionIndex>', actionIndex))
+        repeat = action.repeat - 1
+        repeatInterval = action.repeatInterval
+        const value = action.value.replaceAll('<batchRepeat>', batchIndex)
+        await _checkAction(value)
       }
     }
   }
@@ -45,7 +48,7 @@ const Action = ((Common) => {
     this.value = value
   }
 
-  const _checkAction = (value) => {
+  const _checkAction = async (value) => {
     // Logger.debug('\t\t\t\t Action >> _checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
@@ -63,6 +66,16 @@ const Action = ((Common) => {
       }
     } else {
       MouseEvents.start(elements, 'ClickEvents::click')
+    }
+    await _repeatFunc(value)
+  }
+
+  const _repeatFunc = async (value) => {
+    // Logger.debug('\t\t\t\t Action >> _repeatFunc')
+    if (repeat > 0 || repeat < -1) {
+      repeat--
+      await wait(repeatInterval, 'Action Repeat')
+      _checkAction(value)
     }
   }
 

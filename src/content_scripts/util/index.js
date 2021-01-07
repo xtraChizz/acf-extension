@@ -3,14 +3,14 @@ import { Logger } from '@dhruv-techapps/core-common'
 export const sleep = async (msec) => {
   return new Promise(resolve => setTimeout(resolve, msec))
 }
-export const wait = async (initWait, type = '') => {
-  if (initWait) {
-    let waitTime = Number(initWait) * 1000
-    if (/\d+e\d+/.test(initWait.toString())) {
-      const range = initWait.toString().split('e')
+export const wait = async (wait, type = '') => {
+  if (wait) {
+    let waitTime = Number(wait) * 1000
+    if (/\d+e\d+/.test(wait.toString())) {
+      const range = wait.toString().split('e')
       waitTime = (Math.floor(Math.random() * parseInt(range[1])) + parseInt(range[0])) * 1000
     }
-    Logger.debug(`${type} waiting... ${waitTime / 1000} sec`)
+    Logger.info(`${type} waiting... ${waitTime / 1000} sec`)
     await sleep(waitTime)
   }
 }
