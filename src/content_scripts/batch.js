@@ -32,7 +32,7 @@ const Batch = (() => {
     // Logger.debug('\t\t Batch >> _checkRepeat')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     if (batch.repeat) {
-      for (let i = 0; i < batch.repeat; i++) {
+      for (let i = 1; i < batch.repeat; i++) {
         if (batch.repeatInterval) {
           await wait(batch.repeatInterval, 'Batch Repeat')
         }

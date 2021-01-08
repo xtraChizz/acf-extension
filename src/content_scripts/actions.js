@@ -10,7 +10,7 @@ const Actions = (() => {
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: `${batchIndex}-${i + 1}` })
       BrowserActionService.setTitle({ title: `Batch:${batchIndex} Action:${i + 1}` })
-      await Action.start(actions[i], i + 1, batchIndex)
+      await Action.start(actions[i], batchIndex)
       if (settings.notifications.onAction) {
         NotificationsService.create({ title: 'Action Completed', message: actions[i].elementFinder })
         settings.notifications.sound && SoundService.play()

@@ -4,7 +4,7 @@
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --watch --env.srcDir=_dev",
+    "start": "webpack --watch --env.srcDir=_dev",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
