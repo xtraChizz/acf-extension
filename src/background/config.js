@@ -9,14 +9,14 @@ export default class Config {
       const config = data[index]
       if (config && typeof config === 'object' && !Array.isArray(config)) {
         if (config.enable && config.url && this._urlMatcher(config.url, href)) {
-          BrowserAction.setIcon({ path: 'assets/icons/icon64.png' })
+          BrowserAction.setIcon({ path: 'assets/icons/icon64.png' }, () => {})
           return { result: config }
         }
       }
     }
 
     if (!frameElement) {
-      BrowserAction.setIcon({ path: 'assets/icons/icon_black64.png' })
+      BrowserAction.setIcon({ path: 'assets/icons/icon_black64.png' }, () => {})
     }
 
     Logger.log(`No configs Found ${URL}`)
