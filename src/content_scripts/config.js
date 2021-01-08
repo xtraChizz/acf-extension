@@ -3,26 +3,32 @@ import { BrowserActionService, Logger, NotificationsService, Service, SoundServi
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
+import { Hotkey } from './hotkey'
 
 const Config = (() => {
-  let config
-  const getConfig = async (notifications) => {
+  let config, notifications
+  const getConfig = async (notificationsProp) => {
     // Logger.debug('\t Config >> getConfig')
-    try {
-      config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
-      if (config) {
-        // dataStore.setItem(LOCAL_STORAGE_KEY.SHEETS, record.sheets)
-        // if (processIndex(response.record)) {
+    notifications = notificationsProp
+    config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
+    if (config) {
+      if (config.startManually && config.hotkey) {
+        Hotkey.setup(config.hotkey, _start)
+      } else {
         await _checkStartTime()
-        BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
-        BrowserActionService.setBadgeText({ text: 'Done' })
-        if (notifications.onConfig) {
-          NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
-          notifications.sound && SoundService.play()
-        }
-        /* } else {
-        Logger.warn("All index are process Refresh page to start from first");
-       } */
+        _start()
+      }
+    }
+  }
+
+  const _start = async () => {
+    try {
+      await Batch.start(config.batch, config.actions)
+      BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
+      BrowserActionService.setBadgeText({ text: 'Done' })
+      if (notifications.onConfig) {
+        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
+        notifications.sound && SoundService.play()
       }
     } catch (e) {
       if (e instanceof ConfigError) {
@@ -49,7 +55,6 @@ const Config = (() => {
     } else {
       await wait(config.initWait, 'Configuration')
     }
-    await Batch.start(config.batch, config.actions)
   }
 
   const _schedule = async () => {
