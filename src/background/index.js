@@ -24,6 +24,12 @@ import { UpdateData } from './update-data'
       'config.tracking_id',
       'config.options_page_url'])
     /**
+    * Setup Google Analytics
+    */
+    new GoogleAnalytics(trackingId)
+    GoogleAnalytics.pageView([], console.log)
+
+    /**
     * Browser Action set to open option page / configuration page
     */
     BrowserAction.onClicked(() => {
@@ -41,11 +47,6 @@ import { UpdateData } from './update-data'
         TabsMessenger.optionsTab({ url: optionsPageUrl })
       }
     })
-    /**
-    * Setup Google Analytics
-    */
-    new GoogleAnalytics(trackingId)
-    GoogleAnalytics.pageView([], console.log)
 
     /**
    * Setup Unintall action
@@ -76,6 +77,7 @@ import { UpdateData } from './update-data'
     Runtime.onMessageExternal(onMessageListener)
     Runtime.onMessage(onMessageListener)
   } catch (error) {
-    GoogleAnalytics.error({ name: 'Background', stack: error.stack })
+    console.error(error)
+    GoogleAnalytics.error({ error }, () => {})
   }
 })()
