@@ -33,7 +33,7 @@ const Action = ((Common) => {
           this.notify(`Sheet "${sheetName}" not found`)
           this.error(`Sheet "${sheetName}" not found`)
         } else if (!window.sheets[sheetName][rowIndex]) {
-          this.notify(`Sheet "${sheetName}" dont have Row ${rowIndex}`)
+          this.notify(`Sheet "${sheetName}" do not have Row ${rowIndex}`)
           this.error(`Sheet "${sheetName}" not found`)
         } else if (colIndex < 0 || colIndex > 25) {
           this.notify(`Invalid column letter "${sheetCol[0]}" in value:${value}`)

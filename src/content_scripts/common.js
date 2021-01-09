@@ -9,15 +9,15 @@ const Common = (() => {
     if (!elementFinder) {
       throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
     }
-    const { retryOption, retryInterval, retry } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
-    const nodes = await _getElements(document, elementFinder, retry, retryInterval)
+    const { retryOption, retryInterval, retry, checkiFrames } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
+    const nodes = await _getElements(document, elementFinder, retry, retryInterval, checkiFrames)
     if (!nodes || nodes.snapshotLength === 0) {
       _checkRetryOption(retryOption, elementFinder)
     }
     return nodes
   }
 
-  const _getElements = async (document, elementFinder, retry, retryInterval) => {
+  const _getElements = async (document, elementFinder, retry, retryInterval, checkiFrames) => {
     // Logger.debug('Common >> _getElements')
 
     let elements = []
@@ -50,10 +50,10 @@ const Common = (() => {
     } else {
       throw new ConfigError(`elementFinder: ${elementFinder}`, 'Invalid Element Finder')
     }
-    return elements.length ? elements : await retryFunc(elementFinder, retry, retryInterval)
+    return elements.length ? elements : await retryFunc(elementFinder, retry, retryInterval, checkiFrames)
   }
 
-  const retryFunc = async (element, retry, retryInterval) => {
+  const retryFunc = async (element, retry, retryInterval, checkiFrames) => {
     // Logger.debug('Common >> retryFunc')
     if (retry > 0) {
       retry--
@@ -61,28 +61,32 @@ const Common = (() => {
       BrowserActionService.setBadgeText({ text: 'Retry' })
       await wait(retryInterval, 'Retry')
       return await _getElements(document, element, retry, retryInterval)
-    } else {
+    } else if (checkiFrames) {
       return _checkIframe(element)
     }
   }
 
   const _checkIframe = (element) => {
     // Logger.debug('Common >> _checkIframe')
-    const iframes = document.getElementsByTagName('iframe')
+    const iFrames = document.getElementsByTagName('iframe')
+    const elements = []
     let _nodes
-    for (let index = 0; index < iframes.length; index++) {
+    for (let index = 0; index < iFrames.length; index++) {
       if (_nodes && _nodes.snapshotLength !== 0) {
+        let i = 0
+        while (i < _nodes.snapshotLength) {
+          elements.push(_nodes.snapshotItem(i++))
+        }
         break
       }
-
-      const contentDocument = iframes[index].contentDocument
-      if (contentDocument) {
-        _nodes = document.evaluate(element, contentDocument, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-      } else {
-        throw new Error('contentDocument is null for iframe')
+      if (iFrames[index].src === 'about:blank') {
+        const contentDocument = iFrames[index].contentDocument
+        if (contentDocument) {
+          _nodes = document.evaluate(element, contentDocument, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+        }
       }
     }
-    return _nodes
+    return elements.length ? elements : undefined
   }
 
   const _checkRetryOption = (retryOption, element) => {
