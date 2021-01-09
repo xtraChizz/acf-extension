@@ -7,16 +7,16 @@ const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 
 const Action = ((Common) => {
   let elements, repeat, repeatInterval
-  const start = async (action, batchIndex) => {
+  const start = async (action, batchRepeat) => {
     // Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait, 'Action Wait')
     if (await Addon.check(action.addon, action.settings)) {
-      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchIndex)
+      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
       elements = await Common.start(elementFinder, action.settings)
       if (elements) {
         repeat = action.repeat - 1
         repeatInterval = action.repeatInterval
-        const value = action.value.replaceAll('<batchRepeat>', batchIndex)
+        const value = action.value.replaceAll('<batchRepeat>', batchRepeat)
         await _checkAction(value)
       }
     }
@@ -65,7 +65,9 @@ const Action = ((Common) => {
         PlainEvents.start(elements, value)
       }
     } else {
-      MouseEvents.start(elements, 'ClickEvents::click')
+      for (const element of elements) {
+        element.click()
+      }
     }
     await _repeatFunc(value)
   }

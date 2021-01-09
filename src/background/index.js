@@ -49,7 +49,7 @@ import { UpdateData } from './update-data'
     })
 
     /**
-   * Setup Unintall action
+   * Setup Uninstall action
    */
     Runtime.setUninstallURL(uninstallUrl)
 

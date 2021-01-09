@@ -16,6 +16,8 @@ export const PlainEvents = ((CommonEvents) => {
     if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODENAME.test(element.type))) {
       element.value = value
       element.dispatchEvent(CommonEvents.getFillEvent())
+    } else if (element.nodeName === 'DIV' && element.isContentEditable) {
+      element.textContent = value
     } else {
       element.dispatchEvent(CommonEvents.getMouseEvent())
     }

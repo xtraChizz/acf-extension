@@ -4,26 +4,39 @@ import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
 import { Hotkey } from './hotkey'
+import { defaultSettings } from '@dhruv-techapps/acf-common'
 
 const Config = (() => {
   let config
   const getConfig = async ({ notifications: { onConfig, onError, sound }, hotkey }) => {
+    // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
+    config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
+    if (config) {
+      if (config.startManually) {
+        // Logger.debug('\t Config >> start Manually')
+        BrowserActionService.setBadgeText({ text: 'Manual' })
+        BrowserActionService.setTitle({ title: 'Start Manually' })
+        Hotkey.setup(hotkey || defaultSettings.hotkey, _start.bind(this, onConfig, onError, sound))
+      } else {
+        // Logger.debug('\t Config >> start Automatically')
+        BrowserActionService.setBadgeText({ text: 'Auto' })
+        BrowserActionService.setTitle({ title: 'Start Automatically' })
+        await _checkStartTime()
+        _start(onConfig, onError, sound)
+      }
+    }
+  }
+
+  const _start = async (onConfig, onError, sound) => {
+    // Logger.debug('\t Config >> _start')
     try {
-    // Logger.debug('\t Config >> getConfig')
-      config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
-      if (config) {
-        if (config.startManually) {
-          Hotkey.setup(hotkey, _start)
-        } else {
-          await _checkStartTime()
-          _start()
-        }
-        BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
-        BrowserActionService.setBadgeText({ text: 'Done' })
-        if (onConfig) {
-          NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
-          sound && SoundService.play()
-        }
+      await Batch.start(config.batch, config.actions)
+      // Logger.debug('\t Config >> _start >> done')
+      BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
+      BrowserActionService.setBadgeText({ text: 'Done' })
+      if (onConfig) {
+        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
+        sound && SoundService.play()
       }
     } catch (e) {
       if (e instanceof ConfigError) {
@@ -40,10 +53,6 @@ const Config = (() => {
         throw e
       }
     }
-  }
-
-  const _start = async () => {
-    await Batch.start(config.batch, config.actions)
   }
 
   const _checkStartTime = async () => {

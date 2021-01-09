@@ -3,14 +3,14 @@ import { BrowserActionService, DataStore, NotificationsService, SoundService } f
 import Action from './action'
 
 const Actions = (() => {
-  const start = async (actions, batchIndex) => {
+  const start = async (actions, batchRepeat) => {
     // Logger.debug('\t\t\t Actions >> start')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     for (let i = 0; i < actions.length; i++) {
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
-      BrowserActionService.setBadgeText({ text: `${batchIndex}-${i + 1}` })
-      BrowserActionService.setTitle({ title: `Batch:${batchIndex} Action:${i + 1}` })
-      await Action.start(actions[i], batchIndex)
+      BrowserActionService.setBadgeText({ text: `${batchRepeat}-${i}` })
+      BrowserActionService.setTitle({ title: `Batch:${batchRepeat} Action:${i}` })
+      await Action.start(actions[i], batchRepeat)
       if (settings.notifications.onAction) {
         NotificationsService.create({ title: 'Action Completed', message: actions[i].elementFinder })
         settings.notifications.sound && SoundService.play()

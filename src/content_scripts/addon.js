@@ -58,6 +58,8 @@ const Addon = ((Common) => {
       } else {
         value = element.value
       }
+    } else if (element.nodeName === 'DIV' && element.isContentEditable) {
+      value = element.textContent
     } else {
       value = element.innerText
     }

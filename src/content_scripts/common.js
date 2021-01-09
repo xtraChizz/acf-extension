@@ -89,7 +89,7 @@ const Common = (() => {
     return elements.length ? elements : undefined
   }
 
-  const _checkRetryOption = (retryOption, element) => {
+  const _checkRetryOption = (retryOption, elementFinder) => {
     // Logger.debug('Common >> _checkRetryOption')
     if (retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
@@ -100,9 +100,9 @@ const Common = (() => {
         })
       }
     } else if (retryOption === RETRY_OPTIONS.STOP) {
-      throw new ConfigError(`elementFinder: ${element}`, 'Not Found')
+      throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found')
     } else {
-      Logger.info('Element not found and action is SKIP')
+      Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
     }
   }
 

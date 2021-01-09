@@ -9,7 +9,7 @@ const Batch = (() => {
     // Logger.debug('\t\t Batch >> start')
     batch = _batch
     actions = _actions
-    await Actions.start(_actions, 1)
+    await Actions.start(_actions, 0)
     if (batch.refresh) {
       _refresh()
     } else {
@@ -32,11 +32,11 @@ const Batch = (() => {
     // Logger.debug('\t\t Batch >> _checkRepeat')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     if (batch.repeat) {
-      for (let i = 1; i < batch.repeat; i++) {
+      for (let i = 0; i < batch.repeat; i++) {
         if (batch.repeatInterval) {
           await wait(batch.repeatInterval, 'Batch Repeat')
         }
-        await Actions.start(actions, i + 2)
+        await Actions.start(actions, i + 1)
         if (settings.notifications.onBatch) {
           NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` })
           settings.notifications.sound && SoundService.play()

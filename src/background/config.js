@@ -17,9 +17,8 @@ export default class Config {
 
     if (!frameElement) {
       BrowserAction.setIcon({ path: 'assets/icons/icon_black64.png' }, () => {})
+      Logger.log(`No configs Found ${href}`)
     }
-
-    Logger.log(`No configs Found ${URL}`)
     return {}
   }
 
