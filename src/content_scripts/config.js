@@ -6,38 +6,33 @@ import { ConfigError } from './error'
 import { Hotkey } from './hotkey'
 
 const Config = (() => {
-  let config, notifications
-  const getConfig = async (notificationsProp) => {
-    // Logger.debug('\t Config >> getConfig')
-    notifications = notificationsProp
-    config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
-    if (config) {
-      if (config.startManually && config.hotkey) {
-        Hotkey.setup(config.hotkey, _start)
-      } else {
-        await _checkStartTime()
-        _start()
-      }
-    }
-  }
-
-  const _start = async () => {
+  let config
+  const getConfig = async ({ notifications: { onConfig, onError, sound }, hotkey }) => {
     try {
-      await Batch.start(config.batch, config.actions)
-      BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
-      BrowserActionService.setBadgeText({ text: 'Done' })
-      if (notifications.onConfig) {
-        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
-        notifications.sound && SoundService.play()
+    // Logger.debug('\t Config >> getConfig')
+      config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.frameElement })
+      if (config) {
+        if (config.startManually) {
+          Hotkey.setup(hotkey, _start)
+        } else {
+          await _checkStartTime()
+          _start()
+        }
+        BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
+        BrowserActionService.setBadgeText({ text: 'Done' })
+        if (onConfig) {
+          NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
+          sound && SoundService.play()
+        }
       }
     } catch (e) {
       if (e instanceof ConfigError) {
         const error = { title: e.title, message: `url : ${config.url}\n${e.message}` }
         BrowserActionService.setBadgeBackgroundColor({ color: [220, 53, 69, 1] })
         BrowserActionService.setBadgeText({ text: 'Error' })
-        if (notifications.onError) {
+        if (onError) {
           NotificationsService.create(error)
-          notifications.sound && SoundService.play()
+          sound && SoundService.play()
         } else {
           Logger.error(error)
         }
@@ -47,9 +42,12 @@ const Config = (() => {
     }
   }
 
+  const _start = async () => {
+    await Batch.start(config.batch, config.actions)
+  }
+
   const _checkStartTime = async () => {
     // Logger.debug('\t Config >> _checkStartTime')
-
     if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{2}$/)) {
       await _schedule()
     } else {

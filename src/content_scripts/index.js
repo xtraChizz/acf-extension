@@ -20,7 +20,7 @@ async function loadSettings (loadType) {
     const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
     DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
     if (setting.loadType === loadType) {
-      await Config.getConfig(setting.notifications)
+      await Config.getConfig(setting)
     }
   } catch (e) {
     Logger.error(e)
