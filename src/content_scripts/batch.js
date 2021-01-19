@@ -4,12 +4,13 @@ import Actions from './actions'
 import { wait } from './util'
 
 const Batch = (() => {
-  let batch, actions
-  const start = async (_batch, _actions) => {
+  let batch, actions, sheets
+  const start = async (_batch, _actions, _sheets) => {
     // Logger.debug('\t\t Batch >> start')
     batch = _batch
     actions = _actions
-    await Actions.start(_actions, 0)
+    sheets = _sheets
+    await Actions.start(_actions, 0, sheets)
     if (batch.refresh) {
       _refresh()
     } else {
@@ -36,7 +37,7 @@ const Batch = (() => {
         if (batch.repeatInterval) {
           await wait(batch.repeatInterval, 'Batch Repeat')
         }
-        await Actions.start(actions, i + 1)
+        await Actions.start(actions, i + 1, sheets)
         if (settings.notifications.onBatch) {
           NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` })
           settings.notifications.sound && SoundService.play()

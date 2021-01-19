@@ -2,12 +2,14 @@ import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
 import { ExecCommandEvents, FormEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents } from './events'
+import { ConfigError } from './error'
+import { GAService, Logger } from '@dhruv-techapps/core-common'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
 
 const Action = ((Common) => {
   let elements, repeat, repeatInterval
-  const start = async (action, batchRepeat) => {
+  const start = async (action, batchRepeat, sheets) => {
     // Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait, 'Action Wait')
     if (await Addon.check(action.addon, action.settings)) {
@@ -16,36 +18,36 @@ const Action = ((Common) => {
       if (elements) {
         repeat = action.repeat - 1
         repeatInterval = action.repeatInterval
-        const value = action.value.replaceAll('<batchRepeat>', batchRepeat)
+        const value = _getValue(action.value, batchRepeat, sheets)
         await _checkAction(value)
       }
     }
   }
 
-  const _setValue = (value) => {
+  const _getValue = (value, batchRepeat, sheets) => {
     // Logger.debug('\t\t\t\t Action >> _setValue')
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
-        const rowIndex = sheetCol[1] === '$' ? window.dataEntryIndex : parseInt(sheetCol[1])
+        const rowIndex = sheetCol[1] === '$' ? batchRepeat : parseInt(sheetCol[1])
         const colIndex = sheetCol[0].charCodeAt(0) - 65
-        if (!window.sheets[sheetName]) {
-          this.notify(`Sheet "${sheetName}" not found`)
-          this.error(`Sheet "${sheetName}" not found`)
-        } else if (!window.sheets[sheetName][rowIndex]) {
-          this.notify(`Sheet "${sheetName}" do not have Row ${rowIndex}`)
-          this.error(`Sheet "${sheetName}" not found`)
+        if (!sheets[sheetName]) {
+          throw new ConfigError(`Sheet: "${sheetName}" not found!`, 'Sheet not found')
+        } else if (!sheets[sheetName][rowIndex]) {
+          throw new ConfigError(`Sheet "${sheetName}" do not have Row ${rowIndex}`, 'Sheet row not found')
         } else if (colIndex < 0 || colIndex > 25) {
-          this.notify(`Invalid column letter "${sheetCol[0]}" in value:${value}`)
-          this.error(`Invalid column letter "${sheetCol[0]}" in value:${value}`)
+          throw new ConfigError(`Invalid column letter "${sheetCol[0]}" in value:${value}`, 'Sheet column invalid')
         } else {
-          value = window.sheets[sheetName][rowIndex][colIndex]
+          value = sheets[sheetName][rowIndex][colIndex]
         }
-      } catch (error) {
-        this.error(error)
+      } catch (e) {
+        Logger.error(e)
+        GAService.error({ name: e.name, stack: e.stack })
       }
+    } else {
+      value = value.replaceAll('<batchRepeat>', batchRepeat)
     }
-    this.value = value
+    return value
   }
 
   const _checkAction = async (value) => {
@@ -81,7 +83,7 @@ const Action = ((Common) => {
     }
   }
 
-  return { start, _setValue }
+  return { start }
 })(Common)
 
 export default Action
