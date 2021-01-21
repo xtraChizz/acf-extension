@@ -46,7 +46,9 @@ const CommonEvents = (() => {
 
   const getMouseEventProperties = () => ({ screenX: 10, screenY: 10, clientX: 10, clientY: 10, bubbles: true, cancelable: true, view: window })
 
-  return { getFillEvent, getMouseEvent, getMouseEventProperties, loopElements, getVerifiedEvents }
+  const getKeyboardEventProperties = ({ key = '', code = '', location = 0, ctrlKey = false, shiftKey = false, altKey = false, metaKey = false, repeat = false, isComposing = false, charCode = 0, keyCode = 0, which = 0 }) => ({ key, code, location, ctrlKey, shiftKey, altKey, metaKey, repeat, isComposing, charCode, keyCode, which })
+
+  return { getFillEvent, getMouseEvent, getMouseEventProperties, getKeyboardEventProperties, loopElements, getVerifiedEvents }
 })()
 
 export default CommonEvents

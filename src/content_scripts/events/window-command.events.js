@@ -18,7 +18,7 @@ export const WindowCommandEvents = ((CommonEvents) => {
           window.open(values[2], values[3] || '_blank')
           break
         default:
-          throw new SystemError('Unhandled Event', event)
+          throw new SystemError('Unhandled Event', command)
       }
     })
   }
