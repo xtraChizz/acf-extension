@@ -5,14 +5,25 @@ import { BrowserAction } from '@dhruv-techapps/core-extension'
 export default class Config {
   processPortMessage ({ href, frameElement }) {
     const data = LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS)
+    let result
+    let fullMatch = false
     for (const index in data) {
       const config = data[index]
       if (config && typeof config === 'object' && !Array.isArray(config)) {
-        if (config.enable && config.url && this._urlMatcher(config.url, href)) {
-          BrowserAction.setIcon({ path: 'assets/icons/icon64.png' }, () => {})
-          return { result: config }
+        if (config.enable && config.url) {
+          if (!result && this._urlMatcher(config.url, href)) {
+            result = config
+          }
+          if (!fullMatch && config.url === href) {
+            result = config
+            fullMatch = true
+          }
         }
       }
+    }
+    if (result) {
+      BrowserAction.setIcon({ path: 'assets/icons/icon64.png' }, () => {})
+      return { result }
     }
 
     if (!frameElement) {
@@ -23,7 +34,7 @@ export default class Config {
   }
 
   _urlMatcher (url, href) {
-    return url === href || new RegExp(this._escape(url)).test(href) || href.indexOf(url) !== -1
+    return new RegExp(this._escape(url)).test(href) || href.indexOf(url) !== -1
   }
 
   _escape (url) {
