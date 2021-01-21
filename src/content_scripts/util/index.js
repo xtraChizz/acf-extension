@@ -6,9 +6,9 @@ export const sleep = async (msec) => {
 export const wait = async (wait, type = '') => {
   if (wait) {
     let waitTime = Number(wait) * 1000
-    if (/\d+e\d+/.test(wait.toString())) {
+    if (/^\d+(\.\d+)?e\d+(\.\d+)?$/.test(wait.toString())) {
       const range = wait.toString().split('e')
-      waitTime = (Math.floor(Math.random() * parseInt(range[1])) + parseInt(range[0])) * 1000
+      waitTime = (Math.floor(Math.random() * Number(range[1])) + Number(range[0])) * 1000
     }
     Logger.info(`${type} waiting... ${waitTime / 1000} sec`)
     await sleep(waitTime)
