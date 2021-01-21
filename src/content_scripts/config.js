@@ -1,10 +1,10 @@
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
-import { BrowserActionService, Logger, NotificationsService, Service, SoundService } from '@dhruv-techapps/core-common'
+import { BrowserActionService, Logger, NotificationsService, Service, SoundService, StorageService } from '@dhruv-techapps/core-common'
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
 import { Hotkey } from './hotkey'
-import { defaultSettings } from '@dhruv-techapps/acf-common'
+import { defaultSettings, LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
 
 const Config = (() => {
   let config
@@ -30,7 +30,8 @@ const Config = (() => {
   const _start = async (onConfig, onError, sound) => {
     // Logger.debug('\t Config >> _start')
     try {
-      await Batch.start(config.batch, config.actions)
+      const sheets = await StorageService.getItem(LOCAL_STORAGE_KEY.SHEETS, [])
+      await Batch.start(config.batch, config.actions, _processSheets(sheets))
       // Logger.debug('\t Config >> _start >> done')
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: 'Done' })
@@ -53,6 +54,16 @@ const Config = (() => {
         throw e
       }
     }
+  }
+
+  const _processSheets = (_sheets) => {
+    const sheets = {}
+    if (Array.isArray(_sheets)) {
+      for (const sheet of _sheets) {
+        sheets[sheet.name] = sheet.rows
+      }
+    }
+    return sheets
   }
 
   const _checkStartTime = async () => {
