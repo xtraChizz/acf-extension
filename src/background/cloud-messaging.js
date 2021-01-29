@@ -6,14 +6,16 @@ export default class CloudMessaging {
   processPortMessage ({ notification }) {
     try {
       const { pushNotificationKey: to } = LocalStorage.getItem(LOCAL_STORAGE_KEY.SETTINGS)
-      const {
-        'config.cypher': cypher,
-        'config.gcm_url': url
-      } = Manifest.values(['config.cypher', 'config.gcm_url'])
-      this.postData(url, { to, notification }, `key=${cypher}`).then(console.log).catch(error => {
-        console.error(error)
-        GoogleAnalytics.error({ error }, () => {})
-      })
+      if (to) {
+        const {
+          'config.cypher': cypher,
+          'config.gcm_url': url
+        } = Manifest.values(['config.cypher', 'config.gcm_url'])
+        this.postData(url, { to, notification }, `key=${cypher}`).then(console.log).catch(error => {
+          console.error(error)
+          GoogleAnalytics.error({ error }, () => {})
+        })
+      }
       return {}
     } catch (error) {
       console.error(error)
