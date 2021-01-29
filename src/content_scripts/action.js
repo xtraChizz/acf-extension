@@ -1,7 +1,7 @@
 import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
-import { ExecCommandEvents, FormEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents, KeyEvents } from './events'
+import { FormEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents, KeyEvents } from './events'
 import { ConfigError } from './error'
 import { GAService, Logger } from '@dhruv-techapps/core-common'
 
@@ -59,8 +59,6 @@ const Action = ((Common) => {
         MouseEvents.start(elements, value)
       } else if (/^events::/gi.test(value)) {
         FormEvents.start(elements, value)
-      } else if (/^execcommand::/gi.test(value)) {
-        ExecCommandEvents.start(elements, value)
       } else if (/^locationcommand::/gi.test(value)) {
         LocationCommandEvents.start(value)
       } else if (/^keyevents::/gi.test(value)) {
