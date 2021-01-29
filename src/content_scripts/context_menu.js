@@ -23,7 +23,7 @@ export const ContextMenu = (() => {
         return `//*[@id="${node.id}"]`
       }
       if (node === document.body) {
-        return `html/${node.tagName.toLowerCase()}`
+        return `/html/${node.tagName.toLowerCase()}`
       }
       var index = 1
       var siblings = node.parentNode.childNodes

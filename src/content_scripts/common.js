@@ -35,7 +35,7 @@ const Common = (() => {
       elements = element ? [element] : []
     } else if (/^SelectorAll::/gi.test(elementFinder)) {
       elements = document.querySelectorAll(elementFinder.replace(/^SelectorAll::/gi, ''))
-    } else if (/^(\/\/|html)/gi.test(elementFinder)) {
+    } else if (/^(\/\/|\/html|html)/gi.test(elementFinder)) {
       try {
         const nodes = document.evaluate(elementFinder, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
         if (nodes.snapshotLength !== 0) {
