@@ -1,5 +1,5 @@
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
-import { BrowserActionService, Logger, NotificationsService, Service, SoundService, StorageService } from '@dhruv-techapps/core-common'
+import { BrowserActionService, CloudMessagingService, Logger, NotificationsService, Service, SoundService, StorageService } from '@dhruv-techapps/core-common'
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
@@ -35,6 +35,7 @@ const Config = (() => {
       // Logger.debug('\t Config >> _start >> done')
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: 'Done' })
+      CloudMessagingService.push({ title: 'Configuration Finished', body: config.name || config.url }).catch(console.error)
       if (onConfig) {
         NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
         sound && SoundService.play()
@@ -44,6 +45,7 @@ const Config = (() => {
         const error = { title: e.title, message: `url : ${config.url}\n${e.message}` }
         BrowserActionService.setBadgeBackgroundColor({ color: [220, 53, 69, 1] })
         BrowserActionService.setBadgeText({ text: 'Error' })
+        CloudMessagingService.push({ title: 'Configuration Error', body: config.name || config.url }).catch(console.error)
         if (onError) {
           NotificationsService.create(error)
           sound && SoundService.play()

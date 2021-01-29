@@ -15,7 +15,9 @@
   "config": {
     "uninstall_url": "https://forms.gle/J2iXx49dQNiZYvLK9",
     "tracking_id": "UA-111423401-5",
-    "options_page_url": "https://getautoclicker.com/options_page_lite/index.html"
+    "options_page_url": "https://getautoclicker.com/options_page_lite/index.html",
+    "cypher": "AAAA-LSZpms:APA91bH_W7DqpxTpImhFO8QP5oHh_j7i-qd4bt1BPvvXmr_nd2Vg16eehdJMOejAiXGzKWz349W0KZB5zfjP9Dv0bFjtlL230jDw6ShkcHu8O4YZLYPwOrNMua6Y0osW3zSEjX1DS-kT",
+    "gcm_url": "https://fcm.googleapis.com/fcm/send"
   },
   "browser_specific_settings": {
     "gecko": {

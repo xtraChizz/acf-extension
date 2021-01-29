@@ -11,6 +11,7 @@ import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 import Sound from './sound'
 import Config from './config'
 import { UpdateData } from './update-data'
+import CloudMessaging from './cloud-messaging'
 
 (() => {
   try {
@@ -73,7 +74,11 @@ import { UpdateData } from './update-data'
       UpdateData.checkSettings()
     })
 
-    const onMessageListener = { [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(), [RUNTIME_MESSAGE.SOUND]: new Sound() }
+    const onMessageListener = {
+      [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(),
+      [RUNTIME_MESSAGE.SOUND]: new Sound(),
+      [RUNTIME_MESSAGE.CLOUD_MESSAGING]: new CloudMessaging()
+    }
     Runtime.onMessageExternal(onMessageListener)
     Runtime.onMessage(onMessageListener)
   } catch (error) {
