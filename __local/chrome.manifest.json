@@ -2,7 +2,7 @@
   "name": "Auto Clicker - AutoFill [DEV]",
   "short_name": "Auto Clicker Chrome",
   "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click speed test",
-  "version": "3.1.9",
+  "version": "3.1.10",
   "config": {
     "options_page_url": "https://dev.getautoclicker.com"
   },

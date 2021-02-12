@@ -57,7 +57,7 @@ const Action = ((Common) => {
         ScrollToEvents.start(elements, value)
       } else if (/^clickevents::/gi.test(value) || /^mouseevents::/gi.test(value)) {
         MouseEvents.start(elements, value)
-      } else if (/^events::/gi.test(value)) {
+      } else if (/^formevents::/gi.test(value)) {
         FormEvents.start(elements, value)
       } else if (/^locationcommand::/gi.test(value)) {
         LocationCommandEvents.start(value)
