@@ -1,22 +1,21 @@
-import { RUNTIME_MESSAGE_ACF } from '../common/constant'
-import { BrowserActionService, CloudMessagingService, Logger, NotificationsService, Service, SoundService, StorageService } from '@dhruv-techapps/core-common'
+import { BrowserActionService, CloudMessagingService, Logger, NotificationsService, SoundService, StorageService } from '@dhruv-techapps/core-common'
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
 import { Hotkey } from './hotkey'
-import { defaultSettings, LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
+import { defaultConfig, LOCAL_STORAGE_KEY, START_TYPES } from '@dhruv-techapps/acf-common'
 
 const Config = (() => {
   let config
-  const getConfig = async ({ notifications: { onConfig, onError, sound }, hotkey }) => {
+  const getConfig = async ({ notifications: { onConfig, onError, sound } }, _config) => {
     // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
-    config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
-    if (config) {
-      if (config.startManually) {
+    if (_config) {
+      config = _config
+      if (config.startType === START_TYPES.MANUAL || config.startManually) {
         // Logger.debug('\t Config >> start Manually')
         BrowserActionService.setBadgeText({ text: 'Manual' })
         BrowserActionService.setTitle({ title: 'Start Manually' })
-        Hotkey.setup(hotkey || defaultSettings.hotkey, _start.bind(this, onConfig, onError, sound))
+        Hotkey.setup(config.hotkey || defaultConfig.hotkey, _start.bind(this, onConfig, onError, sound))
       } else {
         // Logger.debug('\t Config >> start Automatically')
         BrowserActionService.setBadgeText({ text: 'Auto' })

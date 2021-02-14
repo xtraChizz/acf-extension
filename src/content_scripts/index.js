@@ -1,5 +1,6 @@
 import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSettings } from '@dhruv-techapps/acf-common'
-import { DataStore, GAService, Logger, StorageService } from '@dhruv-techapps/core-common'
+import { DataStore, GAService, Logger, Service, StorageService } from '@dhruv-techapps/core-common'
+import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 
 import Config from './config'
 import { ContextMenu } from './context_menu'
@@ -15,10 +16,13 @@ window.addEventListener('load', function () {
 async function loadSettings (loadType) {
   try {
     // Logger.debug('\t loadSettings', loadType)
-    const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
-    DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
-    if (setting.loadType === loadType) {
-      await Config.getConfig(setting)
+    const config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
+    if (config) {
+      const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
+      DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
+      if ((config.loadType || setting.loadType || LOAD_TYPES.WINDOW) === loadType) {
+        await Config.getConfig(setting, config)
+      }
     }
   } catch (e) {
     Logger.error(e)

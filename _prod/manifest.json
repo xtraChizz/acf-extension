@@ -1,10 +1,10 @@
 {
-  "name": "Auto Clicker - AutoFill LITE",
+  "name": "Auto Clicker - AutoFill",
   "short_name": "Auto Clicker",
   "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click spped test",
   "version": "1.0.0",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjeqmo6bMN+jknab19l7ZmNOi4EStRTc9es7mV3HfrRhN48AD5VLWx34nbdeiqtWktuYC32WWGrtjQGJHEEtb/svmbXcH5uOf8FiAcqAH1pJfH2jJgX14Q802Wz++Zoas+JTqJvX59vAyXT2SGJkzcqZ/tx6nr0Ucvf3ZpBr8EFWgXu661LMbIpZ7sr9gal3nrQ18tcI466euXgtL/3rSUCLtelsyrUqGbQW0LN1bqY9Xdg+jj5ahPf7ywVKvD036GAjdPuZXa0dWhOIwW+Swe9v6gi50g0XiWf9BBm6SIBXT8N2dRbSixaC3GhQI9oDgChR7z+PpqL6xBb3RCKdkuQIDAQAB",
   "config": {
+    "variant": "PROD",
     "options_page_url": "https://getautoclicker.com/options_page_lite/index.html"
   }
 }

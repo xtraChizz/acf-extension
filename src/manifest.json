@@ -13,6 +13,7 @@
     "https://*/*"
   ],
   "config": {
+    "variant": "LITE",
     "uninstall_url": "https://forms.gle/J2iXx49dQNiZYvLK9",
     "tracking_id": "UA-111423401-5",
     "options_page_url": "https://getautoclicker.com/options_page_lite/index.html",

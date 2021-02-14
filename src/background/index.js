@@ -17,17 +17,21 @@ import CloudMessaging from './cloud-messaging'
   try {
     const {
       name,
+      version,
       'config.uninstall_url': uninstallUrl,
+      'config.variant': variant,
       'config.tracking_id': trackingId,
       'config.options_page_url': optionsPageUrl
     } = Manifest.values(['name',
+      'version',
+      'config.variant',
       'config.uninstall_url',
       'config.tracking_id',
       'config.options_page_url'])
     /**
     * Setup Google Analytics
     */
-    new GoogleAnalytics(trackingId)
+    new GoogleAnalytics(trackingId, variant)
     GoogleAnalytics.pageView([], console.log)
 
     /**
@@ -70,6 +74,7 @@ import CloudMessaging from './cloud-messaging'
     * TODO Need to implement rate us feature
     */
     Runtime.onStartup(() => {
+      GoogleAnalytics.event({ event: ['version', version] }, console.log)
       UpdateData.checkConfig()
       UpdateData.checkSettings()
     })
