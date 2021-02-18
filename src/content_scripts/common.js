@@ -35,7 +35,7 @@ const Common = (() => {
       elements = element ? [element] : []
     } else if (/^SelectorAll::/gi.test(elementFinder)) {
       elements = document.querySelectorAll(elementFinder.replace(/^SelectorAll::/gi, ''))
-    } else if (/^(\/\/|\/html|html)/gi.test(elementFinder)) {
+    } else {
       try {
         const nodes = document.evaluate(elementFinder, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
         if (nodes.snapshotLength !== 0) {
@@ -47,8 +47,6 @@ const Common = (() => {
       } catch (e) {
         throw new ConfigError(`elementFinder: ${e.message.split(':')[1]}`, 'Invalid Xpath')
       }
-    } else {
-      throw new ConfigError(`elementFinder: ${elementFinder}`, 'Invalid Element Finder')
     }
     return elements.length ? elements : await retryFunc(elementFinder, retry, retryInterval, checkiFrames)
   }

@@ -67,7 +67,10 @@ import CloudMessaging from './cloud-messaging'
     /**
     * If an update is available it will auto update
     */
-    Runtime.onUpdateAvailable(Runtime.reload)
+    Runtime.onUpdateAvailable(_ => {
+      LocalStorage.setItem('backup_' + Date.now(), LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS))
+      Runtime.reload()
+    })
 
     /**
     * On start up check for rate

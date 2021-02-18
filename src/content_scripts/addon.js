@@ -9,10 +9,10 @@ const Addon = ((Common) => {
     // Logger.debug('\t\t\t\t\t Addon >> _start')
     const elements = await Common.start(elementFinder, settings)
     const nodeValue = _getNodeValue(elements, valueExtractor)
-    return _compare(nodeValue, condition, value) || await _recheckFunc({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings)
+    return _compare(nodeValue, condition, value) || await _recheckFunc({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
   }
 
-  const _recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings = {}) => {
+  const _recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {
     // Logger.debug('\t\t\t\t\t Addon >> _recheckFunc')
     if (recheck > 0) {
       recheck--
@@ -79,6 +79,8 @@ const Addon = ((Common) => {
         return !new RegExp(`^${value}$`, 'gi').test(nodeValue)
       case ADDON_CONDITIONS['~ Contains']:
         return new RegExp(`${value}`, 'gi').test(nodeValue)
+      case ADDON_CONDITIONS['!~ Not Contains']:
+        return !new RegExp(`${value}`, 'gi').test(nodeValue)
       case ADDON_CONDITIONS['> Greater Than']:
         return nodeValue > value
       case ADDON_CONDITIONS['>= Greater Than Equals']:
