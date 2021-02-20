@@ -11,6 +11,7 @@ const Config = (() => {
     // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
     if (_config) {
       config = _config
+      BrowserActionService.setBadgeBackgroundColor({ color: [13, 110, 253, 1] })
       if (config.startType === START_TYPES.MANUAL || config.startManually) {
         // Logger.debug('\t Config >> start Manually')
         BrowserActionService.setBadgeText({ text: 'Manual' })

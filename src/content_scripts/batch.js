@@ -32,7 +32,7 @@ const Batch = (() => {
   const _checkRepeat = async () => {
     // Logger.debug('\t\t Batch >> _checkRepeat')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
-    if (batch.repeat) {
+    if (batch.repeat > 0) {
       for (let i = 0; i < batch.repeat; i++) {
         if (batch.repeatInterval) {
           await wait(batch.repeatInterval, 'Batch Repeat')
@@ -42,6 +42,15 @@ const Batch = (() => {
           NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` })
           settings.notifications.sound && SoundService.play()
         }
+      }
+    } else if (batch.repeat < -1) {
+      let i = 1
+      while (true) {
+        if (batch.repeatInterval) {
+          await wait(batch.repeatInterval, 'Batch Repeat')
+        }
+        await Actions.start(actions, i, sheets)
+        i++
       }
     }
   }

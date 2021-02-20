@@ -1,15 +1,15 @@
-import { RADIO_CHECKBOX_NODENAME, SELECT_TEXTAREA_NODENAME, wait } from './util'
+import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME, wait } from './util'
 import { ADDON_CONDITIONS, RECHECK_OPTIONS } from '@dhruv-techapps/acf-common'
 import { ConfigError, SystemError } from './error'
 import Common from './common'
 import { BrowserActionService, Logger } from '@dhruv-techapps/core-common'
 
 const Addon = ((Common) => {
-  const _start = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings) => {
+  const _start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings) => {
     // Logger.debug('\t\t\t\t\t Addon >> _start')
     const elements = await Common.start(elementFinder, settings)
     const nodeValue = _getNodeValue(elements, valueExtractor)
-    return _compare(nodeValue, condition, value) || await _recheckFunc({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
+    return _compare(nodeValue, condition, value) || await _recheckFunc({ elementFinder, value, condition, valueExtractor, ...props })
   }
 
   const _recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {
@@ -19,7 +19,7 @@ const Addon = ((Common) => {
       BrowserActionService.setBadgeBackgroundColor({ color: [13, 202, 240, 1] })
       BrowserActionService.setBadgeText({ text: 'Recheck' })
       await wait(recheckInterval, 'Addon Recheck')
-      return await _start({ elementFinder, value, condition, recheck, recheckInterval, valueExtractor })
+      return await _start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
     } else {
       if (recheckOption === RECHECK_OPTIONS.RELOAD) {
         if (document.readyState === 'complete') {
@@ -50,10 +50,10 @@ const Addon = ((Common) => {
     // Logger.debug('\t\t\t\t\t Addon >> _getNodeValue')
     const element = elements[0]
     let value
-    if (SELECT_TEXTAREA_NODENAME.test(element.nodeName)) {
+    if (SELECT_TEXTAREA_NODE_NAME.test(element.nodeName)) {
       value = element.value
     } else if (element.nodeName === 'INPUT') {
-      if (RADIO_CHECKBOX_NODENAME.test(element.type)) {
+      if (RADIO_CHECKBOX_NODE_NAME.test(element.type)) {
         value = element.checked
       } else {
         value = element.value
@@ -67,7 +67,7 @@ const Addon = ((Common) => {
       const match = RegExp(valueExtractor).exec(value)
       return (match && match[0]) || value
     }
-    return (valueExtractor && value.match(RegExp(valueExtractor))) || value
+    return value
   }
 
   const _compare = (nodeValue, condition, value) => {

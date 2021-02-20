@@ -14,7 +14,7 @@ export const wait = async (wait, type = '') => {
     await sleep(waitTime)
   }
 }
-export const FORM_ELEMENT_NODENAME = /^(select|textarea|input|button|label|option|optgroup|fieldset|output)$/gi
-export const FORM_CLEAR_ELEMENT_NODENAME = /^(select|textarea|input)$/gi
-export const SELECT_TEXTAREA_NODENAME = /^(select|textarea)$/gi
-export const RADIO_CHECKBOX_NODENAME = /^(radio|checkbox)$/gi
+export const FORM_ELEMENT_NODE_NAME = /^(select|textarea|input|button|label|option|optgroup|fieldset|output)$/gi
+export const FORM_CLEAR_ELEMENT_NODE_NAME = /^(select|textarea|input)$/gi
+export const SELECT_TEXTAREA_NODE_NAME = /^(select|textarea)$/gi
+export const RADIO_CHECKBOX_NODE_NAME = /^(radio|checkbox)$/gi

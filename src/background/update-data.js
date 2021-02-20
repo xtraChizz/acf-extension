@@ -93,6 +93,7 @@ export class UpdateData {
             if (action.xpath) {
               action.elementFinder = action.xpath
             }
+            action.elementFinder = action.elementFinder.replace('[$]', '[<batchRepeat>]')
             delete action.xpath
 
             //* Convert init wait into numbers

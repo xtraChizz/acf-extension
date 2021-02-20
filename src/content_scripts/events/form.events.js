@@ -1,4 +1,4 @@
-import { FORM_ELEMENT_NODENAME, FORM_CLEAR_ELEMENT_NODENAME } from '../util'
+import { FORM_ELEMENT_NODE_NAME, FORM_CLEAR_ELEMENT_NODE_NAME } from '../util'
 import { SystemError, ConfigError } from '../error'
 import CommonEvents from './common.events'
 
@@ -29,7 +29,7 @@ export const FormEvents = ((CommonEvents) => {
         case 'submit':
           if (element instanceof HTMLFormElement) {
             element.submit()
-          } else if (FORM_ELEMENT_NODENAME.test(element.nodeName)) {
+          } else if (FORM_ELEMENT_NODE_NAME.test(element.nodeName)) {
             element.form.submit()
           } else {
             throw new ConfigError(`elementFinder: ${element}`, 'Invalid Element for submit')
@@ -42,7 +42,7 @@ export const FormEvents = ((CommonEvents) => {
           element.remove()
           break
         case 'clear':
-          if (FORM_CLEAR_ELEMENT_NODENAME.test(element.nodeName)) {
+          if (FORM_CLEAR_ELEMENT_NODE_NAME.test(element.nodeName)) {
             element.value = ''
           } else {
             throw new ConfigError(`elementFinder: ${element}`, 'Invalid Element for clear')

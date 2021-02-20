@@ -1,4 +1,4 @@
-import { RADIO_CHECKBOX_NODENAME } from '../util'
+import { RADIO_CHECKBOX_NODE_NAME } from '../util'
 import CommonEvents from './common.events'
 
 export const PlainEvents = ((CommonEvents) => {
@@ -13,7 +13,7 @@ export const PlainEvents = ((CommonEvents) => {
   }
 
   const _checkNode = (element, value) => {
-    if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODENAME.test(element.type))) {
+    if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODE_NAME.test(element.type))) {
       element.value = value
       element.dispatchEvent(CommonEvents.getFillEvent())
     } else if (element.nodeName === 'DIV' && element.isContentEditable) {
