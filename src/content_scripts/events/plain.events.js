@@ -18,6 +18,8 @@ export const PlainEvents = ((CommonEvents) => {
       element.dispatchEvent(CommonEvents.getFillEvent())
     } else if (element.nodeName === 'DIV' && element.isContentEditable) {
       element.textContent = value
+    } else if (element.nodeName === 'OPTION') {
+      element.selected = true
     } else {
       element.dispatchEvent(CommonEvents.getMouseEvent())
     }

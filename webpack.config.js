@@ -62,7 +62,7 @@ module.exports = env => {
         }
       }),
       new ZipPlugin({
-        path: './../build',
+        path: `./../build/${srcDir}`,
         filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`,
         zipOptions: {
           forceZip64Format: false
