@@ -72,6 +72,9 @@ const Addon = ((Common) => {
 
   const _compare = (nodeValue, condition, value) => {
     // Logger.debug('\t\t\t\t\t Addon >> _compare')
+    if (/than/ig.test(condition) && (isNaN(Number(nodeValue)) || isNaN(Number(value)))) {
+      throw new ConfigError('Greater || Less can only compare number', 'Wrong Comparison')
+    }
     switch (condition) {
       case ADDON_CONDITIONS['= Equals']:
         return new RegExp(`^${value}$`, 'gi').test(nodeValue)
@@ -82,13 +85,13 @@ const Addon = ((Common) => {
       case ADDON_CONDITIONS['!~ Not Contains']:
         return !new RegExp(`${value}`, 'gi').test(nodeValue)
       case ADDON_CONDITIONS['> Greater Than']:
-        return nodeValue > value
+        return Number(nodeValue) > Number(value)
       case ADDON_CONDITIONS['>= Greater Than Equals']:
-        return nodeValue >= value
-      case ADDON_CONDITIONS['&lt; Less Than']:
-        return nodeValue < value
-      case ADDON_CONDITIONS['&lt;= Less Than Equals']:
-        return nodeValue <= value
+        return Number(nodeValue) >= Number(value)
+      case ADDON_CONDITIONS['< Less Than']:
+        return Number(nodeValue) < Number(value)
+      case ADDON_CONDITIONS['<= Less Than Equals']:
+        return Number(nodeValue) <= Number(value)
       default:
         throw new SystemError('Addon Condition not found', `${condition} condition not found`)
     }

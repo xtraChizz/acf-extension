@@ -1,6 +1,6 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "1.0.0",
+  "version": "3.2.14",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
@@ -53,8 +53,8 @@
     "zip-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^3.1.1",
-    "@dhruv-techapps/core-common": "^2.1.1",
-    "@dhruv-techapps/core-extension": "^2.1.0"
+    "@dhruv-techapps/acf-common": "^3.1.2",
+    "@dhruv-techapps/core-common": "^3.0.0",
+    "@dhruv-techapps/core-extension": "^3.0.0"
   }
 }
