@@ -70,7 +70,7 @@ const Config = (() => {
 
   const _checkStartTime = async () => {
     // Logger.debug('\t Config >> _checkStartTime')
-    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{2}$/)) {
+    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{3}$/)) {
       await _schedule()
     } else {
       await wait(config.initWait, 'Configuration')
