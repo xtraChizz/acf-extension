@@ -5,7 +5,8 @@ import { FormEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEv
 import { ConfigError } from './error'
 import { GAService, Logger } from '@dhruv-techapps/core-common'
 
-const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/
+const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
+const QUERY_PARAM_MATCHER = /^Query::/i
 
 const Action = ((Common) => {
   let elements, repeat, repeatInterval
@@ -44,6 +45,12 @@ const Action = ((Common) => {
         Logger.error(e)
         GAService.error({ name: e.name, stack: e.stack })
       }
+    } else if (value.match(QUERY_PARAM_MATCHER)) {
+      const [, key] = value.split('::')
+      const searchParams = new URLSearchParams(window.location.search)
+      if (searchParams.has(key)) {
+        value = searchParams.get(key)
+      }
     } else {
       value = value.replaceAll('<batchRepeat>', batchRepeat)
     }
@@ -51,7 +58,7 @@ const Action = ((Common) => {
   }
 
   const _checkAction = async (value) => {
-    // Logger.debug('\t\t\t\t Action >> _checkAction')
+  // Logger.debug('\t\t\t\t Action >> _checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
         ScrollToEvents.start(elements, value)
@@ -75,7 +82,7 @@ const Action = ((Common) => {
   }
 
   const _repeatFunc = async (value) => {
-    // Logger.debug('\t\t\t\t Action >> _repeatFunc')
+  // Logger.debug('\t\t\t\t Action >> _repeatFunc')
     if (repeat > 0 || repeat < -1) {
       repeat--
       await wait(repeatInterval, 'Action Repeat')
