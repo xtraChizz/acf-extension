@@ -4,6 +4,7 @@ import { wait } from './util'
 import { FormEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents, KeyEvents } from './events'
 import { ConfigError } from './error'
 import { GAService, Logger } from '@dhruv-techapps/core-common'
+import CommonEvents from './events/common.events'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
@@ -75,7 +76,9 @@ const Action = ((Common) => {
       }
     } else {
       for (const element of elements) {
-        element.click()
+        ['mouseover', 'mousedown', 'mouseup', 'click'].forEach((event) => {
+          element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
+        })
       }
     }
     await _repeatFunc(value)

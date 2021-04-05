@@ -21,7 +21,9 @@ export const PlainEvents = ((CommonEvents) => {
     } else if (element.nodeName === 'OPTION') {
       element.selected = true
     } else {
-      element.dispatchEvent(CommonEvents.getMouseEvent())
+      ['mouseover', 'mousedown', 'mouseup', 'click'].forEach((event) => {
+        element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
+      })
     }
     element.focus()
   }
