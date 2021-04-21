@@ -3,8 +3,8 @@ import CommonEvents from './common.events'
 
 const WINDOW_COMMANDS = ['open']
 
-export const WindowCommandEvents = ((CommonEvents) => {
-  const start = (value) => {
+export const WindowCommandEvents = (CommonEvents => {
+  const start = value => {
     // Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
     const commands = CommonEvents.getVerifiedEvents(WINDOW_COMMANDS, value)
     _execCommand(commands, value)
@@ -16,6 +16,9 @@ export const WindowCommandEvents = ((CommonEvents) => {
       switch (command) {
         case 'open':
           window.open(values[2], values[3] || '_blank')
+          break
+        case 'close':
+          window.close()
           break
         default:
           throw new SystemError('Unhandled Event', command)

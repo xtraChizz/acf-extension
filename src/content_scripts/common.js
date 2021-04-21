@@ -58,29 +58,24 @@ const Common = (() => {
       BrowserActionService.setBadgeBackgroundColor({ color: [102, 16, 242, 1] })
       BrowserActionService.setBadgeText({ text: 'Retry' })
       await wait(retryInterval, 'Retry')
-      return await _getElements(document, element, retry, retryInterval)
+      return await _getElements(document, element, retry, retryInterval, checkiFrames)
     } else if (checkiFrames) {
       return _checkIframe(element)
     }
   }
 
-  const _checkIframe = (element) => {
+  const _checkIframe = async element => {
     // Logger.debug('Common >> _checkIframe')
     const iFrames = document.getElementsByTagName('iframe')
-    const elements = []
-    let _nodes
+    let elements = []
     for (let index = 0; index < iFrames.length; index++) {
-      if (_nodes && _nodes.snapshotLength !== 0) {
-        let i = 0
-        while (i < _nodes.snapshotLength) {
-          elements.push(_nodes.snapshotItem(i++))
-        }
+      if (elements.length !== 0) {
         break
       }
       if (iFrames[index].src === 'about:blank') {
         const contentDocument = iFrames[index].contentDocument
         if (contentDocument) {
-          _nodes = document.evaluate(element, contentDocument, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+          elements = await _getElements(contentDocument, element, 0, 0, false)
         }
       }
     }
