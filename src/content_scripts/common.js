@@ -6,7 +6,7 @@ import { wait } from './util'
 const Common = (() => {
   const retryFunc = async (retry, retryInterval) => {
     Logger.debug('Common >>>>>> retryFunc')
-    if (retry >= 0) {
+    if (retry > 0) {
       BrowserActionService.setBadgeBackgroundColor({ color: [102, 16, 242, 1] })
       BrowserActionService.setBadgeText({ text: 'Retry' })
       await wait(retryInterval, 'Retry')
@@ -101,28 +101,28 @@ const Common = (() => {
       throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
     }
     const { retryOption, retryInterval, retry, checkiFrames, iframeFirst } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
-    let nodes
+    let elements
     Logger.info('checkiFrames', checkiFrames)
     Logger.info('iframeFirst', iframeFirst)
     Logger.info('retryOption', retryOption, retryInterval, retry)
     if (iframeFirst) {
-      nodes = await checkIframe(elementFinder, retry, retryInterval)
+      elements = await checkIframe(elementFinder, retry, retryInterval)
     } else {
-      nodes = await main(elementFinder, retry, retryInterval)
+      elements = await main(elementFinder, retry, retryInterval)
     }
-    Logger.info('nodes', nodes)
-    if (!nodes || nodes.length === 0) {
+    Logger.info('elements', elements)
+    if (!elements || elements.length === 0) {
       if (iframeFirst) {
-        nodes = await main(elementFinder, retry, retryInterval)
+        elements = await main(elementFinder, retry, retryInterval)
       } else if (checkiFrames) {
-        nodes = await checkIframe(elementFinder, retry, retryInterval)
+        elements = await checkIframe(elementFinder, retry, retryInterval)
       }
     }
-    Logger.info('nodes', nodes)
-    if (!nodes || nodes.length === 0) {
+    Logger.info('elements', elements)
+    if (!elements || elements.length === 0) {
       checkRetryOption(retryOption, elementFinder)
     }
-    return nodes
+    return elements
   }
   return { start }
 })()
