@@ -1,18 +1,12 @@
 import { RADIO_CHECKBOX_NODE_NAME } from '../util'
 import CommonEvents from './common.events'
 
-export const PlainEvents = ((CommonEvents) => {
-  const start = (elements, value) => {
-    // Logger.debug('\t\t\t\t\t PlainEvents >> start')
-    value = _checkEmptyValue(value)
-    CommonEvents.loopElements(elements, value, _checkNode)
-  }
+const DEFAULT_EVENT = ['mouseover', 'mousedown', 'mouseup', 'click']
 
-  const _checkEmptyValue = (value) => {
-    return value === '::empty' ? '' : value
-  }
+export const PlainEvents = (() => {
+  const checkEmptyValue = value => (value === '::empty' ? '' : value)
 
-  const _checkNode = (element, value) => {
+  const checkNode = (element, value) => {
     if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODE_NAME.test(element.type))) {
       element.value = value
       element.dispatchEvent(CommonEvents.getFillEvent())
@@ -21,12 +15,18 @@ export const PlainEvents = ((CommonEvents) => {
     } else if (element.nodeName === 'OPTION') {
       element.selected = true
     } else {
-      ['mouseover', 'mousedown', 'mouseup', 'click'].forEach((event) => {
+      DEFAULT_EVENT.forEach(event => {
         element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
       })
     }
     element.focus()
   }
 
+  const start = (elements, value) => {
+    // Logger.debug('\t\t\t\t\t PlainEvents >> start')
+    value = checkEmptyValue(value)
+    CommonEvents.loopElements(elements, value, checkNode)
+  }
+
   return { start }
-})(CommonEvents)
+})()

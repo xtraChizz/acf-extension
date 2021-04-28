@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["airbnb", "prettier", "eslint:recommended", "plugin:json/recommended"],
+  "extends": ["airbnb", "prettier", "plugin:json/recommended"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -11,9 +11,19 @@
     "import/prefer-default-export": "off",
     "no-unused-vars": "warn",
     "no-console": "error",
-    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["element"] }],
     "no-await-in-loop": "off",
-    "no-return-await": "off"
+    "no-return-await": "off",
+    "func-names": "off",
+    "no-process-exit": "off",
+    "object-shorthand": "off",
+    "class-methods-use-this": "off",
+    "sort-imports": [
+      "error",
+      {
+        "ignoreDeclarationSort": true
+      }
+    ],
+    "no-param-reassign": "off"
   },
   "env": {
     "browser": true,

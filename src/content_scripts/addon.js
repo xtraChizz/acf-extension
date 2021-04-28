@@ -1,53 +1,39 @@
-import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME, wait } from './util'
 import { ADDON_CONDITIONS, RECHECK_OPTIONS } from '@dhruv-techapps/acf-common'
+import { BrowserActionService, Logger } from '@dhruv-techapps/core-common'
+import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME, wait } from './util'
 import { ConfigError, SystemError } from './error'
 import Common from './common'
-import { BrowserActionService, Logger } from '@dhruv-techapps/core-common'
 
-const Addon = ((Common) => {
-  const _start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings) => {
-    // Logger.debug('\t\t\t\t\t Addon >> _start')
-    const elements = await Common.start(elementFinder, settings)
-    const nodeValue = _getNodeValue(elements, valueExtractor)
-    return _compare(nodeValue, condition, value) || await _recheckFunc({ elementFinder, value, condition, valueExtractor, ...props })
-  }
-
-  const _recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {
-    // Logger.debug('\t\t\t\t\t Addon >> _recheckFunc')
+const Addon = (() => {
+  const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {
+    // Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
     if (recheck > 0) {
-      recheck--
+      recheck -= 1
       BrowserActionService.setBadgeBackgroundColor({ color: [13, 202, 240, 1] })
       BrowserActionService.setBadgeText({ text: 'Recheck' })
       await wait(recheckInterval, 'Addon Recheck')
-      return await _start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
-    } else {
-      if (recheckOption === RECHECK_OPTIONS.RELOAD) {
-        if (document.readyState === 'complete') {
-          location.reload()
-        } else {
-          window.addEventListener('load', function () {
-            location.reload()
-          })
-        }
-      } else if (recheckOption === RECHECK_OPTIONS.STOP) {
-        throw new ConfigError(`elementFinder: ${elementFinder}\nvalue: ${value}\ncondition: ${condition}`, 'Not Matched')
+      // eslint-disable-next-line no-use-before-define
+      return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
+    }
+    // eslint-disable-next-line no-console
+    console.table([{ elementFinder: elementFinder, value: value, condition: condition }])
+    if (recheckOption === RECHECK_OPTIONS.RELOAD) {
+      if (document.readyState === 'complete') {
+        window.location.reload()
       } else {
-        Logger.info('Value not matched and action is SKIP')
-        return false
+        window.addEventListener('load', () => {
+          window.location.reload()
+        })
       }
+    } else if (recheckOption === RECHECK_OPTIONS.STOP) {
+      throw new ConfigError('Not Matched and action is STOP')
     }
+    Logger.info('Not Matched and action is SKIP')
+    return false
   }
 
-  const check = async ({ elementFinder, value, condition, ...props } = {}) => {
-    // Logger.debug('\t\t\t\t\t Addon >> check')
-    if (elementFinder && value && condition) {
-      return await _start({ elementFinder, value, condition, ...props })
-    }
-    return true
-  }
-
-  const _getNodeValue = (elements, valueExtractor) => {
-    // Logger.debug('\t\t\t\t\t Addon >> _getNodeValue')
+  const getNodeValue = (elements, valueExtractor) => {
+    // Logger.debug('\t\t\t\t\t Addon >> getNodeValue')
     const element = elements[0]
     let value
     if (SELECT_TEXTAREA_NODE_NAME.test(element.nodeName)) {
@@ -70,9 +56,9 @@ const Addon = ((Common) => {
     return value
   }
 
-  const _compare = (nodeValue, condition, value) => {
-    // Logger.debug('\t\t\t\t\t Addon >> _compare')
-    if (/than/ig.test(condition) && (isNaN(Number(nodeValue)) || isNaN(Number(value)))) {
+  const compare = (nodeValue, condition, value) => {
+    // Logger.debug('\t\t\t\t\t Addon >> compare')
+    if (/than/gi.test(condition) && (Number.isNaN(Number(nodeValue)) || Number.isNaN(Number(value)))) {
       throw new ConfigError('Greater || Less can only compare number', 'Wrong Comparison')
     }
     switch (condition) {
@@ -95,6 +81,24 @@ const Addon = ((Common) => {
       default:
         throw new SystemError('Addon Condition not found', `${condition} condition not found`)
     }
+  }
+
+  const start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings) => {
+    // Logger.debug('\t\t\t\t\t Addon >> start')
+    const elements = await Common.start(elementFinder, settings)
+    if (elements) {
+      const nodeValue = getNodeValue(elements, valueExtractor)
+      return compare(nodeValue, condition, value) || (await recheckFunc({ elementFinder, value, condition, valueExtractor, ...props }))
+    }
+    return false
+  }
+
+  const check = async ({ elementFinder, value, condition, ...props } = {}) => {
+    // Logger.debug('\t\t\t\t\t Addon >> check')
+    if (elementFinder && value && condition) {
+      return await start({ elementFinder, value, condition, ...props })
+    }
+    return true
   }
 
   return { check }

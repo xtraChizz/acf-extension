@@ -1,44 +1,35 @@
 import { BrowserActionService, Logger, NotificationsService, SoundService, StorageService } from '@dhruv-techapps/core-common'
+import { LOCAL_STORAGE_KEY, START_TYPES, defaultConfig } from '@dhruv-techapps/acf-common'
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
 import { Hotkey } from './hotkey'
-import { defaultConfig, LOCAL_STORAGE_KEY, START_TYPES } from '@dhruv-techapps/acf-common'
 
 const Config = (() => {
   let config
-  const getConfig = async ({ notifications: { onConfig, onError, sound } }, _config) => {
-    // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
-    if (_config) {
-      config = _config
-      BrowserActionService.setBadgeBackgroundColor({ color: [13, 110, 253, 1] })
-      if (config.startType === START_TYPES.MANUAL || config.startManually) {
-        // Logger.debug('\t Config >> start Manually')
-        BrowserActionService.setBadgeText({ text: 'Manual' })
-        BrowserActionService.setTitle({ title: 'Start Manually' })
-        Hotkey.setup(config.hotkey || defaultConfig.hotkey, _start.bind(this, onConfig, onError, sound))
-      } else {
-        // Logger.debug('\t Config >> start Automatically')
-        BrowserActionService.setBadgeText({ text: 'Auto' })
-        BrowserActionService.setTitle({ title: 'Start Automatically' })
-        await _checkStartTime()
-        _start(onConfig, onError, sound)
-      }
+
+  const processSheets = _sheets => {
+    const sheets = {}
+    if (Array.isArray(_sheets)) {
+      _sheets.forEach(sheet => {
+        sheets[sheet.name] = sheet.rows
+      })
     }
+    return sheets
   }
 
-  const _start = async (onConfig, onError, sound) => {
-    // Logger.debug('\t Config >> _start')
+  const start = async (onConfig, onError, sound) => {
+    // Logger.debug('\t Config >> start')
     try {
       const sheets = await StorageService.getItem(LOCAL_STORAGE_KEY.SHEETS, [])
-      await Batch.start(config.batch, config.actions, _processSheets(sheets))
-      // Logger.debug('\t Config >> _start >> done')
+      await Batch.start(config.batch, config.actions, processSheets(sheets))
+      // Logger.debug('\t Config >> start >> done')
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: 'Done' })
       // ! CloudMessagingService.push({ title: 'Configuration Finished', body: config.name || config.url }).catch(console.error)
       if (onConfig) {
         NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
-        sound && SoundService.play()
+        if (sound) SoundService.play()
       }
     } catch (e) {
       if (e instanceof ConfigError) {
@@ -48,7 +39,7 @@ const Config = (() => {
         // ! CloudMessagingService.push({ title: 'Configuration Error', body: config.name || config.url }).catch(console.error)
         if (onError) {
           NotificationsService.create(error)
-          sound && SoundService.play()
+          if (sound) SoundService.play()
         } else {
           Logger.error(error)
         }
@@ -58,33 +49,43 @@ const Config = (() => {
     }
   }
 
-  const _processSheets = (_sheets) => {
-    const sheets = {}
-    if (Array.isArray(_sheets)) {
-      for (const sheet of _sheets) {
-        sheets[sheet.name] = sheet.rows
-      }
-    }
-    return sheets
-  }
-
-  const _checkStartTime = async () => {
-    // Logger.debug('\t Config >> _checkStartTime')
-    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{3}$/)) {
-      await _schedule()
-    } else {
-      await wait(config.initWait, 'Configuration')
-    }
-  }
-
-  const _schedule = async () => {
-    // Logger.debug('\t Config >> _schedule')
-    var rDate = new Date()
+  const schedule = async () => {
+    // Logger.debug('\t Config >> schedule')
+    const rDate = new Date()
     rDate.setHours(Number(config.startTime.split(':')[0]))
     rDate.setMinutes(Number(config.startTime.split(':')[1]))
     rDate.setSeconds(Number(config.startTime.split(':')[2]))
     rDate.setMilliseconds(Number(config.startTime.split(':')[3]))
     await new Promise(resolve => setTimeout(resolve, rDate.getTime() - new Date().getTime()))
+  }
+
+  const checkStartTime = async () => {
+    // Logger.debug('\t Config >> checkStartTime')
+    if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{3}$/)) {
+      await schedule()
+    } else {
+      await wait(config.initWait, 'Configuration')
+    }
+  }
+
+  const getConfig = async ({ notifications: { onConfig, onError, sound } }, _config) => {
+    // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
+    if (_config) {
+      config = _config
+      BrowserActionService.setBadgeBackgroundColor({ color: [13, 110, 253, 1] })
+      if (config.startType === START_TYPES.MANUAL || config.startManually) {
+        // Logger.debug('\t Config >> start Manually')
+        BrowserActionService.setBadgeText({ text: 'Manual' })
+        BrowserActionService.setTitle({ title: 'Start Manually' })
+        Hotkey.setup(config.hotkey || defaultConfig.hotkey, start.bind(this, onConfig, onError, sound))
+      } else {
+        // Logger.debug('\t Config >> start Automatically')
+        BrowserActionService.setBadgeText({ text: 'Auto' })
+        BrowserActionService.setTitle({ title: 'Start Automatically' })
+        await checkStartTime()
+        start(onConfig, onError, sound)
+      }
+    }
   }
 
   return { getConfig }

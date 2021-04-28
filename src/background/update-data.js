@@ -1,13 +1,13 @@
-import { defaultAction, defaultAddon, defaultBatch, defaultConfig, defaultSettings, LOAD_TYPES, LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
+import { LOAD_TYPES, LOCAL_STORAGE_KEY, RETRY_OPTIONS, defaultAction, defaultAddon, defaultBatch, defaultConfig, defaultSettings } from '@dhruv-techapps/acf-common'
 import { LocalStorage } from '@dhruv-techapps/core-common'
 
 // v3.1.11 converter
 export class UpdateData {
-  static checkConfig () {
+  static checkConfig() {
     const configs = LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS, [{ ...defaultConfig }])
     const settings = LocalStorage.getItem(LOCAL_STORAGE_KEY.SETTINGS, { ...defaultSettings })
     if (configs && Array.isArray(configs)) {
-      for (let configIndex = 0; configIndex < configs.length; configIndex++) {
+      for (let configIndex = 0; configIndex < configs.length; configIndex += 1) {
         const config = { ...defaultConfig, ...configs[configIndex] }
         //* convert init wait into numbers
         if (typeof config.initWait === 'string') {
@@ -32,15 +32,15 @@ export class UpdateData {
          * Batch create and update process
          */
         //* move refresh to batch object and delete from config
-        config.batch = { ...defaultBatch, ...config.batch };
-        ['refresh'].forEach(prop => {
+        config.batch = { ...defaultBatch, ...config.batch }
+        ;['refresh'].forEach(prop => {
           if (config[prop] !== undefined) {
             config.batch[prop] = config[prop]
           }
           delete config[prop]
-        });
+        })
         //* convert to number and move repeat, repeat Interval to batch object and delete from config
-        ['repeat', 'repeatInterval'].forEach(prop => {
+        ;['repeat', 'repeatInterval'].forEach(prop => {
           if (config[prop]) {
             config.batch[prop] = Number(config[prop])
           }
@@ -120,7 +120,7 @@ export class UpdateData {
     }
   }
 
-  static checkSettings () {
+  static checkSettings() {
     const settings = LocalStorage.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
     if (settings) {
       if (settings.load) {

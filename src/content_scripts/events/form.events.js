@@ -1,17 +1,11 @@
-import { FORM_ELEMENT_NODE_NAME, FORM_CLEAR_ELEMENT_NODE_NAME } from '../util'
-import { SystemError, ConfigError } from '../error'
+import { FORM_CLEAR_ELEMENT_NODE_NAME, FORM_ELEMENT_NODE_NAME } from '../util'
+import { ConfigError, SystemError } from '../error'
 import CommonEvents from './common.events'
 
 const FORM_EVENTS = ['blur', 'click', 'focus', 'select', 'submit', 'remove', 'clear']
 
-export const FormEvents = ((CommonEvents) => {
-  const start = (elements, action) => {
-    // Logger.debug('\t\t\t\t\t FormEvents >> start')
-    const events = this._getVerifiedEvents(FORM_EVENTS, action)
-    CommonEvents.loopElements(elements, events, _dispatchEvent)
-  }
-
-  const _dispatchEvent = (element, events) => {
+export const FormEvents = (() => {
+  const dispatchEvent = (element, events) => {
     if (!(element instanceof HTMLElement)) {
       throw new ConfigError(`elementFinder: ${element}`, 'Not HTMLElement')
     }
@@ -53,5 +47,11 @@ export const FormEvents = ((CommonEvents) => {
       }
     })
   }
+
+  const start = (elements, action) => {
+    // Logger.debug('\t\t\t\t\t FormEvents >> start')
+    const events = CommonEvents.getVerifiedEvents(FORM_EVENTS, action)
+    CommonEvents.loopElements(elements, events, dispatchEvent)
+  }
   return { start }
-})(CommonEvents)
+})()

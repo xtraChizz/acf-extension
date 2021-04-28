@@ -1,16 +1,10 @@
 import { SystemError } from '../error'
 import CommonEvents from './common.events'
 
-const WINDOW_COMMANDS = ['open']
+const WINDOW_COMMANDS = ['open', 'close', 'cut', 'copy', 'paste']
 
-export const WindowCommandEvents = (CommonEvents => {
-  const start = value => {
-    // Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
-    const commands = CommonEvents.getVerifiedEvents(WINDOW_COMMANDS, value)
-    _execCommand(commands, value)
-  }
-
-  const _execCommand = (commands, value) => {
+export const WindowCommandEvents = (() => {
+  const execCommand = (commands, value) => {
     const values = value.split('::')
     commands.forEach(command => {
       switch (command) {
@@ -20,10 +14,24 @@ export const WindowCommandEvents = (CommonEvents => {
         case 'close':
           window.close()
           break
+        case 'cut':
+          document.execCommand('cut')
+          break
+        case 'copy':
+          document.execCommand('copy')
+          break
+        case 'paste':
+          document.execCommand('paste')
+          break
         default:
           throw new SystemError('Unhandled Event', command)
       }
     })
   }
+  const start = value => {
+    // Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
+    const commands = CommonEvents.getVerifiedEvents(WINDOW_COMMANDS, value)
+    execCommand(commands, value)
+  }
   return { start }
-})(CommonEvents)
+})()

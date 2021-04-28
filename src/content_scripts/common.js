@@ -5,7 +5,7 @@ import { wait } from './util'
 
 const Common = (() => {
   const retryFunc = async (retry, retryInterval) => {
-    Logger.debug('Common >>>>>> retryFunc')
+    // Logger.debug('Common >>>>>> retryFunc')
     if (retry > 0) {
       BrowserActionService.setBadgeBackgroundColor({ color: [102, 16, 242, 1] })
       BrowserActionService.setBadgeText({ text: 'Retry' })
@@ -16,7 +16,7 @@ const Common = (() => {
   }
 
   const getElements = async (document, elementFinder, retry, retryInterval) => {
-    Logger.debug('Common >>>>>>>> getElements')
+    // Logger.debug('Common >>>>>>>> getElements')
     let elements
     if (/^(id::|#)/gi.test(elementFinder)) {
       const element = document.getElementById(elementFinder.replace(/^(id::|#)/gi, ''))
@@ -59,18 +59,14 @@ const Common = (() => {
   const main = async (elementFinder, retry, retryInterval) => await getElements(document, elementFinder, retry, retryInterval)
 
   const checkIframe = async (elementFinder, retry, retryInterval) => {
-    Logger.debug('Common >>>> checkIframe')
+    // Logger.debug('Common >>>> checkIframe')
     const iFrames = document.getElementsByTagName('iframe')
-    Logger.log('iFrames', iFrames)
     let elements
     for (let index = 0; index < iFrames.length; index += 1) {
-      Logger.log('iFrames[index].src', iFrames[index].src)
       if (!iFrames[index].src || iFrames[index].src === 'about:blank') {
         const { contentDocument } = iFrames[index]
-        Logger.log('contentDocument', contentDocument)
         if (contentDocument) {
           elements = await getElements(contentDocument, elementFinder, retry, retryInterval)
-          Logger.log('elements', elements)
           if (elements) {
             break
           }
@@ -81,7 +77,7 @@ const Common = (() => {
   }
 
   const checkRetryOption = (retryOption, elementFinder) => {
-    Logger.debug('Common >> checkRetryOption')
+    // Logger.debug('Common >> checkRetryOption')
     if (retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         window.location.reload()
@@ -90,27 +86,22 @@ const Common = (() => {
       }
     } else if (retryOption === RETRY_OPTIONS.STOP) {
       throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found')
-    } else {
-      Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
     }
+    Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
   }
 
   const start = async (elementFinder, settings = {}) => {
-    Logger.debug('Common >> start')
+    // Logger.debug('Common >> start')
     if (!elementFinder) {
       throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
     }
     const { retryOption, retryInterval, retry, checkiFrames, iframeFirst } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
     let elements
-    Logger.info('checkiFrames', checkiFrames)
-    Logger.info('iframeFirst', iframeFirst)
-    Logger.info('retryOption', retryOption, retryInterval, retry)
     if (iframeFirst) {
       elements = await checkIframe(elementFinder, retry, retryInterval)
     } else {
       elements = await main(elementFinder, retry, retryInterval)
     }
-    Logger.info('elements', elements)
     if (!elements || elements.length === 0) {
       if (iframeFirst) {
         elements = await main(elementFinder, retry, retryInterval)
@@ -118,7 +109,6 @@ const Common = (() => {
         elements = await checkIframe(elementFinder, retry, retryInterval)
       }
     }
-    Logger.info('elements', elements)
     if (!elements || elements.length === 0) {
       checkRetryOption(retryOption, elementFinder)
     }

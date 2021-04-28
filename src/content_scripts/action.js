@@ -1,37 +1,27 @@
+import { GAService, Logger } from '@dhruv-techapps/core-common'
 import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
-import { FormEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents, KeyEvents } from './events'
+import { FormEvents, KeyEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents } from './events'
 import { ConfigError } from './error'
-import { GAService, Logger } from '@dhruv-techapps/core-common'
 import CommonEvents from './events/common.events'
+import { WindowCommandEvents } from './events/window-command.events'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
+const DEFAULT_EVENT = ['mouseover', 'mousedown', 'mouseup', 'click']
 
-const Action = ((Common) => {
-  let elements, repeat, repeatInterval
-  const start = async (action, batchRepeat, sheets) => {
-    // Logger.debug('\t\t\t\t Action >> start')
-    await wait(action.initWait, 'Action Wait')
-    if (await Addon.check(action.addon, action.settings)) {
-      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
-      elements = await Common.start(elementFinder, action.settings)
-      if (elements) {
-        repeat = action.repeat - 1
-        repeatInterval = action.repeatInterval
-        const value = _getValue(action.value, batchRepeat, sheets)
-        await _checkAction(value)
-      }
-    }
-  }
+const Action = (() => {
+  let elements
+  let repeat
+  let repeatInterval
 
-  const _getValue = (value, batchRepeat, sheets) => {
+  const getValue = (value, batchRepeat, sheets) => {
     // Logger.debug('\t\t\t\t Action >> _setValue')
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
-        const rowIndex = sheetCol[1] === '$' ? batchRepeat : parseInt(sheetCol[1])
+        const rowIndex = sheetCol[1] === '$' ? batchRepeat : parseInt(sheetCol[1], 10)
         const colIndex = sheetCol[0].charCodeAt(0) - 65
         if (!sheets[sheetName]) {
           throw new ConfigError(`Sheet: "${sheetName}" not found!`, 'Sheet not found')
@@ -58,8 +48,8 @@ const Action = ((Common) => {
     return value
   }
 
-  const _checkAction = async (value) => {
-  // Logger.debug('\t\t\t\t Action >> _checkAction')
+  const checkAction = async value => {
+    // Logger.debug('\t\t\t\t Action >> checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
         ScrollToEvents.start(elements, value)
@@ -71,29 +61,47 @@ const Action = ((Common) => {
         LocationCommandEvents.start(value)
       } else if (/^keyevents::/gi.test(value)) {
         KeyEvents.start(elements, value)
+      } else if (/^windowcommand::/gi.test(value)) {
+        WindowCommandEvents.start(elements, value)
       } else {
         PlainEvents.start(elements, value)
       }
     } else {
-      for (const element of elements) {
-        ['mouseover', 'mousedown', 'mouseup', 'click'].forEach((event) => {
+      elements.forEach(element => {
+        DEFAULT_EVENT.forEach(event => {
           element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
         })
-      }
+      })
     }
-    await _repeatFunc(value)
+    // eslint-disable-next-line no-use-before-define
+    await repeatFunc(value)
   }
 
-  const _repeatFunc = async (value) => {
-  // Logger.debug('\t\t\t\t Action >> _repeatFunc')
+  const repeatFunc = async value => {
+    // Logger.debug('\t\t\t\t Action >> repeatFunc')
     if (repeat > 0 || repeat < -1) {
-      repeat--
+      repeat -= 1
       await wait(repeatInterval, 'Action Repeat')
-      _checkAction(value)
+      checkAction(value)
+    }
+  }
+
+  const start = async (action, batchRepeat, sheets) => {
+    // Logger.debug('\t\t\t\t Action >> start')
+    await wait(action.initWait, 'Action Wait')
+    if (await Addon.check(action.addon, action.settings)) {
+      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+      elements = await Common.start(elementFinder, action.settings)
+      if (elements) {
+        repeat = action.repeat - 1
+        repeatInterval = action.repeatInterval
+        const value = getValue(action.value, batchRepeat, sheets)
+        await checkAction(value)
+      }
     }
   }
 
   return { start }
-})(Common)
+})()
 
 export default Action

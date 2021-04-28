@@ -1,8 +1,8 @@
 /* eslint-disable no-new, no-use-before-define */
 
-import { DateUtil, LocalStorage, Manifest, RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
+import { DateUtil, LocalStorage, Logger, Manifest, RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { Runtime, BrowserAction, GoogleAnalytics } from '@dhruv-techapps/core-extension'
+import { BrowserAction, GoogleAnalytics, Runtime } from '@dhruv-techapps/core-extension'
 
 import registerContextMenus from './context-menu'
 import registerNotifications from './notifications'
@@ -13,30 +13,26 @@ import Config from './config'
 import { UpdateData } from './update-data'
 import CloudMessaging from './cloud-messaging'
 
+// eslint-disable-next-line prettier/prettier
 (() => {
   try {
-    const {
-      name,
-      version,
-      'config.uninstall_url': uninstallUrl,
-      'config.variant': variant,
-      'config.tracking_id': trackingId,
-      'config.options_page_url': optionsPageUrl
-    } = Manifest.values(['name',
+    const { name, version, 'config.uninstall_url': uninstallUrl, 'config.variant': variant, 'config.tracking_id': trackingId, 'config.options_page_url': optionsPageUrl } = Manifest.values([
+      'name',
       'version',
       'config.variant',
       'config.uninstall_url',
       'config.tracking_id',
-      'config.options_page_url'])
+      'config.options_page_url'
+    ])
     /**
-    * Setup Google Analytics
-    */
+     * Setup Google Analytics
+     */
     new GoogleAnalytics(trackingId, variant)
-    GoogleAnalytics.pageView([], console.log)
+    GoogleAnalytics.pageView([], Logger.log)
 
     /**
-    * Browser Action set to open option page / configuration page
-    */
+     * Browser Action set to open option page / configuration page
+     */
     BrowserAction.onClicked(() => {
       TabsMessenger.optionsTab({ url: optionsPageUrl })
     })
@@ -54,8 +50,8 @@ import CloudMessaging from './cloud-messaging'
     })
 
     /**
-   * Setup Uninstall action
-   */
+     * Setup Uninstall action
+     */
     Runtime.setUninstallURL(uninstallUrl)
 
     /**
@@ -65,19 +61,19 @@ import CloudMessaging from './cloud-messaging'
     registerNotifications(optionsPageUrl)
 
     /**
-    * If an update is available it will auto update
-    */
-    Runtime.onUpdateAvailable(_ => {
-      LocalStorage.setItem('backup_' + Date.now(), LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS))
+     * If an update is available it will auto update
+     */
+    Runtime.onUpdateAvailable(() => {
+      LocalStorage.setItem(`backup_${Date.now()}`, LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS))
       Runtime.reload()
     })
 
     /**
-    * On start up check for rate
-    * TODO Need to implement rate us feature
-    */
+     * On start up check for rate
+     * TODO Need to implement rate us feature
+     */
     Runtime.onStartup(() => {
-      GoogleAnalytics.event({ event: ['version', version] }, console.log)
+      GoogleAnalytics.event({ event: ['version', version] }, Logger.log)
       UpdateData.checkConfig()
       UpdateData.checkSettings()
     })
@@ -90,7 +86,7 @@ import CloudMessaging from './cloud-messaging'
     Runtime.onMessageExternal(onMessageListener)
     Runtime.onMessage(onMessageListener)
   } catch (error) {
-    console.error(error)
+    Logger.error(error)
     GoogleAnalytics.error({ error }, () => {})
   }
 })()

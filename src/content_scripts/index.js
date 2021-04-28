@@ -1,19 +1,11 @@
-import { LOCAL_STORAGE_KEY, LOAD_TYPES, defaultSettings } from '@dhruv-techapps/acf-common'
+import { LOAD_TYPES, LOCAL_STORAGE_KEY, defaultSettings } from '@dhruv-techapps/acf-common'
 import { DataStore, GAService, Logger, Service, StorageService } from '@dhruv-techapps/core-common'
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 
 import Config from './config'
 import { ContextMenu } from './context_menu'
 
-document.addEventListener('DOMContentLoaded', function () {
-  loadSettings(LOAD_TYPES.DOCUMENT)
-})
-
-window.addEventListener('load', function () {
-  loadSettings(LOAD_TYPES.WINDOW)
-})
-
-async function loadSettings (loadType) {
+async function loadSettings(loadType) {
   try {
     // Logger.debug('\t loadSettings', loadType)
     const config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
@@ -29,4 +21,13 @@ async function loadSettings (loadType) {
     GAService.error({ name: e.name, stack: e.stack })
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadSettings(LOAD_TYPES.DOCUMENT)
+})
+
+window.addEventListener('load', () => {
+  loadSettings(LOAD_TYPES.WINDOW)
+})
+
 ContextMenu.setup()

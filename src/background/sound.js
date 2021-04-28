@@ -1,5 +1,5 @@
 export default class Sound {
-  processPortMessage () {
+  processPortMessage() {
     try {
       new Audio(chrome.runtime.getURL('./sounds/Bulb.ogg')).play()
       return {}

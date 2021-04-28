@@ -4,7 +4,8 @@ import { ContextMenus } from '@dhruv-techapps/core-extension'
 import { CONTEXT_MENU_ID } from '../common/constant'
 import { TabsMessenger } from './tab'
 
-export default function registerContextMenus (title, optionsPageUrl) {
+export default function registerContextMenus(title, optionsPageUrl) {
+  // eslint-disable-next-line no-new
   new ContextMenus({ id: CONTEXT_MENU_ID, title, contexts: ['all'] })
 
   chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {

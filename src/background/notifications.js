@@ -1,13 +1,11 @@
-
 import { Logger } from '@dhruv-techapps/core-common'
 import { Tabs } from '@dhruv-techapps/core-extension'
 
-export default function registerNotifications (optionsPageUrl) {
-  chrome.notifications.onClicked.addListener((notificationId) => {
+export default function registerNotifications(optionsPageUrl) {
+  chrome.notifications.onClicked.addListener(notificationId => {
     if (notificationId !== 'rate') {
       Tabs.create({ properties: { url: optionsPageUrl } })
     }
-    Logger.info('Notification onClicked', notificationId)
   })
 
   chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
