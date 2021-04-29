@@ -10,8 +10,8 @@
     "test:coverage": "jest --ci --coverage=true --maxWorkers=2",
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
     "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
-    "build:beta": "webpack --env.srcDir=_beta",
     "build:dev": "webpack --env.srcDir=_dev",
+    "build:beta": "webpack --env.srcDir=_beta",
     "build:production": "webpack --env.srcDir=_prod",
     "prepare": "npm run lint:fix && npm run build"
   },

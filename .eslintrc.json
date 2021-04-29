@@ -9,13 +9,9 @@
       }
     ],
     "import/prefer-default-export": "off",
-    "no-unused-vars": "warn",
     "no-console": "error",
     "no-await-in-loop": "off",
     "no-return-await": "off",
-    "func-names": "off",
-    "no-process-exit": "off",
-    "object-shorthand": "off",
     "class-methods-use-this": "off",
     "sort-imports": [
       "error",

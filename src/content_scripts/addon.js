@@ -16,7 +16,7 @@ const Addon = (() => {
       return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
     }
     // eslint-disable-next-line no-console
-    console.table([{ elementFinder: elementFinder, value: value, condition: condition }])
+    console.table([{ elementFinder, value, condition }])
     if (recheckOption === RECHECK_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         window.location.reload()
@@ -26,7 +26,7 @@ const Addon = (() => {
         })
       }
     } else if (recheckOption === RECHECK_OPTIONS.STOP) {
-      throw new ConfigError('Not Matched and action is STOP')
+      throw new ConfigError('Not Matched', 'Action is STOP')
     }
     Logger.info('Not Matched and action is SKIP')
     return false
@@ -50,6 +50,9 @@ const Addon = (() => {
       value = element.innerText
     }
     if (valueExtractor) {
+      if (/^@\w+$/.test(valueExtractor)) {
+        return element.getAttribute(valueExtractor.replace('@', ''))
+      }
       const match = RegExp(valueExtractor).exec(value)
       return (match && match[0]) || value
     }
