@@ -2,7 +2,7 @@ import { FORM_CLEAR_ELEMENT_NODE_NAME, FORM_ELEMENT_NODE_NAME } from '../util'
 import { ConfigError, SystemError } from '../error'
 import CommonEvents from './common.events'
 
-const FORM_EVENTS = ['blur', 'click', 'focus', 'select', 'submit', 'remove', 'clear']
+const FORM_EVENTS = ['blur', 'change', 'contextmenu', 'click', 'focus', 'input', 'select', 'submit', 'remove', 'clear', 'reset', 'search']
 
 export const FormEvents = (() => {
   const dispatchEvent = (element, events) => {
@@ -43,7 +43,7 @@ export const FormEvents = (() => {
           }
           break
         default:
-          throw new SystemError('Unhandled Event', event)
+          throw new SystemError(`Unhandled Event  "${event}"`)
       }
     })
   }
