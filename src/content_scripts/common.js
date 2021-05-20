@@ -86,8 +86,9 @@ const Common = (() => {
       }
     } else if (retryOption === RETRY_OPTIONS.STOP) {
       throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found')
+    } else {
+      Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
     }
-    Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
   }
 
   const start = async (elementFinder, settings = {}) => {
