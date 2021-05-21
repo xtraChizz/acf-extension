@@ -84,8 +84,9 @@ const Common = (() => {
       } else {
         window.addEventListener('load', window.location.reload)
       }
+      throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found - RELOAD')
     } else if (retryOption === RETRY_OPTIONS.STOP) {
-      throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found')
+      throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found - STOP')
     } else {
       Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
     }
