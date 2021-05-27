@@ -34,14 +34,15 @@ export const KeyEvents = (() => {
     throw new ConfigError(events, 'Invalid Events')
   }
   const dispatchEvent = async (element, events) => {
-    events.forEach(async event => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const event of events) {
       element.dispatchEvent(new KeyboardEvent(KEYBOARD_EVENT_KEYDOWN, { ...CommonEvents.getKeyboardEventProperties(event) }))
       element.value += event.key
       element.dispatchEvent(new KeyboardEvent(KEYBOARD_EVENT_KEYUP, { ...CommonEvents.getKeyboardEventProperties(event) }))
       if (event.delay) {
         await wait(event.delay, 'Key Event')
       }
-    })
+    }
   }
 
   const start = (elements, event) => {
