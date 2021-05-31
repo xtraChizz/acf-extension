@@ -50,7 +50,7 @@ const Addon = (() => {
       value = element.innerText
     }
     if (valueExtractor) {
-      if (/^@\w+$/.test(valueExtractor)) {
+      if (/^@\w+(-\w+)?$/.test(valueExtractor)) {
         return element.getAttribute(valueExtractor.replace('@', ''))
       }
       const match = RegExp(valueExtractor).exec(value)
