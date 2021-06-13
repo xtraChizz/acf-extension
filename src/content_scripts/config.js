@@ -1,4 +1,4 @@
-import { BrowserActionService, Logger, NotificationsService, SoundService, StorageService } from '@dhruv-techapps/core-common'
+import { BrowserActionService, CloudMessagingService, Logger, NotificationsService, SoundService, StorageService } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, START_TYPES, defaultConfig } from '@dhruv-techapps/acf-common'
 import { wait } from './util'
 import Batch from './batch'
@@ -18,17 +18,21 @@ const Config = (() => {
     return sheets
   }
 
-  const start = async (onConfig, onError, sound) => {
+  const start = async (onConfig, onError, sound, discord) => {
     // Logger.debug('\t Config >> start')
+    const fields = [{ name: 'URL', value: config.url }]
+    if (config.name) {
+      fields.unshift({ name: 'name', value: config.name })
+    }
     try {
       const sheets = await StorageService.getItem(LOCAL_STORAGE_KEY.SHEETS, [])
       await Batch.start(config.batch, config.actions, processSheets(sheets))
       // Logger.debug('\t Config >> start >> done')
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: 'Done' })
-      // ! CloudMessagingService.push({ title: 'Configuration Finished', body: config.name || config.url }).catch(console.error)
       if (onConfig) {
         NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
+        if (discord) CloudMessagingService.push({ title: 'Configuration Finished', fields, color: '#198754' }).catch(Logger.error)
         if (sound) SoundService.play()
       }
     } catch (e) {
@@ -36,9 +40,20 @@ const Config = (() => {
         const error = { title: e.title, message: `url : ${config.url}\n${e.message}` }
         BrowserActionService.setBadgeBackgroundColor({ color: [220, 53, 69, 1] })
         BrowserActionService.setBadgeText({ text: 'Error' })
-        // ! CloudMessagingService.push({ title: 'Configuration Error', body: config.name || config.url }).catch(console.error)
         if (onError) {
           NotificationsService.create(error)
+          if (discord)
+            CloudMessagingService.push({
+              title: e.title || 'Configuration Error',
+              fields: [
+                ...fields,
+                ...e.message.split('\n').map(info => {
+                  const [name, value] = info.split(':')
+                  return { name, value: value.replace(/'/g, '`') }
+                })
+              ],
+              color: '#dc3545'
+            }).catch(Logger.error)
           if (sound) SoundService.play()
         } else {
           Logger.error(error)
@@ -68,7 +83,7 @@ const Config = (() => {
     }
   }
 
-  const getConfig = async ({ notifications: { onConfig, onError, sound } }, _config) => {
+  const getConfig = async ({ notifications: { onConfig, onError, sound, discord } }, _config) => {
     // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
     if (_config) {
       config = _config
@@ -83,7 +98,7 @@ const Config = (() => {
         BrowserActionService.setBadgeText({ text: 'Auto' })
         BrowserActionService.setTitle({ title: 'Start Automatically' })
         await checkStartTime()
-        start(onConfig, onError, sound)
+        start(onConfig, onError, sound, discord)
       }
     }
   }

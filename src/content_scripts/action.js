@@ -6,6 +6,8 @@ import { FormEvents, KeyEvents, LocationCommandEvents, MouseEvents, PlainEvents,
 import { ConfigError } from './error'
 import CommonEvents from './events/common.events'
 import { WindowCommandEvents } from './events/window-command.events'
+import { AttributeEvents } from './events/attribute.events'
+import { ClassEvents } from './events/class-list.events'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
@@ -57,12 +59,16 @@ const Action = (() => {
         MouseEvents.start(elements, value)
       } else if (/^formevents::/gi.test(value)) {
         FormEvents.start(elements, value)
-      } else if (/^locationcommand::/gi.test(value)) {
-        LocationCommandEvents.start(value)
       } else if (/^keyevents::/gi.test(value)) {
         KeyEvents.start(elements, value)
+      } else if (/^attr::/gi.test(value)) {
+        AttributeEvents.start(elements, value)
+      } else if (/^class::/gi.test(value)) {
+        ClassEvents.start(elements, value)
       } else if (/^windowcommand::/gi.test(value)) {
-        WindowCommandEvents.start(elements, value)
+        WindowCommandEvents.start(value)
+      } else if (/^locationcommand::/gi.test(value)) {
+        LocationCommandEvents.start(value)
       } else {
         PlainEvents.start(elements, value)
       }

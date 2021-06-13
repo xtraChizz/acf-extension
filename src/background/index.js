@@ -11,7 +11,7 @@ import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 import Sound from './sound'
 import Config from './config'
 import { UpdateData } from './update-data'
-import CloudMessaging from './cloud-messaging'
+import DiscordMessaging from './discord-messaging'
 
 // eslint-disable-next-line prettier/prettier
 (() => {
@@ -81,7 +81,7 @@ import CloudMessaging from './cloud-messaging'
     const onMessageListener = {
       [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(),
       [RUNTIME_MESSAGE.SOUND]: new Sound(),
-      [RUNTIME_MESSAGE.CLOUD_MESSAGING]: new CloudMessaging()
+      [RUNTIME_MESSAGE.CLOUD_MESSAGING]: new DiscordMessaging()
     }
     Runtime.onMessageExternal(onMessageListener)
     Runtime.onMessage(onMessageListener)
