@@ -1,6 +1,74 @@
 {
   "message_action_not_found": {
-    "message": "is not configured",
-    "description": "onMessage action error message"
+    "message": "is not configured"
+  },
+  "@PORT__action_not_found": {
+    "message": "is not configured"
+  },
+  "@PORT__method_not_found": {
+    "message": "process method is not found"
+  },
+  "@RATE__title": {
+    "message": "Useful Extension"
+  },
+  "@RATE__message": {
+    "message": "Do you found our extension useful?"
+  },
+  "@RATE__yes_button": {
+    "message": "Yes"
+  },
+  "@RATE__no_button": {
+    "message": "No"
+  },
+  "@RATE__yes_title": {
+    "message": "Enjoying the extension?"
+  },
+  "@RATE__yes_message": {
+    "message": "Please help us become a 5-star extension,\nThank you!"
+  },
+  "@RATE__no_title": {
+    "message": "Let us help you"
+  },
+  "@RATE__no_message": {
+    "message": "Connect with us on Discord or Create issue if you find"
+  },
+  "@RATE__issue_button": {
+    "message": "☉ Create Issue"
+  },
+  "@RATE__connect_button": {
+    "message": "★ Connect with us"
+  },
+  "@RATE__rate_button": {
+    "message": "❤ Rate Now"
+  },
+  "@RATE__later_button": {
+    "message": "☹ Later"
+  },
+  "@RATE__review_url_missing": {
+    "message": "Review url is missing for rate"
+  },
+  "@NOTIFICATIONS__permission_error": {
+    "message": "notification permission is not provided in manifest. Please update manifest permission"
+  },
+  "@NOTIFICATIONS__default_icon_missing": {
+    "message": "default_icon is not defined under browser_action in manifest. Please add {browser_action:{default_icon}}"
+  },
+  "@TAB__options_page_url_missing": {
+    "message": "options page not defined in manifest. Please add {config{options_page_url}}"
+  },
+  "@IMPORT_DATA___target": {
+    "message": "Import target not specified"
+  },
+  "@NOTIFICATIONS_config_finish": {
+    "message": "Configuration Finished"
+  },
+  "@NOTIFICATIONS_config_finish": {
+    "message": "Configuration Finished"
+  },
+  "@CLOUD_MESSAGE_config_error_title": {
+    "message": "Configuration Error"
+  },
+  "@CLOUD_MESSAGE_config_finish_title": {
+    "message": "Configuration Finish"
   }
 }

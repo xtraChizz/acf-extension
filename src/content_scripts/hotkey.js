@@ -1,6 +1,8 @@
+import { Logger } from '@dhruv-techapps/core-common'
+
 export const Hotkey = (() => {
   const setup = (hotkey, start) => {
-    // Logger.debug('\t Hotkey', hotkey)
+    Logger.debug('\t Hotkey', hotkey)
     document.addEventListener('keydown', ({ ctrlKey, shiftKey, altKey, code }) => {
       const key = hotkey.split('+').pop().trim()
       if (code.replace(/key/gi, '') === key) {

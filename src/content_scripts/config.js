@@ -19,7 +19,7 @@ const Config = (() => {
   }
 
   const start = async (onConfig, onError, sound, discord) => {
-    // Logger.debug('\t Config >> start')
+    Logger.debug('\t Config >> start')
     const fields = [{ name: 'URL', value: config.url }]
     if (config.name) {
       fields.unshift({ name: 'name', value: config.name })
@@ -27,11 +27,11 @@ const Config = (() => {
     try {
       const sheets = await StorageService.getItem(LOCAL_STORAGE_KEY.SHEETS, [])
       await Batch.start(config.batch, config.actions, processSheets(sheets))
-      // Logger.debug('\t Config >> start >> done')
+      Logger.debug('\t Config >> start >> done')
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: 'Done' })
       if (onConfig) {
-        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
+        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url }, 'config-completed')
         if (discord) CloudMessagingService.push({ title: 'Configuration Finished', fields, color: '#198754' }).catch(Logger.error)
         if (sound) SoundService.play()
       }
@@ -41,7 +41,7 @@ const Config = (() => {
         BrowserActionService.setBadgeBackgroundColor({ color: [220, 53, 69, 1] })
         BrowserActionService.setBadgeText({ text: 'Error' })
         if (onError) {
-          NotificationsService.create(error)
+          NotificationsService.create(error, 'error')
           if (discord)
             CloudMessagingService.push({
               title: e.title || 'Configuration Error',
@@ -65,7 +65,7 @@ const Config = (() => {
   }
 
   const schedule = async () => {
-    // Logger.debug('\t Config >> schedule')
+    Logger.debug('\t Config >> schedule')
     const rDate = new Date()
     rDate.setHours(Number(config.startTime.split(':')[0]))
     rDate.setMinutes(Number(config.startTime.split(':')[1]))
@@ -75,7 +75,7 @@ const Config = (() => {
   }
 
   const checkStartTime = async () => {
-    // Logger.debug('\t Config >> checkStartTime')
+    Logger.debug('\t Config >> checkStartTime')
     if (config.startTime && config.startTime.match(/^\d{2}:\d{2}:\d{2}:\d{3}$/)) {
       await schedule()
     } else {
@@ -84,17 +84,17 @@ const Config = (() => {
   }
 
   const getConfig = async ({ notifications: { onConfig, onError, sound, discord } }, _config) => {
-    // Logger.debug('\t Config >> getConfig', onConfig, onError, sound, hotkey)
+    Logger.debug('\t Config >> getConfig', onConfig, onError, sound, discord)
     if (_config) {
       config = _config
       BrowserActionService.setBadgeBackgroundColor({ color: [13, 110, 253, 1] })
       if (config.startType === START_TYPES.MANUAL || config.startManually) {
-        // Logger.debug('\t Config >> start Manually')
+        Logger.debug('\t Config >> start Manually')
         BrowserActionService.setBadgeText({ text: 'Manual' })
         BrowserActionService.setTitle({ title: 'Start Manually' })
         Hotkey.setup(config.hotkey || defaultConfig.hotkey, start.bind(this, onConfig, onError, sound))
       } else {
-        // Logger.debug('\t Config >> start Automatically')
+        Logger.debug('\t Config >> start Automatically')
         BrowserActionService.setBadgeText({ text: 'Auto' })
         BrowserActionService.setTitle({ title: 'Start Automatically' })
         await checkStartTime()

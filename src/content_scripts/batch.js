@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { DataStore, NotificationsService, SoundService } from '@dhruv-techapps/core-common'
+import { DataStore, Logger, NotificationsService, SoundService } from '@dhruv-techapps/core-common'
 import Actions from './actions'
 import { wait } from './util'
 
@@ -9,7 +9,7 @@ const Batch = (() => {
   let sheets
 
   const refresh = () => {
-    // Logger.debug('\t\t Batch >> refresh')
+    Logger.debug('\t\t Batch >> refresh')
     if (document.readyState === 'complete') {
       window.location.reload()
     } else {
@@ -20,7 +20,7 @@ const Batch = (() => {
   }
 
   const checkRepeat = async () => {
-    // Logger.debug('\t\t Batch >> checkRepeat')
+    Logger.debug('\t\t Batch >> checkRepeat')
     const settings = DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS)
     if (batch.repeat > 0) {
       for (let i = 0; i < batch.repeat; i += 1) {
@@ -29,7 +29,7 @@ const Batch = (() => {
         }
         await Actions.start(actions, i + 1, sheets)
         if (settings.notifications.onBatch) {
-          NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` })
+          NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` }, 'batch-completed')
           if (settings.notifications.sound) SoundService.play()
         }
       }
@@ -47,7 +47,7 @@ const Batch = (() => {
   }
 
   const start = async (_batch, _actions, _sheets) => {
-    // Logger.debug('\t\t Batch >> start')
+    Logger.debug('\t\t Batch >> start')
     batch = _batch
     actions = _actions
     sheets = _sheets

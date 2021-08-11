@@ -16,7 +16,7 @@ module.exports = env => {
   return {
     mode: 'production',
     target: 'web',
-    devtool: devtool,
+    devtool,
     entry: {
       content_scripts: './src/content_scripts/index.js',
       background: './src/background/index.js'
@@ -42,6 +42,7 @@ module.exports = env => {
     },
     plugins: [
       new webpack.ProgressPlugin(),
+      new webpack.DefinePlugin({ mode: JSON.stringify({ env: env.srcDir }) }),
       new ESLintPlugin({
         cache: true,
         fix: true,

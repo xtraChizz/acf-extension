@@ -41,7 +41,46 @@ const CommonEvents = (() => {
   }
   const getMouseEventProperties = () => ({ screenX: 10, screenY: 10, clientX: 10, clientY: 10, bubbles: true, cancelable: true, view: window })
 
+  const getPosition = el => {
+    let left = 0
+    let top = 0
+    while (el && !Number.isNaN(el.offsetLeft) && !Number.isNaN(el.offsetTop)) {
+      left += el.offsetLeft - el.scrollLeft
+      top += el.offsetTop - el.scrollTop
+      el = el.offsetParent
+    }
+    return { top, left }
+  }
+
+  const getTouch = element => {
+    const offset = getPosition(element)
+    return new Touch({
+      identifier: Date.now(),
+      target: element,
+      clientX: offset.left,
+      clientY: offset.top,
+      radiusX: 10.5,
+      radiusY: 10.5,
+      rotationAngle: 10,
+      force: 0.5
+    })
+  }
+
+  const getTouchEventProperties = element => {
+    const touch = getTouch(element)
+    return {
+      touches: [touch],
+      targetTouches: [],
+      changedTouches: [touch],
+      shiftKey: true,
+      cancelable: true,
+      bubbles: true
+    }
+  }
+
   const getMouseEvent = () => new MouseEvent('click', getMouseEventProperties())
+
+  const getTouchEvent = () => new TouchEvent('touchstart', getTouchEventProperties())
 
   const getKeyboardEventProperties = ({
     key = '',
@@ -58,7 +97,7 @@ const CommonEvents = (() => {
     which = 0
   }) => ({ key, code, location, ctrlKey, shiftKey, altKey, metaKey, repeat, isComposing, charCode, keyCode, which })
 
-  return { getFillEvent, getMouseEvent, getMouseEventProperties, getKeyboardEventProperties, loopElements, getVerifiedEvents }
+  return { getFillEvent, getMouseEvent, getMouseEventProperties, getKeyboardEventProperties, loopElements, getVerifiedEvents, getTouchEvent, getTouchEventProperties, getTouch }
 })()
 
 export default CommonEvents

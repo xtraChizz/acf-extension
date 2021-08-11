@@ -1,3 +1,4 @@
+import { Logger } from '@dhruv-techapps/core-common'
 import { SystemError } from '../error'
 import CommonEvents from './common.events'
 
@@ -57,7 +58,7 @@ export const LocationCommandEvents = (() => {
   }
 
   const start = value => {
-    // Logger.debug('\t\t\t\t\t LocationCommandEvents >> start')
+    Logger.debug('\t\t\t\t\t LocationCommandEvents >> start')
     const commands = CommonEvents.getVerifiedEvents(LOCATION_COMMANDS, value)
     execCommand(commands, value)
   }

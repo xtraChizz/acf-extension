@@ -7,11 +7,12 @@ import { ContextMenu } from './context_menu'
 
 async function loadSettings(loadType) {
   try {
-    // Logger.debug('\t loadSettings', loadType)
+    Logger.debug('loadSettings', loadType)
     const config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
     if (config) {
       const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
       DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
+      Logger.debug('\t loadType', config.loadType || setting.loadType || LOAD_TYPES.WINDOW)
       if ((config.loadType || setting.loadType || LOAD_TYPES.WINDOW) === loadType) {
         await Config.getConfig(setting, config)
       }

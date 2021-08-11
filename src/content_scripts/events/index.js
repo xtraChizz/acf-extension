@@ -1,6 +1,7 @@
 export * from './form.events'
 export * from './location-command.events'
 export * from './mouse.events'
+export * from './touch.events'
 export * from './key.events'
 export * from './plain.events'
 export * from './scroll-to.events'

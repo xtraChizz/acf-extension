@@ -1,7 +1,9 @@
+import { Logger } from '@dhruv-techapps/core-common'
 import { RADIO_CHECKBOX_NODE_NAME } from '../util'
 import CommonEvents from './common.events'
 
 const DEFAULT_EVENT = ['mouseover', 'mousedown', 'mouseup', 'click']
+const CHANGE_EVENT = ['input', 'change']
 
 export const PlainEvents = (() => {
   const checkEmptyValue = value => (value === '::empty' ? '' : value)
@@ -19,11 +21,14 @@ export const PlainEvents = (() => {
         element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
       })
     }
+    CHANGE_EVENT.forEach(event => {
+      element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
+    })
     element.focus()
   }
 
   const start = (elements, value) => {
-    // Logger.debug('\t\t\t\t\t PlainEvents >> start')
+    Logger.debug('\t\t\t\t\t PlainEvents >> start')
     value = checkEmptyValue(value)
     CommonEvents.loopElements(elements, value, checkNode)
   }

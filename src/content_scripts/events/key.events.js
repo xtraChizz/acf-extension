@@ -46,7 +46,7 @@ export const KeyEvents = (() => {
   }
 
   const start = (elements, event) => {
-    // Logger.debug('\t\t\t\t\t KeyEvents  >> start')
+    Logger.debug('\t\t\t\t\t KeyEvents  >> start')
     const events = getVerifiedEvents(event)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }

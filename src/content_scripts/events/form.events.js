@@ -1,3 +1,4 @@
+import { Logger } from '@dhruv-techapps/core-common'
 import { FORM_CLEAR_ELEMENT_NODE_NAME, FORM_ELEMENT_NODE_NAME } from '../util'
 import { ConfigError, SystemError } from '../error'
 import CommonEvents from './common.events'
@@ -49,7 +50,7 @@ export const FormEvents = (() => {
   }
 
   const start = (elements, action) => {
-    // Logger.debug('\t\t\t\t\t FormEvents >> start')
+    Logger.debug('\t\t\t\t\t FormEvents >> start')
     const events = CommonEvents.getVerifiedEvents(FORM_EVENTS, action)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }

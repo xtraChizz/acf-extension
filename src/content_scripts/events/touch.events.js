@@ -2,18 +2,20 @@ import { Logger } from '@dhruv-techapps/core-common'
 import { ConfigError, SystemError } from '../error'
 import CommonEvents from './common.events'
 
-export const MouseEvents = (() => {
+export const TouchEvents = (() => {
   const dispatchEvent = (element, events) => {
+    Logger.debug('\t\t\t\t\t TouchEvents >>>>>> dispatchEvents', events)
     events.forEach(event => {
       if (typeof event === 'string') {
-        element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
+        element.dispatchEvent(new TouchEvent(event, CommonEvents.getTouchEventProperties(element)))
       } else {
-        element.dispatchEvent(new MouseEvent(event.type, { ...CommonEvents.getMouseEventProperties(), ...event }))
+        element.dispatchEvent(new TouchEvent(event.type, { ...CommonEvents.getTouchEventProperties(element), ...event }))
       }
     })
   }
 
   const getVerifiedEvents = events => {
+    Logger.debug('\t\t\t\t\t TouchEvents >>>> getVerifiedEvents')
     if (!events) {
       throw new SystemError('Event is blank!', 'Event cant be blank | null | undefined')
     }
@@ -41,7 +43,7 @@ export const MouseEvents = (() => {
   }
 
   const start = (elements, event) => {
-    Logger.debug('\t\t\t\t\t MouseEvents >> start')
+    Logger.debug('\t\t\t\t\t TouchEvents >> start', event)
     const events = getVerifiedEvents(event)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }

@@ -1,3 +1,4 @@
+import { Logger } from '@dhruv-techapps/core-common'
 import CommonEvents from './common.events'
 
 export const AttributeEvents = (() => {
@@ -11,7 +12,7 @@ export const AttributeEvents = (() => {
   }
 
   const start = (elements, value) => {
-    // Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
+    Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
     CommonEvents.loopElements(elements, value, execCommand)
   }
   return { start }

@@ -2,7 +2,7 @@ import { GAService, Logger } from '@dhruv-techapps/core-common'
 import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
-import { FormEvents, KeyEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents } from './events'
+import { FormEvents, KeyEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents, TouchEvents } from './events'
 import { ConfigError } from './error'
 import CommonEvents from './events/common.events'
 import { WindowCommandEvents } from './events/window-command.events'
@@ -19,7 +19,7 @@ const Action = (() => {
   let repeatInterval
 
   const getValue = (value, batchRepeat, sheets) => {
-    // Logger.debug('\t\t\t\t Action >> _setValue')
+    Logger.debug('\t\t\t\t Action >> _setValue')
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
@@ -51,12 +51,14 @@ const Action = (() => {
   }
 
   const checkAction = async value => {
-    // Logger.debug('\t\t\t\t Action >> checkAction')
+    Logger.debug('\t\t\t\t Action >> checkAction')
     if (value) {
       if (/^scrollto::/gi.test(value)) {
         ScrollToEvents.start(elements, value)
       } else if (/^clickevents::/gi.test(value) || /^mouseevents::/gi.test(value)) {
         MouseEvents.start(elements, value)
+      } else if (/^touchevents::/gi.test(value)) {
+        TouchEvents.start(elements, value)
       } else if (/^formevents::/gi.test(value)) {
         FormEvents.start(elements, value)
       } else if (/^keyevents::/gi.test(value)) {
@@ -84,7 +86,7 @@ const Action = (() => {
   }
 
   const repeatFunc = async value => {
-    // Logger.debug('\t\t\t\t Action >> repeatFunc')
+    Logger.debug('\t\t\t\t Action >> repeatFunc')
     if (repeat > 0 || repeat < -1) {
       repeat -= 1
       await wait(repeatInterval, 'Action Repeat')
@@ -93,7 +95,7 @@ const Action = (() => {
   }
 
   const start = async (action, batchRepeat, sheets) => {
-    // Logger.debug('\t\t\t\t Action >> start')
+    Logger.debug('\t\t\t\t Action >> start')
     await wait(action.initWait, 'Action Wait')
     if (await Addon.check(action.addon, action.settings)) {
       const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)

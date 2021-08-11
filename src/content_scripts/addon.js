@@ -6,7 +6,7 @@ import Common from './common'
 
 const Addon = (() => {
   const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {
-    // Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
+    Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
     if (recheck > 0) {
       recheck -= 1
       BrowserActionService.setBadgeBackgroundColor({ color: [13, 202, 240, 1] })
@@ -33,7 +33,7 @@ const Addon = (() => {
   }
 
   const getNodeValue = (elements, valueExtractor) => {
-    // Logger.debug('\t\t\t\t\t Addon >> getNodeValue')
+    Logger.debug('\t\t\t\t\t Addon >> getNodeValue')
     const element = elements[0]
     let value
     if (SELECT_TEXTAREA_NODE_NAME.test(element.nodeName)) {
@@ -60,7 +60,7 @@ const Addon = (() => {
   }
 
   const compare = (nodeValue, condition, value) => {
-    // Logger.debug('\t\t\t\t\t Addon >> compare')
+    Logger.debug('\t\t\t\t\t Addon >> compare')
     if (/than/gi.test(condition) && (Number.isNaN(Number(nodeValue)) || Number.isNaN(Number(value)))) {
       throw new ConfigError('Greater || Less can only compare number', 'Wrong Comparison')
     }
@@ -87,7 +87,7 @@ const Addon = (() => {
   }
 
   const start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings) => {
-    // Logger.debug('\t\t\t\t\t Addon >> start')
+    Logger.debug('\t\t\t\t\t Addon >> start')
     const elements = await Common.start(elementFinder, settings)
     if (elements) {
       const nodeValue = getNodeValue(elements, valueExtractor)
@@ -97,7 +97,7 @@ const Addon = (() => {
   }
 
   const check = async ({ elementFinder, value, condition, ...props } = {}) => {
-    // Logger.debug('\t\t\t\t\t Addon >> check')
+    Logger.debug('\t\t\t\t\t Addon >> check')
     if (elementFinder && value && condition) {
       return await start({ elementFinder, value, condition, ...props })
     }

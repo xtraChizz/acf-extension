@@ -1,3 +1,4 @@
+import { Logger } from '@dhruv-techapps/core-common'
 import CommonEvents from './common.events'
 
 const SCROLL_COORDINATES = ['Top', 'Bottom', 'Left', 'Right', 'TopLeft', 'BottomLeft', 'BottomRight', 'TopRight', 'XPath']
@@ -20,7 +21,7 @@ export const ScrollToEvents = (() => {
   }
 
   const start = (elements, value) => {
-    // Logger.debug('\t\t\t\t\t ScrollToEvents >> start')
+    Logger.debug('\t\t\t\t\t ScrollToEvents >> start')
     if (/xpath/gi.test(value)) {
       scrollToElement(elements)
     } else {

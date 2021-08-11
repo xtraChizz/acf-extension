@@ -12,6 +12,7 @@ import Sound from './sound'
 import Config from './config'
 import { UpdateData } from './update-data'
 import DiscordMessaging from './discord-messaging'
+import { Rate } from './rate'
 
 // eslint-disable-next-line prettier/prettier
 (() => {
@@ -90,3 +91,4 @@ import DiscordMessaging from './discord-messaging'
     GoogleAnalytics.error({ error }, () => {})
   }
 })()
+new Rate()
