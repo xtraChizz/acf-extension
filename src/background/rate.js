@@ -25,7 +25,7 @@ const notificationNoOptions = {
 }
 
 export class Rate {
-  constructor(skipDays = 5) {
+  constructor(skipDays = 15) {
     this.data = LocalStorage.getItem(LOCAL_STORAGE_CORE_KEY.RATE_DATA, defaultRateData)
     if (!this.data.isRated && this.checkInstallDate(skipDays)) {
       if (!this.recentlyShown(this.data.lastShownDate)) {

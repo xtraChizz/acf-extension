@@ -17,14 +17,14 @@ import { Rate } from './rate'
 // eslint-disable-next-line prettier/prettier
 (() => {
   try {
-    const { name, version, 'config.uninstall_url': uninstallUrl, 'config.variant': variant, 'config.tracking_id': trackingId, 'config.options_page_url': optionsPageUrl } = Manifest.values([
-      'name',
-      'version',
-      'config.variant',
-      'config.uninstall_url',
-      'config.tracking_id',
-      'config.options_page_url'
-    ])
+    const {
+      name,
+      version,
+      'config.uninstall_url': uninstallUrl,
+      'config.variant': variant,
+      'config.tracking_id': trackingId,
+      'config.options_page_url': optionsPageUrl
+    } = Manifest.values(['name', 'version', 'config.variant', 'config.uninstall_url', 'config.tracking_id', 'config.options_page_url'])
     /**
      * Setup Google Analytics
      */

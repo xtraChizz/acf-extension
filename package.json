@@ -34,33 +34,33 @@
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.4.1",
-    "eslint": "^7.24.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-json": "^2.1.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "eslint-plugin-standard": "^4.1.0",
     "eslint-webpack-plugin": "^2.5.4",
     "jest": "^26.6.3",
-    "jest-chrome": "^0.7.0",
+    "jest-chrome": "^0.7.2",
     "loadash": "^1.0.0",
     "merge-jsons-webpack-plugin": "^1.0.21",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.2",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "zip-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
     "@dhruv-techapps/acf-common": "^3.1.4",
-    "@dhruv-techapps/core-common": "^3.0.2",
-    "@dhruv-techapps/core-extension": "^3.0.0"
+    "@dhruv-techapps/core-common": "^3.0.5",
+    "@dhruv-techapps/core-extension": "^3.0.4"
   }
 }
