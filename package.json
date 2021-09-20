@@ -7,7 +7,7 @@
     "start": "webpack --watch --mode=development --env goal=__local",
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
     "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
-    "build:dev": "webpack ---env goal=_dev",
+    "build:dev": "webpack --env goal=_dev",
     "build:beta": "webpack --env goal=_beta",
     "build:prod": "webpack --env goal=_prod",
     "prepare": "npm run lint:fix && npm run build"
