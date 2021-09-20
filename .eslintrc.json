@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["airbnb", "prettier", "plugin:json/recommended"],
+  "extends": ["airbnb-base", "prettier", "plugin:json/recommended"],
   "rules": {
     "prettier/prettier": [
       "error",

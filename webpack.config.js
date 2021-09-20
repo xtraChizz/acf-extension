@@ -7,9 +7,9 @@ const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 
-module.exports = env => {
-  const srcDir = env ? env.srcDir || '_prod' : '_prod'
-  const devtool = env ? env.devtool || 'none' : 'none'
+module.exports = ({ goal }, argv) => {
+  const srcDir = goal || '_prod'
+  const devtool = argv.mode === 'development' ? 'inline-source-map' : false
   // eslint-disable-next-line global-require
   const manifest = require(`./${srcDir}/manifest.json`)
 
@@ -37,12 +37,9 @@ module.exports = env => {
       contentBase: './dist',
       hot: true
     },
-    module: {
-      rules: []
-    },
     plugins: [
       new webpack.ProgressPlugin(),
-      new webpack.DefinePlugin({ mode: JSON.stringify({ env: env.srcDir }) }),
+      new webpack.DefinePlugin({ mode: JSON.stringify({ env: goal }) }),
       new ESLintPlugin({
         cache: true,
         fix: true,
@@ -59,20 +56,24 @@ module.exports = env => {
           fileName: './manifest.json'
         }
       }),
-      new ZipPlugin({
-        path: `./../build/${srcDir}`,
-        filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`,
-        zipOptions: {
-          forceZip64Format: false
-        }
-      }),
       new CopyPlugin({
         patterns: [
           { from: './_locales', to: './_locales' },
           { from: './sounds', to: './sounds' },
           { from: `./${srcDir}/assets`, to: './assets' }
         ]
-      })
+      }),
+      ...(argv.mode !== 'development'
+        ? [
+            new ZipPlugin({
+              path: `./../build/${srcDir}`,
+              filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`,
+              zipOptions: {
+                forceZip64Format: false
+              }
+            })
+          ]
+        : [])
     ]
   }
 }
