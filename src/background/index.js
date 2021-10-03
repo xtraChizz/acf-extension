@@ -15,7 +15,10 @@ import DiscordMessaging from './discord-messaging'
 import { Rate } from './rate'
 
 // eslint-disable-next-line prettier/prettier
-(() => {
+;
+
+;(() => {
+  Logger.log(LOCAL_STORAGE_KEY)
   try {
     const {
       name,

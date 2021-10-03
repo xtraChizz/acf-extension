@@ -42,11 +42,12 @@
     "prettier": "^2.4.1",
     "webpack": "^5.53.0",
     "webpack-cli": "^4.8.0",
-    "zip-webpack-plugin": "^3.0.0"
+    "zip-webpack-plugin": "^4.0.1"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^3.1.4",
-    "@dhruv-techapps/core-common": "^3.0.5",
-    "@dhruv-techapps/core-extension": "^3.0.4"
+    "@dhruv-techapps/acf-common": "^4.x",
+    "@dhruv-techapps/core-common": "^4.x",
+    "@dhruv-techapps/core-extension": "^4.x",
+    "@dhruv-techapps/core-services": "^4.x"
   }
 }

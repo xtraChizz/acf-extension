@@ -1,5 +1,6 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { BrowserActionService, DataStore, Logger, NotificationsService, SoundService } from '@dhruv-techapps/core-common'
+import { DataStore, Logger } from '@dhruv-techapps/core-common'
+import { BrowserActionService, NotificationsService, SoundService } from '@dhruv-techapps/core-services'
 import Action from './action'
 
 const Actions = (() => {

@@ -7,9 +7,9 @@ const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 
-module.exports = ({ goal }, argv) => {
+module.exports = ({ goal }, { mode }) => {
   const srcDir = goal || '_prod'
-  const devtool = argv.mode === 'development' ? 'inline-source-map' : false
+  const devtool = mode === 'development' ? 'inline-source-map' : false
   // eslint-disable-next-line global-require
   const manifest = require(`./${srcDir}/manifest.json`)
 
@@ -32,10 +32,6 @@ module.exports = ({ goal }, argv) => {
     resolve: {
       extensions: ['.js'],
       modules: ['src', 'node_modules']
-    },
-    devServer: {
-      contentBase: './dist',
-      hot: true
     },
     plugins: [
       new webpack.ProgressPlugin(),
@@ -63,7 +59,7 @@ module.exports = ({ goal }, argv) => {
           { from: `./${srcDir}/assets`, to: './assets' }
         ]
       }),
-      ...(argv.mode !== 'development'
+      ...(mode !== 'development'
         ? [
             new ZipPlugin({
               path: `./../build/${srcDir}`,

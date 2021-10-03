@@ -1,5 +1,5 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { StorageService } from '@dhruv-techapps/core-common'
+import { StorageService } from '@dhruv-techapps/core-services'
 
 export const ContextMenu = (() => {
   const setXPathAndURL = (xpath, event) => {

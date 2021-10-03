@@ -1,5 +1,6 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { DataStore, Logger, NotificationsService, SoundService } from '@dhruv-techapps/core-common'
+import { DataStore, Logger } from '@dhruv-techapps/core-common'
+import { NotificationsService, SoundService } from '@dhruv-techapps/core-services'
 import Actions from './actions'
 import { wait } from './util'
 

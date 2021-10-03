@@ -1,5 +1,6 @@
-import { BrowserActionService, DataStore, Logger } from '@dhruv-techapps/core-common'
+import { DataStore, Logger } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
+import { BrowserActionService } from '@dhruv-techapps/core-services'
 import { ConfigError } from './error/config-error'
 import { wait } from './util'
 

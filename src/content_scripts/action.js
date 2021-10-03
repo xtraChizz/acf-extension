@@ -1,4 +1,5 @@
-import { GAService, Logger } from '@dhruv-techapps/core-common'
+import { Logger } from '@dhruv-techapps/core-common'
+import { GAService } from '@dhruv-techapps/core-services'
 import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
