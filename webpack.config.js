@@ -1,9 +1,8 @@
 /* eslint-disable import/no-dynamic-require */
 const webpack = require('webpack') // to access built-in plugins
 const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
-const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin')
+const MergeJsonPlugin = require('merge-json-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 
@@ -27,7 +26,8 @@ module.exports = ({ goal }, { mode }) => {
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name].js'
+      filename: '[name].js',
+      clean: true
     },
     resolve: {
       extensions: ['.js'],
@@ -42,15 +42,13 @@ module.exports = ({ goal }, { mode }) => {
         emitError: true,
         failOnError: true
       }),
-      new CleanWebpackPlugin({
-        dry: false,
-        verbose: true
-      }),
-      new MergeJsonWebpackPlugin({
-        files: ['./src/manifest.json', `./${srcDir}/manifest.json`],
-        output: {
-          fileName: './manifest.json'
-        }
+      new MergeJsonPlugin({
+        groups: [
+          {
+            files: ['./src/manifest.json', `./${srcDir}/manifest.json`],
+            to: './manifest.json'
+          }
+        ]
       }),
       new CopyPlugin({
         patterns: [
@@ -63,10 +61,7 @@ module.exports = ({ goal }, { mode }) => {
         ? [
             new ZipPlugin({
               path: `./../build/${srcDir}`,
-              filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`,
-              zipOptions: {
-                forceZip64Format: false
-              }
+              filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`
             })
           ]
         : [])
