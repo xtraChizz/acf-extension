@@ -6,6 +6,19 @@ const MergeJsonPlugin = require('merge-json-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 
+const merge = (target, source) => {
+  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
+  Object.keys(source).forEach(key => {
+    if (source[key] instanceof Object) {
+      Object.assign(source[key], merge(target[key], source[key]))
+    }
+  })
+
+  // Join `target` and modified `source`
+  Object.assign(target || {}, source)
+  return target
+}
+
 module.exports = ({ goal }, { mode }) => {
   const srcDir = goal || '_prod'
   const devtool = mode === 'development' ? 'inline-source-map' : false
@@ -48,7 +61,8 @@ module.exports = ({ goal }, { mode }) => {
             files: ['./src/manifest.json', `./${srcDir}/manifest.json`],
             to: './manifest.json'
           }
-        ]
+        ],
+        mergeFn: merge
       }),
       new CopyPlugin({
         patterns: [
