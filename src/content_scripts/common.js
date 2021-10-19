@@ -26,13 +26,13 @@ const Common = (() => {
       const element = document.querySelector(elementFinder.replace(/^Selector::/gi, ''))
       elements = element ? [element] : undefined
     } else if (/^ClassName::/gi.test(elementFinder)) {
-      elements = document.getElementsByClassName(elementFinder.replace(/^ClassName::/gi, ''))
+      elements = Array.from(document.getElementsByClassName(elementFinder.replace(/^ClassName::/gi, '')))
     } else if (/^Name::/gi.test(elementFinder)) {
-      elements = document.getElementsByName(elementFinder.replace(/^Name::/gi, ''))
+      elements = Array.from(document.getElementsByName(elementFinder.replace(/^Name::/gi, '')))
     } else if (/^TagName::/gi.test(elementFinder)) {
-      elements = document.getElementsByTagName(elementFinder.replace(/^TagName::/gi, ''))
+      elements = Array.from(document.getElementsByTagName(elementFinder.replace(/^TagName::/gi, '')))
     } else if (/^SelectorAll::/gi.test(elementFinder)) {
-      elements = document.querySelectorAll(elementFinder.replace(/^SelectorAll::/gi, ''))
+      elements = Array.from(document.querySelectorAll(elementFinder.replace(/^SelectorAll::/gi, '')))
     } else {
       try {
         const nodes = document.evaluate(elementFinder, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
