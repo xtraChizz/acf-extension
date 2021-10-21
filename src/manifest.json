@@ -5,7 +5,8 @@
   "version": "3.0.0",
   "manifest_version": 2,
   "default_locale": "en",
-  "permissions": ["notifications", "contextMenus", "downloads", "http://*/*", "https://*/*", "clipboardRead", "clipboardWrite"],
+  "permissions": ["notifications", "contextMenus", "downloads", "http://*/*", "https://*/*"],
+  "optional_permissions": ["clipboardRead", "clipboardWrite"],
   "config": {
     "variant": "LITE",
     "uninstall_url": "https://forms.gle/49dAyTL1pLNEcvu76",
@@ -29,7 +30,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["<all_urls>"],
       "js": ["content_scripts.js"],
       "run_at": "document_start",
       "all_frames": true
