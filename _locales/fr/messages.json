@@ -1,71 +1,71 @@
 {
   "message_action_not_found": {
-    "message": "is not configured"
+    "message": "n'est pas configuré"
   },
   "@PORT__action_not_found": {
-    "message": "is not configured"
+    "message": "n'est pas configuré"
   },
   "@PORT__method_not_found": {
-    "message": "process method is not found"
+    "message": "La méthode de processus n'est pas trouvée"
   },
   "@RATE__title": {
-    "message": "Useful Extension"
+    "message": "Extension utile"
   },
   "@RATE__message": {
-    "message": "Do you found our extension useful?"
+    "message": "Avez-vous trouvé notre extension utile?"
   },
   "@RATE__yes_button": {
-    "message": "Yes"
+    "message": "Oui"
   },
   "@RATE__no_button": {
-    "message": "No"
+    "message": "Non"
   },
   "@RATE__yes_title": {
-    "message": "Enjoying the extension?"
+    "message": "Profiter de l'extension?"
   },
   "@RATE__yes_message": {
-    "message": "Please help us become a 5-star extension,\nThank you!"
+    "message": "Aidez-nous à devenir une extension 5 étoiles,\nMerci!"
   },
   "@RATE__no_title": {
-    "message": "Let us help you"
+    "message": "Laissez-nous vous aider"
   },
   "@RATE__no_message": {
-    "message": "Connect with us on Discord or Create issue if you find"
+    "message": "Connectez-vous avec nous sur la discorde ou créez un problème si vous trouvez"
   },
   "@RATE__issue_button": {
-    "message": "☉ Create Issue"
+    "message": "☉ Créer un problème"
   },
   "@RATE__connect_button": {
-    "message": "★ Connect with us"
+    "message": "★ Connectez-vous avec nous"
   },
   "@RATE__rate_button": {
-    "message": "❤ Rate Now"
+    "message": "❤ Noter maintenant"
   },
   "@RATE__later_button": {
-    "message": "☹ Later"
+    "message": "☹ Plus tard"
   },
   "@RATE__review_url_missing": {
-    "message": "Review url is missing for rate"
+    "message": "L'URL d'examen est manquante pour le tarif"
   },
   "@NOTIFICATIONS__permission_error": {
-    "message": "notification permission is not provided in manifest. Please update manifest permission"
+    "message": "La permission de notification n'est pas fournie dans Manifeste.S'il vous plaît mettre à jour la permission manifeste"
   },
   "@NOTIFICATIONS__default_icon_missing": {
-    "message": "default_icon is not defined under browser_action in manifest. Please add {browser_action:{default_icon}}"
+    "message": "Default_icon n'est pas défini sous Browser_action dans Manifest.S'il-vous-plait ajoutez {browser_action:{default_icon}}"
   },
   "@TAB__options_page_url_missing": {
-    "message": "options page not defined in manifest. Please add {config{options_page_url}}"
+    "message": "Page Options non définie dans Manifeste.S'il-vous-plait ajoutez {config{options_page_url}}"
   },
   "@IMPORT_DATA___target": {
-    "message": "Import target not specified"
+    "message": "Cible d'importation non spécifiée"
   },
   "@NOTIFICATIONS_config_finish": {
-    "message": "Configuration Finished"
+    "message": "Configuration terminée"
   },
   "@CLOUD_MESSAGE_config_error_title": {
-    "message": "Configuration Error"
+    "message": "Erreur de configuration"
   },
   "@CLOUD_MESSAGE_config_finish_title": {
-    "message": "Configuration Finish"
+    "message": "Finition de configuration"
   }
 }
