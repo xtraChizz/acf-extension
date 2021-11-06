@@ -31,7 +31,8 @@ module.exports = ({ goal }, { mode }) => {
     devtool,
     entry: {
       content_scripts: './src/content_scripts/index.js',
-      background: './src/background/index.js'
+      background: './src/background/index.js',
+      editor: './src/editor/index.js'
     },
     stats: {
       children: false,
@@ -60,6 +61,10 @@ module.exports = ({ goal }, { mode }) => {
           {
             files: ['./src/manifest.json', `./${srcDir}/manifest.json`],
             to: './manifest.json'
+          },
+          {
+            files: ['./src/configuration.json', `./${srcDir}/configuration.json`],
+            to: './configuration.json'
           }
         ],
         mergeFn: merge

@@ -4,7 +4,6 @@ import { GAService, Service, StorageService } from '@dhruv-techapps/core-service
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 
 import Config from './config'
-import { ContextMenu } from './context_menu'
 
 async function loadSettings(loadType) {
   try {
@@ -31,5 +30,3 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('load', () => {
   loadSettings(LOAD_TYPES.WINDOW)
 })
-
-ContextMenu.setup()

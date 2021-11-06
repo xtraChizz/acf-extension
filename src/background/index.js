@@ -12,21 +12,15 @@ import Sound from './sound'
 import Config from './config'
 import { UpdateData } from './update-data'
 import DiscordMessaging from './discord-messaging'
+import configuration from '../configuration.json'
 
 // eslint-disable-next-line prettier/prettier
 ;
 
 ;(() => {
-  Logger.log(LOCAL_STORAGE_KEY)
   try {
-    const {
-      name,
-      version,
-      'config.uninstall_url': uninstallUrl,
-      'config.variant': variant,
-      'config.tracking_id': trackingId,
-      'config.options_page_url': optionsPageUrl
-    } = Manifest.values(['name', 'version', 'config.variant', 'config.uninstall_url', 'config.tracking_id', 'config.options_page_url'])
+    const { name, version } = Manifest.values(['name', 'version'])
+    const { uninstall_url: uninstallUrl, variant, tracking_id: trackingId, options_page_url: optionsPageUrl } = configuration
     /**
      * Setup Google Analytics
      */

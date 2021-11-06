@@ -32,7 +32,7 @@ const Config = (() => {
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: 'Done' })
       if (onConfig) {
-        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url }, 'config-completed')
+        NotificationsService.create({ title: 'Config Completed', message: config.name || config.url })
         if (discord) CloudMessagingService.push({ title: 'Configuration Finished', fields, color: '#198754' }).catch(Logger.error)
         if (sound) SoundService.play()
       }
