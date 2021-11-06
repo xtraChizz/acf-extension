@@ -91,7 +91,7 @@ const Action = (() => {
     if (repeat > 0 || repeat < -1) {
       repeat -= 1
       await wait(repeatInterval, 'Action Repeat')
-      checkAction(value)
+      await checkAction(value)
     }
   }
 
