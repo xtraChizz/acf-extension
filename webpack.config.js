@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 const webpack = require('webpack') // to access built-in plugins
 const path = require('path')
@@ -32,7 +33,8 @@ module.exports = ({ goal }, { mode }) => {
     entry: {
       content_scripts: './src/content_scripts/index.js',
       background: './src/background/index.js',
-      editor: './src/editor/index.js'
+      wizard: './src/wizard/index.js',
+      wizard_css: './src/wizard/wizard.scss'
     },
     stats: {
       children: false,
@@ -46,6 +48,20 @@ module.exports = ({ goal }, { mode }) => {
     resolve: {
       extensions: ['.js'],
       modules: ['src', 'node_modules']
+    },
+    module: {
+      rules: [
+        {
+          test: /\.scss$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: { outputPath: 'css/', name: '[name].min.css' }
+            },
+            'sass-loader'
+          ]
+        }
+      ]
     },
     plugins: [
       new webpack.ProgressPlugin(),
@@ -73,6 +89,7 @@ module.exports = ({ goal }, { mode }) => {
         patterns: [
           { from: './_locales', to: './_locales' },
           { from: './sounds', to: './sounds' },
+          { from: `./assets`, to: './assets' },
           { from: `./${srcDir}/assets`, to: './assets' }
         ]
       }),

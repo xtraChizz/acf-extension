@@ -1,5 +1,5 @@
 import { Logger } from '@dhruv-techapps/core-common'
-import { RADIO_CHECKBOX_NODE_NAME } from '../util'
+import { RADIO_CHECKBOX_NODE_NAME } from '../../common/constant'
 import CommonEvents from './common.events'
 
 const DEFAULT_EVENT = ['mouseover', 'mousedown', 'mouseup', 'click']
