@@ -70,9 +70,9 @@ const Action = (() => {
         AttributeEvents.start(elements, value)
       } else if (/^class::/gi.test(value)) {
         ClassEvents.start(elements, value)
-      } else if (/^copyevents::/gi.test(value)) {
+      } else if (/^copy::/gi.test(value)) {
         CopyEvents.start(elements, value)
-      } else if (/^pasteevents::/gi.test(value)) {
+      } else if (/^paste::/gi.test(value)) {
         PasteEvents.start(elements, value)
       } else if (/^windowcommand::/gi.test(value)) {
         WindowCommandEvents.start(value)
