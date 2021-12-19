@@ -20,6 +20,8 @@ const Action = (() => {
   let elements
   let repeat
   let repeatInterval
+  let elementFinder
+  let actionSettings
 
   const getValue = (value, batchRepeat, sheets) => {
     Logger.debug('\t\t\t\t Action >> _setValue')
@@ -97,16 +99,20 @@ const Action = (() => {
     if (repeat > 0 || repeat < -1) {
       repeat -= 1
       await wait(repeatInterval, 'Action Repeat')
-      await checkAction(value)
+      elements = await Common.start(elementFinder, actionSettings)
+      if (elements) {
+        await checkAction(value)
+      }
     }
   }
 
   const start = async (action, batchRepeat, sheets) => {
     Logger.debug('\t\t\t\t Action >> start')
+    actionSettings = action.settings
     await wait(action.initWait, 'Action Wait')
-    if (await Addon.check(action.addon, action.settings)) {
-      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
-      elements = await Common.start(elementFinder, action.settings)
+    if (await Addon.check(action.addon, actionSettings)) {
+      elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+      elements = await Common.start(elementFinder, actionSettings)
       if (elements) {
         repeat = action.repeat - 1
         repeatInterval = action.repeatInterval

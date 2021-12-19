@@ -1,4 +1,6 @@
-export const CONTEXT_MENU_ID = 'xpath-selection'
+export const CONTEXT_MENU_ELEMENT_ID = 'element-mode'
+export const CONTEXT_MENU_FORM_ID = 'form-mode'
+export const CONTEXT_MENU_CONFIG_PAGE_ID = 'config-page-mode'
 export const RUNTIME_MESSAGE_ACF = {
   CONFIG: 'config',
   SAVE_CONFIG: 'saveConfig'

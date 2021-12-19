@@ -19,7 +19,7 @@ import SaveConfig from './save-config'
 
 ;(() => {
   try {
-    const { name, version } = Manifest.values(['name', 'version'])
+    const { version } = Manifest.values(['name', 'version'])
     fetch(chrome.runtime.getURL('configuration.json'))
       .then(r => r.json())
       .then(({ uninstall_url: uninstallUrl, variant, tracking_id: trackingId, options_page_url: optionsPageUrl }) => {
@@ -56,7 +56,7 @@ import SaveConfig from './save-config'
         /**
          * Set Context Menu for right click
          */
-        registerContextMenus(name, optionsPageUrl)
+        registerContextMenus(optionsPageUrl)
         registerNotifications(optionsPageUrl)
 
         /**
