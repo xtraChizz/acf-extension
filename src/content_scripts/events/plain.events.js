@@ -16,7 +16,6 @@ export const PlainEvents = (() => {
     const RANDOM_REGEX = /<random(\[.+\])?(\{(\d+),?(\d+)?\})?>/i
     if (RANDOM_REGEX.test(value)) {
       const [, range, , start = 6, end] = value.match(RANDOM_REGEX)
-      Logger.log(range, start, end, value, value.match(RANDOM_REGEX))
       let characters
       switch (range) {
         case '[A-Z]':
@@ -55,11 +54,10 @@ export const PlainEvents = (() => {
       if (end) {
         length = Math.floor(Math.random() * Number(end)) + Number(start)
       }
-      Logger.log(characters, start, end)
       for (let i = 0; i < length; i += 1) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength))
       }
-      return result
+      return value.replace(/<random(\[.+\])?(\{(\d+),?(\d+)?\})?>/gi, result)
     }
     return value
   }

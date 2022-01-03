@@ -5,8 +5,8 @@ import { TabsMessenger } from './tab'
 
 export default function registerContextMenus(optionsPageUrl) {
   // eslint-disable-next-line no-new
+  chrome.contextMenus.create({ id: CONTEXT_MENU_FORM_ID, title: 'Configure for this Page (Record)', contexts: ['all'] })
   chrome.contextMenus.create({ id: CONTEXT_MENU_ELEMENT_ID, title: 'Configure for this Field', contexts: ['all'] })
-  chrome.contextMenus.create({ id: CONTEXT_MENU_FORM_ID, title: 'Configure for this Page', contexts: ['all'] })
   chrome.contextMenus.create({ id: 'SEPARATOR', type: 'separator', contexts: ['all'] })
   chrome.contextMenus.create({ id: CONTEXT_MENU_CONFIG_PAGE_ID, title: 'Open Configuration Page', contexts: ['all'] })
 
