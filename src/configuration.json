@@ -1,0 +1,7 @@
+{
+  "variant": "LITE",
+  "uninstall_url": "https://forms.gle/49dAyTL1pLNEcvu76",
+  "tracking_id": "UA-111423401-5",
+  "options_page_url": "https://getautoclicker.com/options_page_dev/index.html",
+  "functions": "https://us-central1-auto-fill-proj.cloudfunctions.net/"
+}

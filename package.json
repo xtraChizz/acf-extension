@@ -37,6 +37,7 @@
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-webpack-plugin": "^2.5.4",
+    "file-loader": "^6.2.0",
     "merge-json-webpack-plugin": "^6.0.0",
     "prettier": "^2.4.1",
     "webpack": "^5.53.0",
@@ -47,6 +48,8 @@
     "@dhruv-techapps/acf-common": "^4.x",
     "@dhruv-techapps/core-common": "^4.x",
     "@dhruv-techapps/core-extension": "^4.x",
-    "@dhruv-techapps/core-services": "^4.x"
+    "@dhruv-techapps/core-services": "^4.x",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.3.0"
   }
 }

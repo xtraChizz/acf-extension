@@ -1,9 +1,10 @@
 import { ADDON_CONDITIONS, RECHECK_OPTIONS } from '@dhruv-techapps/acf-common'
 import { BrowserActionService } from '@dhruv-techapps/core-services'
 import { Logger } from '@dhruv-techapps/core-common'
-import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME, wait } from './util'
+import { wait } from './util'
 import { ConfigError, SystemError } from './error'
 import Common from './common'
+import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME } from '../common/constant'
 
 const Addon = (() => {
   const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {

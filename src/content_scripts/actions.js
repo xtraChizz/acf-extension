@@ -13,7 +13,7 @@ const Actions = (() => {
       BrowserActionService.setTitle({ title: `Batch:${batchRepeat} Action:${i}` })
       await Action.start(actions[i], batchRepeat, sheets)
       if (settings.notifications.onAction) {
-        NotificationsService.create({ title: 'Action Completed', message: actions[i].elementFinder }, 'action-completed')
+        NotificationsService.create({ title: 'Action Completed', message: actions[i].elementFinder })
         if (settings.notifications.sound) SoundService.play()
       }
     }

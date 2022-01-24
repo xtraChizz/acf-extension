@@ -1,0 +1,71 @@
+{
+  "message_action_not_found": {
+    "message": "구성되지 않았습니다"
+  },
+  "@PORT__action_not_found": {
+    "message": "구성되지 않았습니다"
+  },
+  "@PORT__method_not_found": {
+    "message": "프로세스 방법을 찾을 수 없습니다"
+  },
+  "@RATE__title": {
+    "message": "유용한 확장"
+  },
+  "@RATE__message": {
+    "message": "우리의 연장이 유용 했습니까?"
+  },
+  "@RATE__yes_button": {
+    "message": "예"
+  },
+  "@RATE__no_button": {
+    "message": "아니요"
+  },
+  "@RATE__yes_title": {
+    "message": "확장을 즐기고 있니?"
+  },
+  "@RATE__yes_message": {
+    "message": "우리가 5 성급 확장이되도록 도와주세요.\n감사합니다!"
+  },
+  "@RATE__no_title": {
+    "message": "우리가 당신을 도울 수있게합시다"
+  },
+  "@RATE__no_message": {
+    "message": "찾는 경우 불화에 우리와 연결하거나 찾으면 문제가 발생합니다."
+  },
+  "@RATE__issue_button": {
+    "message": "☉ 문제를 만듭니다"
+  },
+  "@RATE__connect_button": {
+    "message": "★ 우리와 접촉"
+  },
+  "@RATE__rate_button": {
+    "message": "❤ 지금 평가"
+  },
+  "@RATE__later_button": {
+    "message": "☹ 나중"
+  },
+  "@RATE__review_url_missing": {
+    "message": "리뷰 URL이 속도가 없습니다"
+  },
+  "@NOTIFICATIONS__permission_error": {
+    "message": "알림 허가는 매니페스트에서 제공되지 않습니다.매니페스트 허가를 업데이트하십시오"
+  },
+  "@NOTIFICATIONS__default_icon_missing": {
+    "message": "default_icon은 매니페스트에서 browser_action에서 정의되지 않습니다.제발 추가하십시오{browser_action:{default_icon}}"
+  },
+  "@TAB__options_page_url_missing": {
+    "message": "옵션 페이지는 매니페스트에서 정의되지 않았습니다.제발 추가하십시오{config{options_page_url}}"
+  },
+  "@IMPORT_DATA___target": {
+    "message": "가져 오기 대상이 지정되지 않았습니다"
+  },
+  "@NOTIFICATIONS_config_finish": {
+    "message": "구성 완료"
+  },
+  "@CLOUD_MESSAGE_config_error_title": {
+    "message": "구성 오류"
+  },
+  "@CLOUD_MESSAGE_config_finish_title": {
+    "message": "구성 완료"
+  }
+}

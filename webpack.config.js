@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 const webpack = require('webpack') // to access built-in plugins
 const path = require('path')
@@ -5,6 +6,19 @@ const CopyPlugin = require('copy-webpack-plugin')
 const MergeJsonPlugin = require('merge-json-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+
+const merge = (target, source) => {
+  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
+  Object.keys(source).forEach(key => {
+    if (source[key] instanceof Object) {
+      Object.assign(source[key], merge(target[key], source[key]))
+    }
+  })
+
+  // Join `target` and modified `source`
+  Object.assign(target || {}, source)
+  return target
+}
 
 module.exports = ({ goal }, { mode }) => {
   const srcDir = goal || '_prod'
@@ -18,7 +32,9 @@ module.exports = ({ goal }, { mode }) => {
     devtool,
     entry: {
       content_scripts: './src/content_scripts/index.js',
-      background: './src/background/index.js'
+      background: './src/background/index.js',
+      wizard: './src/wizard/index.js',
+      wizard_css: './src/wizard/wizard.scss'
     },
     stats: {
       children: false,
@@ -32,6 +48,20 @@ module.exports = ({ goal }, { mode }) => {
     resolve: {
       extensions: ['.js'],
       modules: ['src', 'node_modules']
+    },
+    module: {
+      rules: [
+        {
+          test: /\.scss$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: { outputPath: 'css/', name: '[name].min.css' }
+            },
+            'sass-loader'
+          ]
+        }
+      ]
     },
     plugins: [
       new webpack.ProgressPlugin(),
@@ -47,13 +77,19 @@ module.exports = ({ goal }, { mode }) => {
           {
             files: ['./src/manifest.json', `./${srcDir}/manifest.json`],
             to: './manifest.json'
+          },
+          {
+            files: ['./src/configuration.json', `./${srcDir}/configuration.json`],
+            to: './configuration.json'
           }
-        ]
+        ],
+        mergeFn: merge
       }),
       new CopyPlugin({
         patterns: [
           { from: './_locales', to: './_locales' },
           { from: './sounds', to: './sounds' },
+          { from: `./assets`, to: './assets' },
           { from: `./${srcDir}/assets`, to: './assets' }
         ]
       }),

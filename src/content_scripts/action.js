@@ -9,6 +9,8 @@ import CommonEvents from './events/common.events'
 import { WindowCommandEvents } from './events/window-command.events'
 import { AttributeEvents } from './events/attribute.events'
 import { ClassEvents } from './events/class-list.events'
+import { CopyEvents } from './events/copy.events'
+import { PasteEvents } from './events/paste.events'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
@@ -18,6 +20,8 @@ const Action = (() => {
   let elements
   let repeat
   let repeatInterval
+  let elementFinder
+  let actionSettings
 
   const getValue = (value, batchRepeat, sheets) => {
     Logger.debug('\t\t\t\t Action >> _setValue')
@@ -68,6 +72,10 @@ const Action = (() => {
         AttributeEvents.start(elements, value)
       } else if (/^class::/gi.test(value)) {
         ClassEvents.start(elements, value)
+      } else if (/^copy::/gi.test(value)) {
+        CopyEvents.start(elements, value)
+      } else if (/^paste::/gi.test(value)) {
+        PasteEvents.start(elements, value)
       } else if (/^windowcommand::/gi.test(value)) {
         WindowCommandEvents.start(value)
       } else if (/^locationcommand::/gi.test(value)) {
@@ -91,16 +99,20 @@ const Action = (() => {
     if (repeat > 0 || repeat < -1) {
       repeat -= 1
       await wait(repeatInterval, 'Action Repeat')
-      checkAction(value)
+      elements = await Common.start(elementFinder, actionSettings)
+      if (elements) {
+        await checkAction(value)
+      }
     }
   }
 
   const start = async (action, batchRepeat, sheets) => {
     Logger.debug('\t\t\t\t Action >> start')
+    actionSettings = action.settings
     await wait(action.initWait, 'Action Wait')
-    if (await Addon.check(action.addon, action.settings)) {
-      const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
-      elements = await Common.start(elementFinder, action.settings)
+    if (await Addon.check(action.addon, actionSettings)) {
+      elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+      elements = await Common.start(elementFinder, actionSettings)
       if (elements) {
         repeat = action.repeat - 1
         repeatInterval = action.repeatInterval

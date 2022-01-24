@@ -30,7 +30,7 @@ const Batch = (() => {
         }
         await Actions.start(actions, i + 1, sheets)
         if (settings.notifications.onBatch) {
-          NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` }, 'batch-completed')
+          NotificationsService.create({ title: 'Batch Completed', message: `#${i + 1} Batch` })
           if (settings.notifications.sound) SoundService.play()
         }
       }

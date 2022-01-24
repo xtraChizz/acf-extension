@@ -62,9 +62,6 @@
   "@NOTIFICATIONS_config_finish": {
     "message": "Configuration Finished"
   },
-  "@NOTIFICATIONS_config_finish": {
-    "message": "Configuration Finished"
-  },
   "@CLOUD_MESSAGE_config_error_title": {
     "message": "Configuration Error"
   },
