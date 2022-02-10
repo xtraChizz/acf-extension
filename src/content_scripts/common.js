@@ -16,6 +16,21 @@ const Common = (() => {
     return false
   }
 
+  const stringFunction = elementFinder =>
+    elementFinder
+      .replace(/^Func::/gi, '')
+      .split('.')
+      .map(func => func.match(/\w+/)[0])
+      .reduce((p, c) => {
+        if (p === 'Date') {
+          return new window[p]()[c]()
+        }
+        if (typeof p === 'string') {
+          return window[p]()[c]()
+        }
+        return p[c]()
+      })
+
   const getElements = async (document, elementFinder, retry, retryInterval) => {
     Logger.debug('\t\t\t\t\t\t Common >>>> getElements')
     let elements
@@ -117,7 +132,7 @@ const Common = (() => {
     }
     return elements
   }
-  return { start }
+  return { start, stringFunction }
 })()
 
 export default Common

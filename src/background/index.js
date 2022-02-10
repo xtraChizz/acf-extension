@@ -60,6 +60,7 @@ try {
        */
       Runtime.onUpdateAvailable(details => {
         LocalStorage.setItem(`backup_${Date.now()}`, LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS))
+        Logger.log(optionsPageUrl, details.version)
         Blog.check(optionsPageUrl, details.version)
         Runtime.reload()
       })

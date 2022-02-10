@@ -110,7 +110,7 @@ const Action = (() => {
     Logger.debug('\t\t\t\t Action >> start')
     actionSettings = action.settings
     await wait(action.initWait, 'Action Wait')
-    if (await Addon.check(action.addon, actionSettings)) {
+    if (await Addon.check(action.addon, actionSettings, batchRepeat)) {
       elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
       elements = await Common.start(elementFinder, actionSettings)
       if (elements) {

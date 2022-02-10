@@ -7,7 +7,7 @@ import Common from './common'
 import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME } from '../common/constant'
 
 const Addon = (() => {
-  const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }) => {
+  const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat) => {
     Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
     if (recheck > 0) {
       recheck -= 1
@@ -15,7 +15,7 @@ const Addon = (() => {
       BrowserActionService.setBadgeText({ text: 'Recheck' })
       await wait(recheckInterval, 'Addon Recheck')
       // eslint-disable-next-line no-use-before-define
-      return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor })
+      return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat)
     }
     // eslint-disable-next-line no-console
     console.table([{ elementFinder, value, condition }])
@@ -88,20 +88,29 @@ const Addon = (() => {
     }
   }
 
-  const start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings) => {
+  const start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat) => {
     Logger.debug('\t\t\t\t\t Addon >> start')
-    const elements = await Common.start(elementFinder, settings)
-    if (elements) {
-      const nodeValue = getNodeValue(elements, valueExtractor)
-      return compare(nodeValue, condition, value) || (await recheckFunc({ elementFinder, value, condition, valueExtractor, ...props }))
+    let nodeValue
+    if (/^Func::/gi.test(elementFinder)) {
+      nodeValue = Common.stringFunction(elementFinder)
+    } else {
+      elementFinder = elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+      const elements = await Common.start(elementFinder, settings)
+      if (elements) {
+        nodeValue = getNodeValue(elements, valueExtractor)
+      }
+    }
+    if (nodeValue) {
+      value = value.replaceAll('<batchRepeat>', batchRepeat)
+      return compare(nodeValue, condition, value) || (await recheckFunc({ elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
     }
     return false
   }
 
-  const check = async ({ elementFinder, value, condition, ...props } = {}) => {
+  const check = async ({ elementFinder, value, condition, ...props } = {}, actionSettings, batchRepeat) => {
     Logger.debug('\t\t\t\t\t Addon >> check')
     if (elementFinder && value && condition) {
-      return await start({ elementFinder, value, condition, ...props })
+      return await start({ elementFinder, value, condition, ...props }, actionSettings, batchRepeat)
     }
     return true
   }
