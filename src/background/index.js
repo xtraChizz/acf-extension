@@ -58,10 +58,12 @@ try {
       /**
        * If an update is available it will auto update
        */
-      Runtime.onUpdateAvailable(details => {
+      Runtime.onUpdateAvailable(async details => {
         LocalStorage.setItem(`backup_${Date.now()}`, LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS))
+        LocalStorage.setItem(`version`, details.version)
+        LocalStorage.setItem(`details`, JSON.stringify(details))
         Logger.log(optionsPageUrl, details.version)
-        Blog.check(optionsPageUrl, details.version)
+        await Blog.check(optionsPageUrl, details.version)
         Runtime.reload()
       })
 

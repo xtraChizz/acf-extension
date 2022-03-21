@@ -7,7 +7,7 @@ import { wait } from './util'
 const Common = (() => {
   const retryFunc = async (retry, retryInterval) => {
     Logger.debug('\t\t\t\t\t\t Common >>>>>> retryFunc')
-    if (retry > 0) {
+    if (retry > 0 || retry < -1) {
       BrowserActionService.setBadgeBackgroundColor({ color: [102, 16, 242, 1] })
       BrowserActionService.setBadgeText({ text: 'Retry' })
       await wait(retryInterval, 'Retry')
@@ -16,20 +16,11 @@ const Common = (() => {
     return false
   }
 
-  const stringFunction = elementFinder =>
-    elementFinder
-      .replace(/^Func::/gi, '')
-      .split('.')
-      .map(func => func.match(/\w+/)[0])
-      .reduce((p, c) => {
-        if (p === 'Date') {
-          return new window[p]()[c]()
-        }
-        if (typeof p === 'string') {
-          return window[p]()[c]()
-        }
-        return p[c]()
-      })
+  const stringFunction = stringFunc => {
+    Logger.log(stringFunc, stringFunc.replace(/^func::/gi, ''))
+    // eslint-disable-next-line no-eval
+    return eval(stringFunc.replace(/^func::/gi, ''))
+  }
 
   const getElements = async (document, elementFinder, retry, retryInterval) => {
     Logger.debug('\t\t\t\t\t\t Common >>>> getElements')

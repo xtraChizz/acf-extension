@@ -1,5 +1,6 @@
 import { Logger } from '@dhruv-techapps/core-common'
 import { GAService } from '@dhruv-techapps/core-services'
+import { ACTION_STATUS } from '@dhruv-techapps/acf-common'
 import Common from './common'
 import Addon from './addon'
 import { wait } from './util'
@@ -11,6 +12,8 @@ import { AttributeEvents } from './events/attribute.events'
 import { ClassEvents } from './events/class-list.events'
 import { CopyEvents } from './events/copy.events'
 import { PasteEvents } from './events/paste.events'
+import { FuncEvents } from './events/func.events'
+import Statement from './statement'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
@@ -80,6 +83,8 @@ const Action = (() => {
         WindowCommandEvents.start(value)
       } else if (/^locationcommand::/gi.test(value)) {
         LocationCommandEvents.start(value)
+      } else if (/^func::/gi.test(value)) {
+        FuncEvents.start(value)
       } else {
         PlainEvents.start(elements, value)
       }
@@ -91,7 +96,7 @@ const Action = (() => {
       })
     }
     // eslint-disable-next-line no-use-before-define
-    await repeatFunc(value)
+    return await repeatFunc(value)
   }
 
   const repeatFunc = async value => {
@@ -101,25 +106,29 @@ const Action = (() => {
       await wait(repeatInterval, 'Action Repeat')
       elements = await Common.start(elementFinder, actionSettings)
       if (elements) {
-        await checkAction(value)
+        return await checkAction(value)
       }
     }
+    return ACTION_STATUS.DONE
   }
 
-  const start = async (action, batchRepeat, sheets) => {
+  const start = async (action, batchRepeat, sheets, actions) => {
     Logger.debug('\t\t\t\t Action >> start')
     actionSettings = action.settings
     await wait(action.initWait, 'Action Wait')
-    if (await Addon.check(action.addon, actionSettings, batchRepeat)) {
-      elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
-      elements = await Common.start(elementFinder, actionSettings)
-      if (elements) {
-        repeat = action.repeat - 1
-        repeatInterval = action.repeatInterval
-        const value = getValue(action.value, batchRepeat, sheets)
-        await checkAction(value)
+    if (await Statement.check(action.statement, actions)) {
+      if (await Addon.check(action.addon, actionSettings, batchRepeat)) {
+        elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+        elements = await Common.start(elementFinder, actionSettings)
+        if (elements) {
+          repeat = action.repeat - 1
+          repeatInterval = action.repeatInterval
+          const value = getValue(action.value, batchRepeat, sheets)
+          return await checkAction(value)
+        }
       }
     }
+    return ACTION_STATUS.SKIPPED
   }
 
   return { start }

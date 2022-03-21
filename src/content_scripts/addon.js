@@ -9,7 +9,7 @@ import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME } from '../common/c
 const Addon = (() => {
   const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat) => {
     Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
-    if (recheck > 0) {
+    if (recheck > 0 || recheck < -1) {
       recheck -= 1
       BrowserActionService.setBadgeBackgroundColor({ color: [13, 202, 240, 1] })
       BrowserActionService.setBadgeText({ text: 'Recheck' })
@@ -100,7 +100,7 @@ const Addon = (() => {
         nodeValue = getNodeValue(elements, valueExtractor)
       }
     }
-    if (nodeValue) {
+    if (nodeValue !== undefined) {
       value = value.replaceAll('<batchRepeat>', batchRepeat)
       return compare(nodeValue, condition, value) || (await recheckFunc({ elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
     }

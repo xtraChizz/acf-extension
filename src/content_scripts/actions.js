@@ -11,7 +11,12 @@ const Actions = (() => {
       BrowserActionService.setBadgeBackgroundColor({ color: [25, 135, 84, 1] })
       BrowserActionService.setBadgeText({ text: `${batchRepeat}-${i}` })
       BrowserActionService.setTitle({ title: `Batch:${batchRepeat} Action:${i}` })
-      await Action.start(actions[i], batchRepeat, sheets)
+      actions[i].status = await Action.start(
+        actions[i],
+        batchRepeat,
+        sheets,
+        actions.map(action => action.status)
+      )
       if (settings.notifications.onAction) {
         NotificationsService.create({ title: 'Action Completed', message: actions[i].elementFinder })
         if (settings.notifications.sound) SoundService.play()

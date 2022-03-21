@@ -26,7 +26,7 @@ export const CopyEvents = (() => {
 
   const start = (elements, value) => {
     Logger.debug('\t\t\t\t\t CopyEvents >> start')
-    const text = applyFilter(getValue(elements[0]), value.replace(/copyevents::/gi, ''))
+    const text = applyFilter(getValue(elements[0]), value.replace(/copy::/gi, ''))
     LocalStorage.setItem(LOCAL_STORAGE_COPY, text)
   }
 
