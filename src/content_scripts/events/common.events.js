@@ -100,4 +100,23 @@ const CommonEvents = (() => {
   return { getFillEvent, getMouseEvent, getMouseEventProperties, getKeyboardEventProperties, loopElements, getVerifiedEvents, getTouchEvent, getTouchEventProperties, getTouch }
 })()
 
+export const EVENTS = {
+  SCROLL_TO: 'scrollto',
+  CLICK_EVENTS: 'clickevents',
+  MOUSE_EVENTS: 'mouseevents',
+  TOUCH_EVENTS: 'touchevents',
+  FORM_EVENTS: 'formevents',
+  KEY_EVENTS: 'keyevents',
+  ATTR: 'attr',
+  CLASS: 'class',
+  COPY: 'copy',
+  PASTE: 'paste',
+  WINDOW_COMMAND: 'windowcommand',
+  LOCATION_COMMAND: 'locationcommand',
+  FUNC: 'func',
+  REPLACE: 'replace',
+  APPEND: 'append',
+  PREPEND: 'prepend'
+}
+
 export default CommonEvents

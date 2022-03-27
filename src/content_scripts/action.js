@@ -6,7 +6,7 @@ import Addon from './addon'
 import { wait } from './util'
 import { FormEvents, KeyEvents, LocationCommandEvents, MouseEvents, PlainEvents, ScrollToEvents, TouchEvents } from './events'
 import { ConfigError } from './error'
-import CommonEvents from './events/common.events'
+import CommonEvents, { EVENTS } from './events/common.events'
 import { WindowCommandEvents } from './events/window-command.events'
 import { AttributeEvents } from './events/attribute.events'
 import { ClassEvents } from './events/class-list.events'
@@ -14,6 +14,9 @@ import { CopyEvents } from './events/copy.events'
 import { PasteEvents } from './events/paste.events'
 import { FuncEvents } from './events/func.events'
 import Statement from './statement'
+import { ReplaceEvents } from './events/replace.events'
+import { AppendEvents } from './events/append.events'
+import { PrependEvents } from './events/prepend.events'
 
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
@@ -61,32 +64,60 @@ const Action = (() => {
   const checkAction = async value => {
     Logger.debug('\t\t\t\t Action >> checkAction')
     if (value) {
-      if (/^scrollto::/gi.test(value)) {
-        ScrollToEvents.start(elements, value)
-      } else if (/^clickevents::/gi.test(value) || /^mouseevents::/gi.test(value)) {
-        MouseEvents.start(elements, value)
-      } else if (/^touchevents::/gi.test(value)) {
-        TouchEvents.start(elements, value)
-      } else if (/^formevents::/gi.test(value)) {
-        FormEvents.start(elements, value)
-      } else if (/^keyevents::/gi.test(value)) {
-        KeyEvents.start(elements, value)
-      } else if (/^attr::/gi.test(value)) {
-        AttributeEvents.start(elements, value)
-      } else if (/^class::/gi.test(value)) {
-        ClassEvents.start(elements, value)
-      } else if (/^copy::/gi.test(value)) {
-        CopyEvents.start(elements, value)
-      } else if (/^paste::/gi.test(value)) {
-        PasteEvents.start(elements, value)
-      } else if (/^windowcommand::/gi.test(value)) {
-        WindowCommandEvents.start(value)
-      } else if (/^locationcommand::/gi.test(value)) {
-        LocationCommandEvents.start(value)
-      } else if (/^func::/gi.test(value)) {
-        FuncEvents.start(value)
-      } else {
-        PlainEvents.start(elements, value)
+      let event = /^(\w+)::/.exec(value)
+      if (event) {
+        event = event[1].toLowerCase()
+      }
+      Logger.log(event)
+      switch (event) {
+        case EVENTS.SCROLL_TO:
+          ScrollToEvents.start(elements, value)
+          break
+        case EVENTS.MOUSE_EVENTS:
+        case EVENTS.CLICK_EVENTS:
+          MouseEvents.start(elements, value)
+          break
+        case EVENTS.TOUCH_EVENTS:
+          TouchEvents.start(elements, value)
+          break
+        case EVENTS.FORM_EVENTS:
+          FormEvents.start(elements, value)
+          break
+        case EVENTS.KEY_EVENTS:
+          KeyEvents.start(elements, value)
+          break
+        case EVENTS.ATTR:
+          AttributeEvents.start(elements, value)
+          break
+        case EVENTS.CLASS:
+          ClassEvents.start(elements, value)
+          break
+        case EVENTS.COPY:
+          CopyEvents.start(elements, value)
+          break
+        case EVENTS.PASTE:
+          PasteEvents.start(elements, value)
+          break
+        case EVENTS.WINDOW_COMMAND:
+          WindowCommandEvents.start(value)
+          break
+        case EVENTS.LOCATION_COMMAND:
+          LocationCommandEvents.start(value)
+          break
+        case EVENTS.FUNC:
+          FuncEvents.start(value)
+          break
+        case EVENTS.REPLACE:
+          ReplaceEvents.start(elements, value)
+          break
+        case EVENTS.APPEND:
+          AppendEvents.start(elements, value)
+          break
+        case EVENTS.PREPEND:
+          PrependEvents.start(elements, value)
+          break
+        default:
+          PlainEvents.start(elements, value)
       }
     } else {
       elements.forEach(element => {
