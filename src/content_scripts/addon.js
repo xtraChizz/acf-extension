@@ -7,7 +7,7 @@ import Common from './common'
 import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME } from '../common/constant'
 
 const Addon = (() => {
-  const recheckFunc = async ({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat) => {
+  const recheckFunc = async ({ nodeValue, elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat) => {
     Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
     if (recheck > 0 || recheck < -1) {
       recheck -= 1
@@ -18,7 +18,7 @@ const Addon = (() => {
       return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat)
     }
     // eslint-disable-next-line no-console
-    console.table([{ elementFinder, value, condition }])
+    console.table([{ elementFinder, value, condition, nodeValue }])
     if (recheckOption === RECHECK_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         window.location.reload()
@@ -35,7 +35,7 @@ const Addon = (() => {
   }
 
   const getNodeValue = (elements, valueExtractor) => {
-    Logger.debug('\t\t\t\t\t Addon >> getNodeValue')
+    Logger.debug('\t\t\t\t\t Addon >> getNodeValue', valueExtractor)
     const element = elements[0]
     let value
     if (SELECT_TEXTAREA_NODE_NAME.test(element.nodeName)) {
@@ -55,7 +55,9 @@ const Addon = (() => {
       if (/^@\w+(-\w+)?$/.test(valueExtractor)) {
         return element.getAttribute(valueExtractor.replace('@', ''))
       }
+      Logger.log(value)
       const match = RegExp(valueExtractor).exec(value)
+      Logger.log(match)
       return (match && match[0]) || value
     }
     return value
@@ -102,7 +104,7 @@ const Addon = (() => {
     }
     if (nodeValue !== undefined) {
       value = value.replaceAll('<batchRepeat>', batchRepeat)
-      return compare(nodeValue, condition, value) || (await recheckFunc({ elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
+      return compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
     }
     return false
   }

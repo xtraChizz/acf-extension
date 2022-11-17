@@ -7,6 +7,9 @@
     "start": "webpack --watch --mode=development --env goal=__local",
     "lint": "eslint --cache --format codeframe --ext mjs,js src",
     "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
     "build:dev": "webpack --env goal=_dev",
     "build:beta": "webpack --env goal=_beta",
     "build:prod": "webpack --env goal=_prod"
@@ -28,6 +31,7 @@
   },
   "homepage": "https://github.com/Dhruv-Techapps/acf-extension#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.20.2",
     "copy-webpack-plugin": "^9.0.1",
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -37,6 +41,8 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-webpack-plugin": "^2.5.4",
     "file-loader": "^6.2.0",
+    "jest": "^27.5.1",
+    "jest-chrome": "^0.8.0",
     "merge-json-webpack-plugin": "^6.0.0",
     "prettier": "^2.4.1",
     "webpack": "^5.53.0",
