@@ -12,7 +12,8 @@
     "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
     "build:dev": "webpack --env goal=_dev",
     "build:beta": "webpack --env goal=_beta",
-    "build:prod": "webpack --env goal=_prod"
+    "build:prod": "webpack --env goal=_prod",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-webpack-plugin": "^2.5.4",
     "file-loader": "^6.2.0",
+    "husky": "^8.0.2",
     "jest": "^27.5.1",
     "jest-chrome": "^0.8.0",
     "merge-json-webpack-plugin": "^6.0.0",

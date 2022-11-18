@@ -55,9 +55,7 @@ const Addon = (() => {
       if (/^@\w+(-\w+)?$/.test(valueExtractor)) {
         return element.getAttribute(valueExtractor.replace('@', ''))
       }
-      Logger.log(value)
       const match = RegExp(valueExtractor).exec(value)
-      Logger.log(match)
       return (match && match[0]) || value
     }
     return value
