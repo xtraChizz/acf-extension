@@ -16,11 +16,8 @@ const Common = (() => {
     return false
   }
 
-  const stringFunction = stringFunc => {
-    Logger.log(stringFunc, stringFunc.replace(/^func::/gi, ''))
-    // eslint-disable-next-line no-eval
-    return eval(stringFunc.replace(/^func::/gi, ''))
-  }
+  // eslint-disable-next-line no-eval
+  const stringFunction = stringFunc => eval(stringFunc.replace(/^func::/gi, ''))
 
   const getElements = async (document, elementFinder, retry, retryInterval) => {
     Logger.debug('\t\t\t\t\t\t Common >>>> getElements')
