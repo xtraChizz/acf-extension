@@ -12,7 +12,7 @@ export const AttributeEvents = (() => {
   }
 
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
+    Logger.colorDebug(`AttributeEvents`, value)
     CommonEvents.loopElements(elements, value, execCommand)
   }
   return { start }

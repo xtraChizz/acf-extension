@@ -5,6 +5,7 @@ const SCROLL_COORDINATES = ['Top', 'Bottom', 'Left', 'Right', 'TopLeft', 'Bottom
 
 export const ScrollToEvents = (() => {
   const scrollToCoordinates = axis => {
+    Logger.colorDebug('ScrollToCoordinates', axis)
     let xAxis = 0
     let yAxis = 0
     if (axis.indexOf('Right') !== -1) {
@@ -17,11 +18,11 @@ export const ScrollToEvents = (() => {
   }
 
   const scrollToElement = elements => {
+    Logger.colorDebug('ScrollToElement', elements[0])
     elements[0].scrollIntoView()
   }
 
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t ScrollToEvents >> start')
     if (/xpath/gi.test(value)) {
       scrollToElement(elements)
     } else {

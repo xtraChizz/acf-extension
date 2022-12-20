@@ -1,19 +1,20 @@
 import { ADDON_CONDITIONS, RECHECK_OPTIONS } from '@dhruv-techapps/acf-common'
-import { BrowserActionService } from '@dhruv-techapps/core-services'
+import { ActionService } from '@dhruv-techapps/core-services'
 import { Logger } from '@dhruv-techapps/core-common'
 import { wait } from './util'
 import { ConfigError, SystemError } from './error'
 import Common from './common'
 import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME } from '../common/constant'
 
+const LOGGER_LETTER = 'Addon'
+
 const Addon = (() => {
   const recheckFunc = async ({ nodeValue, elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat) => {
-    Logger.debug('\t\t\t\t\t Addon >> recheckFunc')
     if (recheck > 0 || recheck < -1) {
       recheck -= 1
-      BrowserActionService.setBadgeBackgroundColor({ color: [13, 202, 240, 1] })
-      BrowserActionService.setBadgeText({ text: 'Recheck' })
-      await wait(recheckInterval, 'Addon Recheck')
+      ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [13, 202, 240, 1] })
+      ActionService.setBadgeText(chrome.runtime.id, { text: 'Recheck' })
+      await wait(recheckInterval, `${LOGGER_LETTER} Recheck`, recheck, '<interval>')
       // eslint-disable-next-line no-use-before-define
       return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat)
     }
@@ -30,12 +31,11 @@ const Addon = (() => {
     } else if (recheckOption === RECHECK_OPTIONS.STOP) {
       throw new ConfigError('Not Matched', 'Action is STOP')
     }
-    Logger.info('Not Matched and action is SKIP')
+    Logger.colorInfo('RecheckOption', recheckOption)
     return false
   }
 
   const getNodeValue = (elements, valueExtractor) => {
-    Logger.debug('\t\t\t\t\t Addon >> getNodeValue', valueExtractor)
     const element = elements[0]
     let value
     if (SELECT_TEXTAREA_NODE_NAME.test(element.nodeName)) {
@@ -58,11 +58,12 @@ const Addon = (() => {
       const match = RegExp(valueExtractor).exec(value)
       return (match && match[0]) || value
     }
+    Logger.colorDebug('GetNodeValue', value)
     return value
   }
 
   const compare = (nodeValue, condition, value) => {
-    Logger.debug('\t\t\t\t\t Addon >> compare')
+    Logger.colorDebug('Compare', { nodeValue, condition, value })
     if (/than/gi.test(condition) && (Number.isNaN(Number(nodeValue)) || Number.isNaN(Number(value)))) {
       throw new ConfigError('Greater || Less can only compare number', 'Wrong Comparison')
     }
@@ -89,7 +90,7 @@ const Addon = (() => {
   }
 
   const start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat) => {
-    Logger.debug('\t\t\t\t\t Addon >> start')
+    Logger.colorDebug('Start', { elementFinder, value, condition, valueExtractor })
     let nodeValue
     if (/^Func::/gi.test(elementFinder)) {
       nodeValue = Common.stringFunction(elementFinder)
@@ -102,14 +103,18 @@ const Addon = (() => {
     }
     if (nodeValue !== undefined) {
       value = value.replaceAll('<batchRepeat>', batchRepeat)
-      return compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
+      const result = compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
+      Logger.colorDebug('Compare Result', result)
+      Logger.groupEnd(LOGGER_LETTER)
+      return result
     }
+    Logger.groupEnd(LOGGER_LETTER)
     return false
   }
 
-  const check = async ({ elementFinder, value, condition, ...props } = {}, actionSettings, batchRepeat) => {
-    Logger.debug('\t\t\t\t\t Addon >> check')
+  const check = async (actionSettings, batchRepeat, { elementFinder, value, condition, ...props } = {}) => {
     if (elementFinder && value && condition) {
+      Logger.groupCollapsed(LOGGER_LETTER)
       return await start({ elementFinder, value, condition, ...props }, actionSettings, batchRepeat)
     }
     return true

@@ -58,8 +58,8 @@ export const LocationCommandEvents = (() => {
   }
 
   const start = value => {
-    Logger.debug('\t\t\t\t\t LocationCommandEvents >> start')
     const commands = CommonEvents.getVerifiedEvents(LOCATION_COMMANDS, value)
+    Logger.colorDebug('LocationCommandEvents', { commands, value })
     execCommand(commands, value)
   }
   return { start }

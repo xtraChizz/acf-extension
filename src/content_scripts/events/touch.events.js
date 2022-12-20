@@ -4,7 +4,6 @@ import CommonEvents from './common.events'
 
 export const TouchEvents = (() => {
   const dispatchEvent = (element, events) => {
-    Logger.debug('\t\t\t\t\t TouchEvents >>>>>> dispatchEvents', events)
     events.forEach(event => {
       if (typeof event === 'string') {
         element.dispatchEvent(new TouchEvent(event, CommonEvents.getTouchEventProperties(element)))
@@ -15,7 +14,7 @@ export const TouchEvents = (() => {
   }
 
   const getVerifiedEvents = events => {
-    Logger.debug('\t\t\t\t\t TouchEvents >>>> getVerifiedEvents')
+    Logger.colorDebug('GetVerifiedEvents', events)
     if (!events) {
       throw new SystemError('Event is blank!', 'Event cant be blank | null | undefined')
     }
@@ -35,7 +34,6 @@ export const TouchEvents = (() => {
         result = [event]
       }
     }
-
     if (result) {
       return result
     }
@@ -43,8 +41,8 @@ export const TouchEvents = (() => {
   }
 
   const start = (elements, event) => {
-    Logger.debug('\t\t\t\t\t TouchEvents >> start', event)
     const events = getVerifiedEvents(event)
+    Logger.colorDebug(`TouchEvents`, events)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }
   return { start }

@@ -3,7 +3,6 @@ import { RADIO_CHECKBOX_NODE_NAME } from '../../common/constant'
 import CommonEvents from './common.events'
 
 const CHANGE_EVENT = ['input', 'change']
-
 export const AppendEvents = (() => {
   const checkNode = (element, value) => {
     if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODE_NAME.test(element.type))) {
@@ -19,8 +18,8 @@ export const AppendEvents = (() => {
   }
 
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t AppendEvents >> start')
     value = value.replace(/^append::/i, '')
+    Logger.colorDebug(`AppendEvents`, value)
     CommonEvents.loopElements(elements, value, checkNode)
   }
 

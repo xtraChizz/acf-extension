@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { ACTION_CONDITION_OPR, ACTION_RUNNING, ACTION_STATUS } from '@dhruv-techapps/acf-common'
-import Statement from './statement'
+import Statement from '../../src/content_scripts/statement'
 
 describe('Statement.conditionResult', () => {
   const { SKIPPED, DONE } = ACTION_STATUS

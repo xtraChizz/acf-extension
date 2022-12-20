@@ -62,8 +62,8 @@ export const WindowCommandEvents = (() => {
     })
   }
   const start = value => {
-    Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
     const commands = CommonEvents.getVerifiedEvents(WINDOW_COMMANDS, value)
+    Logger.colorDebug('WindowCommandEvents', commands)
     execCommand(commands, value)
   }
   return { start }

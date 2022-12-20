@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack --watch --mode=development --env goal=__local",
-    "lint": "eslint --cache --format codeframe --ext mjs,js src",
-    "lint:fix": "eslint --cache --format codeframe --ext mjs,js src --fix",
+    "lint": "eslint --cache --format stylish --ext mjs,js src",
+    "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
@@ -34,13 +34,13 @@
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "copy-webpack-plugin": "^9.0.1",
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint": "^8.29.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-webpack-plugin": "^2.5.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-webpack-plugin": "^3.2.0",
     "file-loader": "^6.2.0",
     "husky": "^8.0.2",
     "jest": "^27.5.1",
@@ -52,10 +52,10 @@
     "zip-webpack-plugin": "^4.0.1"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^4.0.8",
-    "@dhruv-techapps/core-common": "^4.x",
-    "@dhruv-techapps/core-extension": "^4.x",
-    "@dhruv-techapps/core-services": "^4.x",
+    "@dhruv-techapps/acf-common": "^5.x",
+    "@dhruv-techapps/core-common": "^5.0.8",
+    "@dhruv-techapps/core-extension": "^5.0.7",
+    "@dhruv-techapps/core-services": "^5.0.8",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0"
   }

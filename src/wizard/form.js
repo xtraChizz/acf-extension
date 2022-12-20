@@ -2,19 +2,12 @@
 /* eslint-disable no-alert */
 import { defaultConfig } from '@dhruv-techapps/acf-common'
 import { Logger } from '@dhruv-techapps/core-common'
-import { Service } from '@dhruv-techapps/core-services'
 import { Listener } from './listener'
 
 const { RUNTIME_MESSAGE_ACF } = require('../common/constant')
 
 export const FormGenerator = (() => {
   let config
-  const addHTML = async () =>
-    fetch(chrome.runtime.getURL('/assets/wizard.html'))
-      .then(r => r.text())
-      .then(html => {
-        document.body.insertAdjacentHTML('beforeend', html)
-      })
 
   const getName = () => {
     const configName = prompt('Please enter configuration name', window.location.host)
@@ -33,50 +26,44 @@ export const FormGenerator = (() => {
     return config
   }
 
-  const checkConfiguration = async () => {
-    config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
-    if (config) {
-      // eslint-disable-next-line no-restricted-globals
-      const result = confirm(`Do you want to append to existing configuration "${config.name}" ?`)
-      if (!result) {
+  const checkConfiguration = () => {
+    chrome.runtime.sendMessage(chrome.runtime.id, { action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self }, response => {
+      config = response
+      if (config) {
+        // eslint-disable-next-line no-restricted-globals
+        const result = confirm(`Do you want to append to existing configuration "${config.name || config.url}" ?`)
+        // If the choice is to create new configuration
+        if (!result) {
+          config = getConfig()
+        }
+      } else {
         config = getConfig()
       }
-    } else {
-      config = getConfig()
-    }
-    return config
+      attachFieldListener()
+    })
   }
 
   const listener = element => {
-    Listener.check(element)
-      .then(action => {
-        if (action.elementFinder) {
-          const index = config.actions.findIndex(_action => _action.elementFinder === action.elementFinder)
-          if (index !== -1) {
-            Logger.info(action, 'updated')
-            config.actions[index].value = action.value
-          } else {
-            Logger.info(action, 'added')
-            config.actions.push(action)
-          }
+    Listener.check(element).then(action => {
+      if (action.elementFinder) {
+        const index = config.actions.findIndex(_action => _action.elementFinder === action.elementFinder)
+        if (index !== -1) {
+          Logger.colorDebug(action, 'updated')
+          config.actions[index].value = action.value
+        } else {
+          Logger.colorDebug(action, 'added')
+          config.actions.push(action)
         }
-      })
-      .finally(() => {
-        // eslint-disable-next-line no-use-before-define
-        setTimeout(checkActiveElement, 500)
-      })
-  }
-
-  const checkActiveElement = () => {
-    const element = document.activeElement
-    if (element.nodeName !== 'HEAD' || element.nodeName !== 'BODY') {
-      listener(element)
-    }
+      }
+    })
   }
 
   const attachFieldListener = () => {
     document.addEventListener('click', e => {
-      listener(e.target)
+      const { autoClicker } = e.target.dataset
+      if (!autoClicker) {
+        listener(e.target)
+      }
     })
   }
 
@@ -96,20 +83,26 @@ export const FormGenerator = (() => {
     autoClicker.parentNode.removeChild(autoClicker)
   }
 
-  const startListener = async () => {
+  const startListener = () => {
     document.querySelector('auto-clicker-autofill button[stop]').hidden = false
     document.querySelector('auto-clicker-autofill button[start]').hidden = true
-    await checkConfiguration()
-    attachFieldListener()
+    checkConfiguration()
   }
 
   const stopListener = () => {
-    Service.message({ action: RUNTIME_MESSAGE_ACF.SAVE_CONFIG, config })
-    document.querySelector('auto-clicker-autofill button[start]').hidden = true
-    document.querySelector('auto-clicker-autofill button[stop]').hidden = true
-    document.querySelector('auto-clicker-autofill #message').hidden = false
-    setTimeout(clear, 5000)
+    chrome.runtime.sendMessage(chrome.runtime.id, { action: RUNTIME_MESSAGE_ACF.SAVE_CONFIG, config }, response => {
+      document.querySelector('auto-clicker-autofill button[start]').hidden = true
+      document.querySelector('auto-clicker-autofill button[stop]').hidden = true
+      document.querySelector('auto-clicker-autofill #message').innerHTML = response
+      document.querySelector('auto-clicker-autofill #message').hidden = false
+      setTimeout(clear, 5000)
+    })
   }
+
+  const addHTML = () =>
+    fetch(chrome.runtime.getURL('/assets/wizard.html'))
+      .then(r => r.text())
+      .then(html => document.body.insertAdjacentHTML('beforeend', html))
 
   const setup = async () => {
     await addHTML()

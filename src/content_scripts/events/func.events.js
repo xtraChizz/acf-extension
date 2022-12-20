@@ -3,7 +3,7 @@ import Common from '../common'
 
 export const FuncEvents = (() => {
   const start = value => {
-    Logger.debug('\t\t\t\t\t FuncEvents >> start')
+    Logger.colorDebug('FuncEvents', value)
     Common.stringFunction(value)
   }
   return { start }

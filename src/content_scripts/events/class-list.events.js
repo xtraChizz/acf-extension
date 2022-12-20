@@ -16,7 +16,7 @@ export const ClassEvents = (() => {
   }
 
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t WindowCommandEvents >> start')
+    Logger.colorDebug(`ClassEvents`, value)
     CommonEvents.loopElements(elements, value, execCommand)
   }
   return { start }

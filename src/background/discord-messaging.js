@@ -1,11 +1,11 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { LocalStorage, Logger } from '@dhruv-techapps/core-common'
-import { GoogleAnalytics } from '@dhruv-techapps/core-extension'
+import { Logger } from '@dhruv-techapps/core-common'
+// import { GoogleAnalytics } from '@dhruv-techapps/core-extension'
 
 export default class DiscordMessaging {
-  processPortMessage({ notification: { title, fields, color } }) {
+  async processPortMessage({ notification: { title, fields, color } }) {
     try {
-      const settings = LocalStorage.getItem(LOCAL_STORAGE_KEY.SETTINGS)
+      const { settings } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
       if (settings) {
         const {
           notifications: { discord }
@@ -13,28 +13,28 @@ export default class DiscordMessaging {
         if (discord) {
           fetch(chrome.runtime.getURL('configuration.json'))
             .then(r => r.json())
-            .then(({ functions: functionURL, variant }) => {
+            .then(async ({ functions: functionURL, variant }) => {
               const url = new URL(`${functionURL}/notifyDiscord`)
+              const { uid } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.DISCORD)
               url.searchParams.append('title', title)
-              url.searchParams.append('id', LocalStorage.getItem(LOCAL_STORAGE_KEY.DISCORD).uid)
+              url.searchParams.append('id', uid)
               url.searchParams.append('fields', JSON.stringify(fields))
               url.searchParams.append('variant', variant)
               url.searchParams.append('color', color)
               fetch(url)
-                .then(Logger.log)
+                .then(Logger.colorInfo)
                 .catch(error => {
-                  Logger.error(error)
-                  GoogleAnalytics.error({ error }, () => {})
+                  Logger.colorError(error)
+                  // GoogleAnalytics.error({ error }, () => {})
                 })
             })
         }
       }
-
-      return {}
     } catch (error) {
-      Logger.error(error)
-      GoogleAnalytics.error({ error }, () => {})
+      Logger.colorError(error)
+      return error
+      // GoogleAnalytics.error({ error }, () => {})
     }
-    return false
+    return {}
   }
 }

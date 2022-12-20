@@ -1,13 +1,12 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { LocalStorage, Logger } from '@dhruv-techapps/core-common'
-import { BrowserAction } from '@dhruv-techapps/core-extension'
+import { Logger } from '@dhruv-techapps/core-common'
 
 export default class Config {
-  processPortMessage({ href, frameElement }) {
-    const data = LocalStorage.getItem(LOCAL_STORAGE_KEY.CONFIGS)
+  async processPortMessage({ href, frameElement }) {
+    const { configs } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
     let result
     let fullMatch = false
-    data.forEach(config => {
+    configs.forEach(config => {
       if (config && typeof config === 'object' && !Array.isArray(config)) {
         if (config.enable && config.url) {
           if (!result && this.urlMatcher(config.url, href)) {
@@ -21,15 +20,15 @@ export default class Config {
       }
     })
     if (result) {
-      BrowserAction.setIcon({ path: 'assets/icons/icon64.png' }, () => {})
-      return { result }
+      chrome.action.setIcon({ path: 'assets/icons/icon64.png' })
+      return { ...result }
     }
 
     if (!frameElement) {
-      BrowserAction.setIcon({ path: 'assets/icons/icon_black64.png' }, () => {})
-      Logger.log(`No configs Found ${href}`)
+      chrome.action.setIcon({ path: 'assets/icons/icon_black64.png' })
+      Logger.colorInfo(`No configs Found ${href}`)
     }
-    return {}
+    return null
   }
 
   urlMatcher(url, href) {

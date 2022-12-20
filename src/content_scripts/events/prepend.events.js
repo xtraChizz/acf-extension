@@ -19,8 +19,8 @@ export const PrependEvents = (() => {
   }
 
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t PrependEvents >> start')
     value = value.replace(/^prepend::/i, '')
+    Logger.colorDebug(`PrependEvents`, { value })
     CommonEvents.loopElements(elements, value, checkNode)
   }
 

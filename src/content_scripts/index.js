@@ -1,32 +1,32 @@
 import { LOAD_TYPES, LOCAL_STORAGE_KEY, defaultSettings } from '@dhruv-techapps/acf-common'
-import { DataStore, Logger } from '@dhruv-techapps/core-common'
-import { GAService, Service, StorageService } from '@dhruv-techapps/core-services'
+import { DataStore, LOGGER_COLOR, Logger } from '@dhruv-techapps/core-common'
 import { RUNTIME_MESSAGE_ACF } from '../common/constant'
 
 import Config from './config'
 
-async function loadSettings(loadType) {
+async function loadConfig(loadType) {
   try {
-    Logger.debug('loadSettings', loadType)
-    const config = await Service.message({ action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self })
-    if (config) {
-      const setting = await StorageService.getItem(LOCAL_STORAGE_KEY.SETTINGS, defaultSettings)
-      DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, setting)
-      Logger.debug('\t loadType', config.loadType || setting.loadType || LOAD_TYPES.WINDOW)
-      if ((config.loadType || setting.loadType || LOAD_TYPES.WINDOW) === loadType) {
-        await Config.getConfig(setting, config)
+    chrome.runtime.sendMessage(chrome.runtime.id, { action: RUNTIME_MESSAGE_ACF.CONFIG, href: document.location.href, frameElement: window.top !== window.self }, async config => {
+      if (config) {
+        const { settings = defaultSettings } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
+        DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, settings)
+        if ((config.loadType || settings.loadType || LOAD_TYPES.WINDOW) === loadType) {
+          Logger.color(undefined, undefined, LOGGER_COLOR.PRIMARY, document.location.host, loadType)
+          await Config.checkStartType(settings, config)
+          Logger.color(undefined, undefined, LOGGER_COLOR.PRIMARY, document.location.host, 'END')
+        }
       }
-    }
+    })
   } catch (e) {
-    Logger.error(e)
-    GAService.error({ name: e.name, stack: e.stack })
+    Logger.colorError('Error', e)
+    // GAService.error(chrome.runtime.id, { name: e.name, stack: e.stack })
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadSettings(LOAD_TYPES.DOCUMENT)
+  loadConfig(LOAD_TYPES.DOCUMENT)
 })
 
 window.addEventListener('load', () => {
-  loadSettings(LOAD_TYPES.WINDOW)
+  loadConfig(LOAD_TYPES.WINDOW)
 })

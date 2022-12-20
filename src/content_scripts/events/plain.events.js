@@ -9,12 +9,14 @@ const SMALL_ALPHA = 'abcdefghijklmnopqrstuvwxyz'
 const SPECIAL_CHAR = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
 const NUM = '0123456789'
 
+const LOGGER_LETTER = 'Plain Events'
 export const PlainEvents = (() => {
   const checkEmptyValue = value => (value === '::empty' ? '' : value)
 
   const checkRandomValue = value => {
     const RANDOM_REGEX = /<random(\[.+\])?(\{(\d+),?(\d+)?\})?>/i
     if (RANDOM_REGEX.test(value)) {
+      Logger.colorDebug('CheckRandomValue', value)
       const [, range, , start = 6, end] = value.match(RANDOM_REGEX)
       let characters
       switch (range) {
@@ -57,12 +59,13 @@ export const PlainEvents = (() => {
       for (let i = 0; i < length; i += 1) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength))
       }
+      Logger.colorDebug('RandomValue', result)
       return value.replace(/<random(\[.+\])?(\{(\d+),?(\d+)?\})?>/gi, result)
     }
     return value
   }
 
-  const checkNode = (element, value) => {
+  const dispatchEvent = (element, value) => {
     if (element.nodeName === 'SELECT' || element.nodeName === 'TEXTAREA' || (element.nodeName === 'INPUT' && !RADIO_CHECKBOX_NODE_NAME.test(element.type))) {
       element.value = value
       element.dispatchEvent(CommonEvents.getFillEvent())
@@ -82,10 +85,10 @@ export const PlainEvents = (() => {
   }
 
   const start = (elements, value) => {
-    Logger.debug('\t\t\t\t\t PlainEvents >> start')
+    Logger.colorDebug(LOGGER_LETTER, value)
     value = checkEmptyValue(value)
     value = checkRandomValue(value)
-    CommonEvents.loopElements(elements, value, checkNode)
+    CommonEvents.loopElements(elements, value, dispatchEvent)
   }
 
   return { start }

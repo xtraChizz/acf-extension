@@ -11,6 +11,7 @@ const KEYBOARD_EVENT_KEYUP = 'keyup'
 
 export const KeyEvents = (() => {
   const getVerifiedEvents = events => {
+    Logger.colorDebug(`getVerifiedEvents`, events)
     if (!events) {
       throw new SystemError('Event is blank!', 'Event cant be blank | null | undefined')
     }
@@ -25,7 +26,7 @@ export const KeyEvents = (() => {
         throw new ConfigError(events, 'Invalid Events')
       }
     } catch (error) {
-      Logger.error(error)
+      Logger.colorError(error)
       result = events.split('').map(event => ({ key: event }))
     }
     if (result) {
@@ -46,8 +47,8 @@ export const KeyEvents = (() => {
   }
 
   const start = (elements, event) => {
-    Logger.debug('\t\t\t\t\t KeyEvents  >> start')
     const events = getVerifiedEvents(event)
+    Logger.colorDebug(`KeyEvents`, events)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }
   return { start }

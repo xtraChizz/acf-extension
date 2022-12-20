@@ -50,8 +50,8 @@ export const FormEvents = (() => {
   }
 
   const start = (elements, action) => {
-    Logger.debug('\t\t\t\t\t FormEvents >> start')
     const events = CommonEvents.getVerifiedEvents(FORM_EVENTS, action)
+    Logger.colorDebug(`FormEvents`, events)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }
   return { start }

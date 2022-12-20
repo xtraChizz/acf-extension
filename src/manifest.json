@@ -1,11 +1,14 @@
 {
-  "name": "Auto Clicker - AutoFill LITE",
-  "short_name": "Auto Clicker - AutoFill LITE",
+  "name": "Auto Clicker - AutoFill",
+  "short_name": "Auto Clicker",
   "description": "AutoFill input field or auto click button or link anything anywhere.You can configure and check click speed test",
-  "version": "3.4.9",
-  "manifest_version": 2,
+  "version": "5.0.0",
+  "manifest_version": 3,
   "default_locale": "en",
-  "permissions": ["notifications", "contextMenus", "downloads", "http://*/*", "https://*/*"],
+  "permissions": ["storage", "notifications", "contextMenus", "downloads"],
+  "optional_host_permissions": [
+    "http://*/*", "https://*/*"
+  ],
   "icons": {
     "16": "assets/icons/icon16.png",
     "32": "assets/icons/icon32.png",
@@ -14,11 +17,12 @@
     "96": "assets/icons/icon96.png",
     "128": "assets/icons/icon128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "assets/icons/icon64.png"
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -37,6 +41,8 @@
   "externally_connectable": {
     "matches": ["http://localhost:*/*", "https://*.getautoclicker.com/*", "https://*.getdataentry.com/*"]
   },
-  "web_accessible_resources": ["assets/*"],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+  "web_accessible_resources": [{
+    "resources": ["assets/*"],
+    "matches": ["https://*.getautoclicker.com/*"]
+  }]
 }

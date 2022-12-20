@@ -88,7 +88,6 @@ module.exports = ({ goal }, { mode }) => {
       new CopyPlugin({
         patterns: [
           { from: './_locales', to: './_locales' },
-          { from: './sounds', to: './sounds' },
           { from: `./assets`, to: './assets' },
           { from: `./${srcDir}/assets`, to: './assets' }
         ]

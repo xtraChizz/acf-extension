@@ -1,4 +1,4 @@
-import { LocalStorage, Logger } from '@dhruv-techapps/core-common'
+import { Logger } from '@dhruv-techapps/core-common'
 import { RADIO_CHECKBOX_NODE_NAME } from '../../common/constant'
 import CommonEvents from './common.events'
 
@@ -20,8 +20,8 @@ export const PasteEvents = (() => {
   }
 
   const start = elements => {
-    const value = LocalStorage.getItem(LOCAL_STORAGE_COPY)
-    Logger.debug('\t\t\t\t\t PasteEvents >> start')
+    const value = localStorage.getItem(LOCAL_STORAGE_COPY)
+    Logger.colorDebug(`PasteEvents`, value)
     CommonEvents.loopElements(elements, value, checkNode)
   }
 

@@ -1,5 +1,5 @@
 import { Logger } from '@dhruv-techapps/core-common'
-import { GAService } from '@dhruv-techapps/core-services'
+// import { GAService } from '@dhruv-techapps/core-services'
 import { ACTION_STATUS } from '@dhruv-techapps/acf-common'
 import Common from './common'
 import Addon from './addon'
@@ -21,6 +21,7 @@ import { PrependEvents } from './events/prepend.events'
 const SHEET_MATCHER = /^Sheet::[\w|-]+::\w[$|\d]$/i
 const QUERY_PARAM_MATCHER = /^Query::/i
 const DEFAULT_EVENT = ['mouseover', 'mousedown', 'mouseup', 'click']
+const LOGGER_LETTER = 'Action'
 
 const Action = (() => {
   let elements
@@ -30,7 +31,11 @@ const Action = (() => {
   let actionSettings
 
   const getValue = (value, batchRepeat, sheets) => {
-    Logger.debug('\t\t\t\t Action >> _setValue')
+    /// For select box value is boolean true
+    if (typeof value !== 'string') {
+      Logger.colorDebug('Value', value)
+      return value
+    }
     if (value.match(SHEET_MATCHER)) {
       try {
         const [, sheetName, sheetCol] = value.split('::')
@@ -45,9 +50,10 @@ const Action = (() => {
         } else {
           value = sheets[sheetName][rowIndex][colIndex]
         }
+        Logger.colorDebug('GetSheetValue', value)
       } catch (e) {
-        Logger.error(e)
-        GAService.error({ name: e.name, stack: e.stack })
+        Logger.colorError(e)
+        // GAService.error(chrome.runtime.id, { name: e.name, stack: e.stack })
       }
     } else if (value.match(QUERY_PARAM_MATCHER)) {
       const [, key] = value.split('::')
@@ -55,20 +61,21 @@ const Action = (() => {
       if (searchParams.has(key)) {
         value = searchParams.get(key)
       }
-    } else {
+      Logger.colorDebug('Query Param', value)
+    } else if (/<batchRepeat>/.test(value)) {
       value = value.replaceAll('<batchRepeat>', batchRepeat)
+      Logger.colorDebug('<batchRepeat>', value)
     }
+
     return value
   }
 
-  const checkAction = async value => {
-    Logger.debug('\t\t\t\t Action >> checkAction')
+  const checkAction = async (value, actionIndex) => {
     if (value) {
       let event = /^(\w+)::/.exec(value)
       if (event) {
         event = event[1].toLowerCase()
       }
-      Logger.log(event)
       switch (event) {
         case EVENTS.SCROLL_TO:
           ScrollToEvents.start(elements, value)
@@ -120,6 +127,7 @@ const Action = (() => {
           PlainEvents.start(elements, value)
       }
     } else {
+      Logger.colorDebug('Default Click Events')
       elements.forEach(element => {
         DEFAULT_EVENT.forEach(event => {
           element.dispatchEvent(new MouseEvent(event, CommonEvents.getMouseEventProperties()))
@@ -127,38 +135,39 @@ const Action = (() => {
       })
     }
     // eslint-disable-next-line no-use-before-define
-    return await repeatFunc(value)
+    return await repeatFunc(value, actionIndex)
   }
 
-  const repeatFunc = async value => {
-    Logger.debug('\t\t\t\t Action >> repeatFunc')
+  const repeatFunc = async (value, actionIndex) => {
     if (repeat > 0 || repeat < -1) {
+      await wait(repeatInterval, `${LOGGER_LETTER} Repeat`, repeat, '<interval>')
       repeat -= 1
-      await wait(repeatInterval, 'Action Repeat')
       elements = await Common.start(elementFinder, actionSettings)
       if (elements) {
-        return await checkAction(value)
+        return await checkAction(value, actionIndex)
       }
     }
+    Logger.groupEnd(`${LOGGER_LETTER} #${actionIndex}`)
     return ACTION_STATUS.DONE
   }
 
-  const start = async (action, batchRepeat, sheets, actions) => {
-    Logger.debug('\t\t\t\t Action >> start')
+  const start = async (action, batchRepeat, sheets, actions, actionIndex) => {
+    Logger.group(`${LOGGER_LETTER} #${actionIndex}`)
     actionSettings = action.settings
-    await wait(action.initWait, 'Action Wait')
-    if (await Statement.check(action.statement, actions)) {
-      if (await Addon.check(action.addon, actionSettings, batchRepeat)) {
+    if (await Statement.check(actions, action.statement)) {
+      await wait(action.initWait, `${LOGGER_LETTER} initWait`)
+      if (await Addon.check(actionSettings, batchRepeat, action.addon)) {
         elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
         elements = await Common.start(elementFinder, actionSettings)
         if (elements) {
-          repeat = action.repeat - 1
+          repeat = action.repeat
           repeatInterval = action.repeatInterval
           const value = getValue(action.value, batchRepeat, sheets)
-          return await checkAction(value)
+          return await checkAction(value, actionIndex)
         }
       }
     }
+    Logger.groupEnd(`${LOGGER_LETTER} #${actionIndex}`)
     return ACTION_STATUS.SKIPPED
   }
 

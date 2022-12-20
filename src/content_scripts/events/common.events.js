@@ -1,7 +1,9 @@
+import { Logger } from '@dhruv-techapps/core-common'
 import { ConfigError, SystemError } from '../error'
 
 const CommonEvents = (() => {
   const getVerifiedEvents = (verifiedEvents, events) => {
+    Logger.colorDebug('getVerifiedEvents', { verifiedEvents, events })
     if (!events) {
       throw new SystemError('Event is blank!', 'Event cant be blank | null | undefined')
     }

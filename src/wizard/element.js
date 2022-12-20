@@ -1,10 +1,9 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
-import { StorageService } from '@dhruv-techapps/core-services'
 
 export const ElementGenerator = (() => {
   const setXPathAndURL = (xpath, event) => {
-    StorageService.setItem(LOCAL_STORAGE_KEY.URL, event.view.document.URL)
-    StorageService.setItem(LOCAL_STORAGE_KEY.XPATH, xpath)
+    chrome.storage.local.set({ [LOCAL_STORAGE_KEY.URL]: event.view.document.URL })
+    chrome.storage.local.set({ [LOCAL_STORAGE_KEY.XPATH]: xpath })
   }
 
   const getPathTo = node => {

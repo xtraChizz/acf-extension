@@ -1,16 +1,16 @@
 import { DataStore, Logger } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
-import { BrowserActionService } from '@dhruv-techapps/core-services'
+import { ActionService } from '@dhruv-techapps/core-services'
 import { ConfigError } from './error/config-error'
 import { wait } from './util'
 
+const LOGGER_LETTER = 'Common'
 const Common = (() => {
   const retryFunc = async (retry, retryInterval) => {
-    Logger.debug('\t\t\t\t\t\t Common >>>>>> retryFunc')
     if (retry > 0 || retry < -1) {
-      BrowserActionService.setBadgeBackgroundColor({ color: [102, 16, 242, 1] })
-      BrowserActionService.setBadgeText({ text: 'Retry' })
-      await wait(retryInterval, 'Retry')
+      ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [102, 16, 242, 1] })
+      ActionService.setBadgeText(chrome.runtime.id, { text: 'Retry' })
+      await wait(retryInterval, 'Retry', retry, '<interval>')
       return true
     }
     return false
@@ -20,7 +20,7 @@ const Common = (() => {
   const stringFunction = stringFunc => eval(stringFunc.replace(/^func::/gi, ''))
 
   const getElements = async (document, elementFinder, retry, retryInterval) => {
-    Logger.debug('\t\t\t\t\t\t Common >>>> getElements')
+    Logger.colorDebug('GetElements', elementFinder)
     let elements
     if (/^(id::|#)/gi.test(elementFinder)) {
       const element = document.getElementById(elementFinder.replace(/^(id::|#)/gi, ''))
@@ -63,7 +63,7 @@ const Common = (() => {
   const main = async (elementFinder, retry, retryInterval) => await getElements(document, elementFinder, retry, retryInterval)
 
   const checkIframe = async (elementFinder, retry, retryInterval) => {
-    Logger.debug('\t\t\t\t\t\t Common >>>>>> checkIframe')
+    Logger.colorDebug('CheckIframe')
     const iFrames = document.getElementsByTagName('iframe')
     let elements
     for (let index = 0; index < iFrames.length; index += 1) {
@@ -81,7 +81,6 @@ const Common = (() => {
   }
 
   const checkRetryOption = (retryOption, elementFinder) => {
-    Logger.debug('\t\t\t\t\t\t Common >>>> checkRetryOption')
     if (retryOption === RETRY_OPTIONS.RELOAD) {
       if (document.readyState === 'complete') {
         window.location.reload()
@@ -91,16 +90,15 @@ const Common = (() => {
       throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found - RELOAD')
     } else if (retryOption === RETRY_OPTIONS.STOP) {
       throw new ConfigError(`elementFinder: ${elementFinder}`, 'Not Found - STOP')
-    } else {
-      Logger.log(`elementFinder: ${elementFinder} not found and action is SKIP`)
     }
+    Logger.colorInfo('RetryOption', retryOption)
   }
 
   const start = async (elementFinder, settings = {}) => {
-    Logger.debug('\t\t\t\t\t\t Common >> start')
     if (!elementFinder) {
       throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
     }
+    Logger.groupCollapsed(LOGGER_LETTER)
     const { retryOption, retryInterval, retry, checkiFrames, iframeFirst } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
     let elements
     if (iframeFirst) {
@@ -118,6 +116,7 @@ const Common = (() => {
     if (!elements || elements.length === 0) {
       checkRetryOption(retryOption, elementFinder)
     }
+    Logger.groupEnd(LOGGER_LETTER)
     return elements
   }
   return { start, stringFunction }

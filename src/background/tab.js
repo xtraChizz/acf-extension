@@ -1,5 +1,3 @@
-import { Tabs } from '@dhruv-techapps/core-extension'
-
 let optionsTab
 
 chrome.tabs.onRemoved.addListener(tabId => {
@@ -11,9 +9,9 @@ chrome.tabs.onRemoved.addListener(tabId => {
 export class TabsMessenger {
   static optionsTab(properties) {
     if (optionsTab) {
-      Tabs.update({ tabId: optionsTab.id, properties: { ...properties, active: true } })
+      chrome.tabs.update(optionsTab.id, { ...properties, active: true })
     } else {
-      Tabs.create({ properties }, tab => {
+      chrome.tabs.create(properties, tab => {
         optionsTab = tab
       })
     }

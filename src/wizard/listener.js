@@ -6,13 +6,13 @@ import { RADIO_CHECKBOX_NODE_NAME } from '../common/constant'
 export const Listener = (() => {
   const inputListener = async element =>
     new Promise(resolve => {
-      Logger.log(element, 'input')
+      Logger.colorLog(element, 'input')
       element.addEventListener('blur', e => resolve(e.target.value), { once: true, passive: true })
     })
 
   const optionListener = async element =>
     new Promise(resolve => {
-      Logger.log(element, 'option')
+      Logger.colorLog(element, 'option')
       element.addEventListener(
         'click',
         e => {

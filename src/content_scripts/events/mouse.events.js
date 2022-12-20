@@ -14,6 +14,7 @@ export const MouseEvents = (() => {
   }
 
   const getVerifiedEvents = events => {
+    Logger.colorDebug('GetVerifiedEvents', events)
     if (!events) {
       throw new SystemError('Event is blank!', 'Event cant be blank | null | undefined')
     }
@@ -41,8 +42,8 @@ export const MouseEvents = (() => {
   }
 
   const start = (elements, event) => {
-    Logger.debug('\t\t\t\t\t MouseEvents >> start')
     const events = getVerifiedEvents(event)
+    Logger.colorDebug(`MouseEvents`, events)
     CommonEvents.loopElements(elements, events, dispatchEvent)
   }
   return { start }
