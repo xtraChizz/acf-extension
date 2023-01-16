@@ -1,22 +1,17 @@
 import { ACTION_CONDITION_OPR, ACTION_RUNNING } from '@dhruv-techapps/acf-common'
 import { Logger } from '@dhruv-techapps/core-common'
-import Common from './common'
 
 const Statement = (() => {
   const conditionResult = (conditions, actions) => {
     Logger.colorDebug('Condition Result', { conditions, actions })
-    return Common.stringFunction(
-      conditions
-        .map(({ actionIndex, status, operator }) => {
-          if (operator) {
-            operator = operator === ACTION_CONDITION_OPR.AND ? '&&' : '||'
-          } else {
-            operator = ''
-          }
-          return `${operator} ${actions[actionIndex] === status} `
-        })
-        .join('')
-    )
+    return conditions
+      .map(({ actionIndex, status, operator }) => ({ status: actions[actionIndex] === status, operator }))
+      .reduce((accumulator, currentValue) => {
+        if (currentValue.operator === undefined) {
+          return currentValue.status
+        }
+        return currentValue.operator === ACTION_CONDITION_OPR.AND ? accumulator && currentValue.status : accumulator || currentValue.status
+      }, undefined)
   }
 
   const checkThen = (condition, then) => {
