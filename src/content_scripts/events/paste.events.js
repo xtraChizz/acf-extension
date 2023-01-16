@@ -19,8 +19,8 @@ export const PasteEvents = (() => {
     element.focus()
   }
 
-  const start = elements => {
-    const value = localStorage.getItem(LOCAL_STORAGE_COPY)
+  const start = (elements, value) => {
+    value = value.replace(/paste::/i, localStorage.getItem(LOCAL_STORAGE_COPY))
     Logger.colorDebug(`PasteEvents`, value)
     CommonEvents.loopElements(elements, value, checkNode)
   }
