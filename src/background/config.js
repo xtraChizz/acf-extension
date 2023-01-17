@@ -3,7 +3,7 @@ import { Logger } from '@dhruv-techapps/core-common'
 
 export default class Config {
   async processPortMessage({ href, frameElement }) {
-    const { configs } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
+    const { configs = [] } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
     let result
     let fullMatch = false
     configs.forEach(config => {
