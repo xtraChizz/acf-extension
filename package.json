@@ -7,7 +7,7 @@
     "start": "webpack --watch --mode=development --env goal=__local",
     "lint": "eslint --cache --format stylish --ext mjs,js src",
     "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
-    "test": "jest",
+    "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
     "build:dev": "webpack --env goal=_dev",

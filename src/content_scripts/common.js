@@ -119,7 +119,7 @@ const Common = (() => {
     Logger.groupEnd(LOGGER_LETTER)
     return elements
   }
-  return { start, stringFunction }
+  return { start, stringFunction, getElements }
 })()
 
 export default Common
