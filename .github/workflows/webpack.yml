@@ -1,0 +1,23 @@
+name: NodeJS with Webpack
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: 
+      name: Development
+      url: https://dev.getautoclicker.com/
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+    - name: Build
+      run: |
+        npm install
+        npx webpack
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        path: downloads
