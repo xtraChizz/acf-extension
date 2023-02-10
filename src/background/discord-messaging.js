@@ -1,5 +1,6 @@
 import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
 import { Logger } from '@dhruv-techapps/core-common'
+import { FUNCTION_URL, VARIANT } from '../common/environments'
 // import { GoogleAnalytics } from '@dhruv-techapps/core-extension'
 
 export default class DiscordMessaging {
@@ -11,22 +12,18 @@ export default class DiscordMessaging {
           notifications: { discord }
         } = settings
         if (discord) {
-          fetch(chrome.runtime.getURL('configuration.json'))
-            .then(r => r.json())
-            .then(async ({ functions: functionURL, variant }) => {
-              const url = new URL(`${functionURL}/notifyDiscord`)
-              const { uid } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.DISCORD)
-              url.searchParams.append('title', title)
-              url.searchParams.append('id', uid)
-              url.searchParams.append('fields', JSON.stringify(fields))
-              url.searchParams.append('variant', variant)
-              url.searchParams.append('color', color)
-              fetch(url)
-                .then(Logger.colorInfo)
-                .catch(error => {
-                  Logger.colorError(error)
-                  // GoogleAnalytics.error({ error }, () => {})
-                })
+          const url = new URL(FUNCTION_URL)
+          const { uid } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.DISCORD)
+          url.searchParams.append('title', title)
+          url.searchParams.append('id', uid)
+          url.searchParams.append('fields', JSON.stringify(fields))
+          url.searchParams.append('variant', VARIANT)
+          url.searchParams.append('color', color)
+          fetch(url)
+            .then(Logger.colorInfo)
+            .catch(error => {
+              Logger.colorError(error)
+              // GoogleAnalytics.error({ error }, () => {})
             })
         }
       }

@@ -1,105 +1,92 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
-const webpack = require('webpack') // to access built-in plugins
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
-const MergeJsonPlugin = require('merge-json-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
+const PACKAGE = require('./package.json')
 
-const merge = (target, source) => {
-  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
-  Object.keys(source).forEach(key => {
-    if (source[key] instanceof Object) {
-      Object.assign(source[key], merge(target[key], source[key]))
-    }
-  })
+function modify(buffer, name, version, { KEY }) {
+  // copy-webpack-plugin passes a buffer
+  const manifest = JSON.parse(buffer.toString())
 
-  // Join `target` and modified `source`
-  Object.assign(target || {}, source)
-  return target
+  // make any modifications you like, such as
+  manifest.version = version
+  manifest.name = name
+  if (KEY) {
+    manifest.key = KEY
+  }
+
+  return JSON.stringify(manifest, null, 2)
 }
 
-module.exports = ({ goal }, { mode }) => {
-  const srcDir = goal || '_prod'
-  const devtool = mode === 'development' ? 'inline-source-map' : false
-  // eslint-disable-next-line global-require
-  const manifest = require(`./${srcDir}/manifest.json`)
-
-  return {
-    mode: 'production',
-    target: 'web',
-    devtool,
-    entry: {
-      content_scripts: './src/content_scripts/index.js',
-      background: './src/background/index.js',
-      wizard: './src/wizard/index.js',
-      wizard_css: './src/wizard/wizard.scss'
-    },
-    stats: {
-      children: false,
-      logging: 'warn'
-    },
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: '[name].js',
-      clean: true
-    },
-    resolve: {
-      extensions: ['.js'],
-      modules: ['src', 'node_modules']
-    },
-    module: {
-      rules: [
+module.exports = ({ name, variant, devtool = false }, { WEBPACK_WATCH }) => ({
+  mode: 'production',
+  target: 'web',
+  devtool,
+  entry: {
+    content_scripts: './src/content_scripts/index.js',
+    background: './src/background/index.js',
+    wizard: './src/wizard/index.js',
+    wizard_css: './src/wizard/wizard.scss'
+  },
+  stats: {
+    children: false,
+    logging: 'warn'
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    clean: true
+  },
+  resolve: {
+    extensions: ['.js'],
+    modules: ['src', 'node_modules']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.scss$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: { outputPath: 'css/', name: '[name].min.css' }
+          },
+          'sass-loader'
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new Dotenv({
+      systemvars: true
+    }),
+    new ESLintPlugin({
+      cache: true,
+      fix: true,
+      emitError: true,
+      failOnError: true
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: './_locales', to: './_locales' },
+        { from: `./assets/*.html`, to: './' },
+        { from: `./assets/${variant}`, to: './assets' },
         {
-          test: /\.scss$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: { outputPath: 'css/', name: '[name].min.css' }
-            },
-            'sass-loader'
-          ]
+          from: './src/manifest.json',
+          to: './manifest.json',
+          transform(content) {
+            return modify(content, name, PACKAGE.version, process.env)
+          }
         }
       ]
-    },
-    plugins: [
-      new webpack.ProgressPlugin(),
-      new webpack.DefinePlugin({ mode: JSON.stringify({ env: goal }) }),
-      new ESLintPlugin({
-        cache: true,
-        fix: true,
-        emitError: true,
-        failOnError: true
-      }),
-      new MergeJsonPlugin({
-        groups: [
-          {
-            files: ['./src/manifest.json', `./${srcDir}/manifest.json`],
-            to: './manifest.json'
-          },
-          {
-            files: ['./src/configuration.json', `./${srcDir}/configuration.json`],
-            to: './configuration.json'
-          }
-        ],
-        mergeFn: merge
-      }),
-      new CopyPlugin({
-        patterns: [
-          { from: './_locales', to: './_locales' },
-          { from: `./assets`, to: './assets' },
-          { from: `./${srcDir}/assets`, to: './assets' }
+    }),
+    ...(!WEBPACK_WATCH
+      ? [
+          new ZipPlugin({
+            path: `./../build/`,
+            filename: `${name.replace(/\W+/g, '-').toLowerCase()}-v${PACKAGE.version}.zip`
+          })
         ]
-      }),
-      ...(mode !== 'development'
-        ? [
-            new ZipPlugin({
-              path: `./../build/${srcDir}`,
-              filename: `${manifest.name.replace(/\W+/g, '-').toLowerCase()}-v${manifest.version}.zip`
-            })
-          ]
-        : [])
-    ]
-  }
-}
+      : [])
+  ]
+})

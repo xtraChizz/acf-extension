@@ -1,7 +1,18 @@
-name: NodeJS with Webpack
+name: Build Extension
 
 on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
+  
+env:
+    UNINSTALL_URL: ${{vars.UNINSTALL_URL}}
+    TRACKING_ID: ${{vars.TRACKING_ID}}
+    OPTIONS_PAGE_URL: ${{vars.OPTIONS_PAGE_URL}}
+    FUNCTION_URL: ${{vars.FUNCTION_URL}}
+    VARIANT: ${{vars.VARIANT}}
 
 jobs:
   build:
@@ -10,21 +21,29 @@ jobs:
       name: Development
       url: https://dev.getautoclicker.com/
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    - name: Setup Env
+      uses: actions/setup-node@v3
       with:
          always-auth: true
          node-version: 16
          registry-url: https://npm.pkg.github.com
          scope: "@dhruv-techapps"
          cache: "npm"
-    - name: Build
+    - name: Build Extension
       run: |
         npm install
-        npx webpack
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.2
+        npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}"
+    - name: Set DEV Tag
+      uses: rickstaa/action-create-tag@v1
       with:
-        path: downloads
-      env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        force_push_tag: true
+        tag: "DEV"
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        generate_release_notes: true
+        files: build/*
+        fail_on_unmatched_files: true

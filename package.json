@@ -1,18 +1,16 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "3.2.14",
+  "version": "3.4.11",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch --mode=development --env goal=__local",
+    "start": "webpack --watch",
     "lint": "eslint --cache --format stylish --ext mjs,js src",
     "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
-    "build:dev": "webpack --env goal=_dev",
-    "build:beta": "webpack --env goal=_beta",
-    "build:prod": "webpack --env goal=_prod",
+    "build": "webpack --env name='Auto Clicker - AutoFill' devtool='inline-source-map' variant='DEV'",
     "prepare": "husky install"
   },
   "repository": {
@@ -34,6 +32,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "copy-webpack-plugin": "^9.0.1",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
