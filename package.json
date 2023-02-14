@@ -1,16 +1,16 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "3.4.11",
+  "version": "3.4.14",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch",
+    "start": "webpack --watch --env name=\"Auto Clicker - AutoFill\" devtool=inline-source-map variant=DEV",
     "lint": "eslint --cache --format stylish --ext mjs,js src",
     "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
-    "build": "webpack --env name='Auto Clicker - AutoFill' devtool='inline-source-map' variant='DEV'",
+    "build": "webpack --env name=\"Auto Clicker - AutoFill\" variant=PROD",
     "prepare": "husky install"
   },
   "repository": {
@@ -51,10 +51,12 @@
     "zip-webpack-plugin": "^4.0.1"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^5.x",
-    "@dhruv-techapps/core-common": "^5.0.8",
-    "@dhruv-techapps/core-extension": "^5.0.7",
-    "@dhruv-techapps/core-services": "^5.0.8",
+    "@dhruv-techapps/acf-common": "^5.0.1",
+    "@dhruv-techapps/core-common": "^5.0.10",
+    "@dhruv-techapps/core-extension": "^5.0.10",
+    "@dhruv-techapps/core-services": "^5.0.10",
+    "@webcomponents/webcomponentsjs": "^2.7.0",
+    "redux": "^4.2.1",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0"
   }

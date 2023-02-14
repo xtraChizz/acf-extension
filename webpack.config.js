@@ -27,7 +27,7 @@ module.exports = ({ name, variant, devtool = false }, { WEBPACK_WATCH }) => ({
     content_scripts: './src/content_scripts/index.js',
     background: './src/background/index.js',
     wizard: './src/wizard/index.js',
-    wizard_css: './src/wizard/wizard.scss'
+    popup: ['./src/popup/index.js', './src/popup/popup.scss']
   },
   stats: {
     children: false,
@@ -49,7 +49,7 @@ module.exports = ({ name, variant, devtool = false }, { WEBPACK_WATCH }) => ({
         use: [
           {
             loader: 'file-loader',
-            options: { outputPath: 'css/', name: '[name].min.css' }
+            options: { publicPath: path.resolve(__dirname, 'dist'), outputPath: 'css/', name: '[name].min.css' }
           },
           'sass-loader'
         ]
@@ -69,8 +69,9 @@ module.exports = ({ name, variant, devtool = false }, { WEBPACK_WATCH }) => ({
     new CopyPlugin({
       patterns: [
         { from: './_locales', to: './_locales' },
-        { from: `./assets/*.html`, to: './' },
         { from: `./assets/${variant}`, to: './assets' },
+        { from: `./*.html`, to: './html', context: 'src/popup' },
+        { from: './node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js', to: './' },
         {
           from: './src/manifest.json',
           to: './manifest.json',

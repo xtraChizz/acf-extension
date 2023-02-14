@@ -6,7 +6,7 @@ import { Runtime } from '@dhruv-techapps/core-extension'
 import registerContextMenus from './context-menu'
 import registerNotifications from './notifications'
 import { TabsMessenger } from './tab'
-import { RUNTIME_MESSAGE_ACF } from '../common/constant'
+import { ACTION_POPUP, RUNTIME_MESSAGE_ACF } from '../common/constant'
 import Config from './config'
 import DiscordMessaging from './discord-messaging'
 import SaveConfig from './save-config'
@@ -17,15 +17,14 @@ try {
   /**
    * Setup Google Analytics
    */
-
   // new GoogleAnalytics(trackingId, variant)
   // GoogleAnalytics.pageView([], Logger.log)
 
   /**
    * Browser Action set to open option page / configuration page
    */
-  chrome.action.onClicked.addListener(() => {
-    TabsMessenger.optionsTab({ url: OPTIONS_PAGE_URL })
+  chrome.action.onClicked.addListener(async tab => {
+    chrome.tabs.sendMessage(tab.id, { action: ACTION_POPUP })
   })
 
   /**

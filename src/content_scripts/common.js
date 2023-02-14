@@ -17,7 +17,26 @@ const Common = (() => {
   }
 
   // eslint-disable-next-line no-eval
-  const stringFunction = stringFunc => eval(stringFunc.replace(/^func::/gi, ''))
+  const stringFunction = (stringFunc, parent = window) => {
+    const functions = stringFunc.replace(/^func::/gi, '').split('.')
+    if (functions[0].includes('new')) {
+      const newFunc = functions.shift()
+      switch (newFunc) {
+        case 'new Date()':
+          parent = new Date()
+          break
+        default:
+          throw new ConfigError(`${newFunc} is not available contact extension developer`, 'Invalid Addon Func')
+      }
+    }
+    return functions.reduce((acc, current) => {
+      if (current.includes('(')) {
+        const values = current.split('(')[1].replace(')', '').split(',')
+        return acc[current.replace(/\(.*\)/, '')](values)
+      }
+      return acc[current]
+    }, parent)
+  }
 
   const getElements = async (document, elementFinder, retry, retryInterval) => {
     Logger.colorDebug('GetElements', elementFinder)
