@@ -1,6 +1,21 @@
 name: Build Extension
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment of release'
+        type: environment
+        default: Development
+        required: true
+      draft:
+        description: 'Draft Release'
+        required: true
+        default: false
+      prerelease:
+        description: 'Pre Release'
+        required: true
+        default: true
   push:
     # Sequence of patterns matched against refs/tags
     tags:
@@ -16,9 +31,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: 
-      name: Development
-      url: https://dev.getautoclicker.com/
+    environment:
+      name: ${{inputs.environment}}
+      url: ${{ fromJSON(steps.release.outputs.assets)[0].browser_download_url }}
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -34,15 +49,21 @@ jobs:
       run: |
         npm install
         npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}"
-    - name: Set DEV Tag
+    - name: Set ${{vars.VARIANT}} Tag
+      if: ${{!inputs.draft}}
       uses: rickstaa/action-create-tag@v1
       with:
         force_push_tag: true
-        tag: "DEV"
+        tag: "${{vars.VARIANT}}"
+    - id: package
+      uses: martinbeentjes/npm-get-version-action@main
     - name: Release
+      id: release
       uses: softprops/action-gh-release@v1
       with:
-        prerelease: true
+        prerelease: ${{inputs.prerelease}}
+        draft: ${{inputs.draft}}
+        tag_name: ${{ steps.package.outputs.current-version}}
         generate_release_notes: true
         files: build/*
         fail_on_unmatched_files: true
