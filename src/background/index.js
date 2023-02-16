@@ -1,16 +1,17 @@
 /* eslint-disable no-new */
 import { DateUtil, Logger, RUNTIME_MESSAGE } from '@dhruv-techapps/core-common'
-import { LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
+import { LOCAL_STORAGE_KEY, RUNTIME_MESSAGE_ACF } from '@dhruv-techapps/acf-common'
 import { Runtime } from '@dhruv-techapps/core-extension'
 
 import registerContextMenus from './context-menu'
 import registerNotifications from './notifications'
-import { TabsMessenger } from './tab'
-import { ACTION_POPUP, RUNTIME_MESSAGE_ACF } from '../common/constant'
 import Config from './config'
 import DiscordMessaging from './discord-messaging'
+import Backup from './backup'
 import SaveConfig from './save-config'
+import { TabsMessenger } from './tab'
 import { Blog } from './check-blog'
+import { ACTION_POPUP } from '../common/constant'
 import { OPTIONS_PAGE_URL, UNINSTALL_URL } from '../common/environments'
 
 try {
@@ -51,7 +52,9 @@ try {
   /**
    * Setup Uninstall action
    */
-  chrome.runtime.setUninstallURL(UNINSTALL_URL)
+  if (UNINSTALL_URL) {
+    chrome.runtime.setUninstallURL(UNINSTALL_URL)
+  }
 
   /**
    * On start up check for rate
@@ -76,9 +79,10 @@ try {
    * Setup on Message Listener
    */
   const onMessageListener = {
+    [RUNTIME_MESSAGE.DISCORD_MESSAGING]: new DiscordMessaging(),
     [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(),
     [RUNTIME_MESSAGE_ACF.SAVE_CONFIG]: new SaveConfig(),
-    [RUNTIME_MESSAGE.DISCORD_MESSAGING]: new DiscordMessaging()
+    [RUNTIME_MESSAGE_ACF.BACKUP]: new Backup()
   }
   Runtime.onMessageExternal(onMessageListener)
   Runtime.onMessage(onMessageListener)

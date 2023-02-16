@@ -2,6 +2,7 @@
 import { Auto } from './auto'
 import { WizardElementUtil } from './element-util'
 import { ACTION_ACTIONS, store } from './store'
+import { OPTIONS_PAGE_URL } from '../common/environments'
 
 export const Popup = (() => {
   let popupContainer
@@ -44,12 +45,7 @@ export const Popup = (() => {
     })
   }
 
-  const setSettingsUrl = () =>
-    fetch(chrome.runtime.getURL('./configuration.json'))
-      .then(r => r.json())
-      .then(configuration => {
-        popupContainer.setAttribute('settings', configuration.options_page_url)
-      })
+  const setSettingsUrl = () => popupContainer.setAttribute('settings', OPTIONS_PAGE_URL)
 
   const storeSubscribe = () => {
     store.subscribe(() => {

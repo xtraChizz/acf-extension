@@ -113,3 +113,5 @@ export class AutoClickerAutoFillPopup extends HTMLElement {
     }
   }
 }
+
+window.customElements.define('auto-clicker-autofill-popup', AutoClickerAutoFillPopup)

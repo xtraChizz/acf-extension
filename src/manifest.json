@@ -5,7 +5,7 @@
   "version": "5.0.0",
   "manifest_version": 3,
   "default_locale": "en",
-  "permissions": ["storage", "notifications", "contextMenus", "activeTab"],
+  "permissions": ["storage", "notifications", "contextMenus", "activeTab", "identity", "alarms"],
   "optional_host_permissions": ["http://*/*", "https://*/*"],
   "icons": {
     "16": "assets/icons/icon16.png",
@@ -31,17 +31,21 @@
     },
     {
       "matches": ["<all_urls>"],
-      "css": ["css/popup.min.css"],
-      "js": ["webcomponents-bundle.js", "popup.js", "wizard.js"],
+      "css": ["css/wizard-popup.min.css"],
+      "js": ["node_modules/webcomponents-bundle.js", "wizard-popup.js", "wizard.js"],
       "run_at": "document_end"
     }
   ],
   "externally_connectable": {
     "matches": ["http://localhost:*/*", "https://*.getautoclicker.com/*", "https://*.getdataentry.com/*"]
   },
+  "oauth2": {
+    "client_id": "1068181857899-r0f42tolvddi77t0jtatj59pl88lq9om.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/drive.appdata"]
+  },
   "web_accessible_resources": [
     {
-      "resources": ["assets/*", "css/*", "html/*", "configuration.json"],
+      "resources": ["assets/*", "css/*", "html/*"],
       "matches": ["<all_urls>"]
     }
   ]

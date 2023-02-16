@@ -17,6 +17,6 @@ chrome.runtime.onMessage.addListener(async msg => {
   }
 })
 
-fetch(chrome.runtime.getURL('/html/popup.html'))
+fetch(chrome.runtime.getURL('/html/wizard-popup.html'))
   .then(r => r.text())
   .then(html => document.body.insertAdjacentHTML('beforeend', html))
