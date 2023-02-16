@@ -47,8 +47,10 @@ jobs:
          cache: "npm"
     - name: Build Extension
       run: |
+        echo "NAME=${vars.NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
         npm install
         npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}"
+        (cd dist  && zip -r ../build/${{NAME}}.zip .);
     - name: Set ${{vars.VARIANT}} Tag
       if: ${{!inputs.draft}}
       uses: rickstaa/action-create-tag@v1
