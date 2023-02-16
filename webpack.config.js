@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
-const ZipPlugin = require('zip-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 const PACKAGE = require('./package.json')
@@ -86,15 +85,7 @@ module.exports = ({ name, variant, devtool = false, WEBPACK_WATCH }) => {
             }
           }
         ]
-      }),
-      ...(!WEBPACK_WATCH
-        ? [
-            new ZipPlugin({
-              path: `./../build/`,
-              filename: `${name.replace(/\W+/g, '-').toLowerCase()}-v${PACKAGE.version}.zip`
-            })
-          ]
-        : [])
+      })
     ]
   }
 }
