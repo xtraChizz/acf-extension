@@ -34,6 +34,7 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+      
     - name: Setup Env
       uses: actions/setup-node@v3
       with:
@@ -55,9 +56,7 @@ jobs:
     - name: Zip
       run: |
         mkdir -p build
-        ls
         cd dist
-        ls
         zip -r ../build/${NAME}.zip .
         
     - name: Set ${{vars.VARIANT}} Tag
@@ -66,8 +65,10 @@ jobs:
       with:
         force_push_tag: true
         tag: "${{vars.VARIANT}}"
+        
     - id: package
       uses: martinbeentjes/npm-get-version-action@main
+      
     - name: Release
       id: release
       uses: softprops/action-gh-release@v1
