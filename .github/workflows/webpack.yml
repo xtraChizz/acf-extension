@@ -16,10 +16,6 @@ on:
         description: 'Pre Release'
         required: true
         default: true
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   
 env:
     UNINSTALL_URL: ${{vars.UNINSTALL_URL}}
