@@ -27,6 +27,7 @@ env:
     OPTIONS_PAGE_URL: ${{vars.OPTIONS_PAGE_URL}}
     FUNCTION_URL: ${{vars.FUNCTION_URL}}
     VARIANT: ${{vars.VARIANT}}
+    NAME: ${{vars.NAME}}
 
 jobs:
   build:
@@ -47,7 +48,7 @@ jobs:
          cache: "npm"
     - name: Build Extension
       run: |
-        echo "NAME=${vars.NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
+        echo "NAME=${NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
         npm install
         npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}"
         (cd dist  && zip -r ../build/${{NAME}}.zip .);
