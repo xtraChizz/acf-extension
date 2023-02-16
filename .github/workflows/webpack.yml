@@ -58,8 +58,11 @@ jobs:
         
     - name: Zip
       run: |
+        mkdir -p build
         ls
-        (cd dist  && zip -r ../build/${NAME}.zip .);
+        cd dist
+        ls
+        zip -r ../build/${NAME}.zip .
         
     - name: Set ${{vars.VARIANT}} Tag
       if: ${{!inputs.draft}}
