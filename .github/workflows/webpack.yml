@@ -46,12 +46,20 @@ jobs:
          registry-url: https://npm.pkg.github.com
          scope: "@dhruv-techapps"
          cache: "npm"
+    - id: name
+      run: |
+        run: |
+        echo "NAME=${NAME,,}" >>${GITHUB_ENV}
+        echo "NAME=${NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
+        echo "${NAME}"
+    - name: TEST
+      run: |
+        echo "${NAME}"
     - name: Build Extension
       run: |
-        echo "NAME=${NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
         npm install
         npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}"
-        (cd dist  && zip -r ../build/${{NAME}}.zip .);
+        (cd dist  && zip -r ../build/${NAME}.zip .);
     - name: Set ${{vars.VARIANT}} Tag
       if: ${{!inputs.draft}}
       uses: rickstaa/action-create-tag@v1
