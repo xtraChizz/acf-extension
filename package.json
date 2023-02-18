@@ -4,7 +4,7 @@
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch --env name=\"Auto Clicker - AutoFill [LOCAL]\" devtool=source-map variant=DEV",
+    "start": "webpack --watch --env name=\"Auto Clicker - AutoFill [LOCAL]\" devtool=source-map variant=DEV oauth=1068181857899-s9nt53dmtv98tebm91a8jofn0de8777j.apps.googleusercontent.com",
     "lint": "eslint --cache --format stylish --ext mjs,js src",
     "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
     "test": "jest --verbose",

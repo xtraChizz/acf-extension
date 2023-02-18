@@ -40,7 +40,7 @@
     "matches": ["http://localhost:*/*", "https://*.getautoclicker.com/*", "https://*.getdataentry.com/*"]
   },
   "oauth2": {
-    "client_id": "1068181857899-r0f42tolvddi77t0jtatj59pl88lq9om.apps.googleusercontent.com",
+    "client_id": "",
     "scopes": ["https://www.googleapis.com/auth/drive.appdata"]
   },
   "web_accessible_resources": [

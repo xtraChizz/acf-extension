@@ -51,26 +51,6 @@ export default class Backup {
     chrome.alarms.create(BACKUP_ALARM, alarmInfo)
   }
 
-  async backup(now) {
-    const { configs } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
-    if (configs) {
-      const { settings } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
-      const files = await this.list()
-      const fileIds = files.reduce((a, file) => ({ ...a, [file.name]: file.id }), {})
-      const { error } = await this.createOrUpdate(BACKUP_FILE_NAMES.CONFIGS, configs, fileIds[BACKUP_FILE_NAMES.CONFIGS])
-      if (error) {
-        this.notify('Configuration Backup Error', error.message)
-      } else {
-        await this.createOrUpdate(BACKUP_FILE_NAMES.SETTINGS, settings, fileIds[BACKUP_FILE_NAMES.SETTINGS])
-        settings.backup.lastBackup = new Date().toLocaleString()
-        chrome.storage.local.set({ [LOCAL_STORAGE_KEY.SETTINGS]: settings })
-        if (now) {
-          this.notify('Configurations Backup', `Configurations are backup on Google Drive at ${settings.backup.lastBackup}`)
-        }
-      }
-    }
-  }
-
   async notify(title, message, requireInteraction = true) {
     const { action } = await chrome.runtime.getManifest()
     const defaultOptions = {
@@ -84,23 +64,64 @@ export default class Backup {
     chrome.notifications.create('backup', { ...defaultOptions })
   }
 
-  async restore() {
-    const files = await this.list()
-    if (files.length === 0) {
-      this.notify('Configuration Restore', 'No configurations found on google drive for your account')
-    } else {
-      files.forEach(async file => {
-        const fileContent = await this.get(file.id)
-        if (fileContent) {
-          if (file.name === BACKUP_FILE_NAMES.SETTINGS) {
-            chrome.storage.local.set({ [LOCAL_STORAGE_KEY.SETTINGS]: fileContent })
-          }
-          if (file.name === BACKUP_FILE_NAMES.CONFIGS) {
-            chrome.storage.local.set({ [LOCAL_STORAGE_KEY.CONFIGS]: fileContent })
-            this.notify('Configurations Restored', 'Configurations are restored from Google Drive. Refresh configurations page to load content.')
-          }
+  async checkInvalidCredentials(message) {
+    if (message === 'Invalid Credentials' || message.includes('invalid authentication credentials')) {
+      await chrome.identity.removeCachedAuthToken({ token: this.ACCESS_TOKEN })
+      this.ACCESS_TOKEN = null
+      this.notify('Configuration Backup Error', 'Token expired reauthenticate!')
+      return true
+    }
+    this.notify('Configuration Backup Error', message)
+    return false
+  }
+
+  async backup(now) {
+    try {
+      const { configs } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
+      if (configs) {
+        const { settings } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
+        const { files } = await this.list()
+        const fileIds = files.reduce((a, file) => ({ ...a, [file.name]: file.id }), {})
+        await this.createOrUpdate(BACKUP_FILE_NAMES.CONFIGS, configs, fileIds[BACKUP_FILE_NAMES.CONFIGS])
+        await this.createOrUpdate(BACKUP_FILE_NAMES.SETTINGS, settings, fileIds[BACKUP_FILE_NAMES.SETTINGS])
+        settings.backup.lastBackup = new Date().toLocaleString()
+        chrome.storage.local.set({ [LOCAL_STORAGE_KEY.SETTINGS]: settings })
+        if (now) {
+          this.notify('Configurations Backup', `Configurations are backup on Google Drive at ${settings.backup.lastBackup}`)
         }
-      })
+      }
+    } catch ({ message }) {
+      const retry = await this.checkInvalidCredentials(message)
+      if (retry) {
+        this.backup(now)
+      }
+    }
+  }
+
+  async restore() {
+    try {
+      const { files } = await this.list()
+      if (files.length === 0) {
+        this.notify('Configuration Restore', 'No configurations found on google drive for your account')
+      } else {
+        files.forEach(async file => {
+          const fileContent = await this.get(file.id)
+          if (fileContent) {
+            if (file.name === BACKUP_FILE_NAMES.SETTINGS) {
+              chrome.storage.local.set({ [LOCAL_STORAGE_KEY.SETTINGS]: fileContent })
+            }
+            if (file.name === BACKUP_FILE_NAMES.CONFIGS) {
+              chrome.storage.local.set({ [LOCAL_STORAGE_KEY.CONFIGS]: fileContent })
+              this.notify('Configurations Restored', 'Configurations are restored from Google Drive. Refresh configurations page to load content.')
+            }
+          }
+        })
+      }
+    } catch ({ message }) {
+      const retry = await this.checkInvalidCredentials(message)
+      if (retry) {
+        this.restore()
+      }
     }
   }
 
@@ -135,9 +156,13 @@ export default class Backup {
 
   async list() {
     const headers = await this.getHeaders()
-    const result = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id%2C%20name)&pageSize=10', { headers })
-    const { files } = await result.json()
-    return files
+    const response = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id%2C%20name)&pageSize=10', { headers })
+    if (response.status === 401) {
+      const { error } = await response.json()
+      throw new Error(error.message)
+    }
+    const result = await response.json()
+    return result
   }
 
   async get(fileId) {

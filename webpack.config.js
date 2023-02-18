@@ -5,13 +5,16 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 const PACKAGE = require('./package.json')
 
-function modify(buffer, name, version, { KEY }) {
+function modify(buffer, name, oauth, version, { KEY }) {
   // copy-webpack-plugin passes a buffer
   const manifest = JSON.parse(buffer.toString())
 
   // make any modifications you like, such as
   manifest.version = version
   manifest.name = name
+  if (oauth) {
+    manifest.oauth2.client_id = oauth
+  }
   if (KEY) {
     manifest.key = KEY
   }
@@ -19,7 +22,7 @@ function modify(buffer, name, version, { KEY }) {
   return JSON.stringify(manifest, null, 2)
 }
 
-module.exports = ({ name, variant, devtool = false, WEBPACK_WATCH }) => {
+module.exports = ({ name, variant, oauth, devtool = false, WEBPACK_WATCH }) => {
   if (WEBPACK_WATCH) {
     // eslint-disable-next-line global-require
     require('dotenv').config({ path: './.env' })
@@ -81,7 +84,7 @@ module.exports = ({ name, variant, devtool = false, WEBPACK_WATCH }) => {
             from: './src/manifest.json',
             to: './manifest.json',
             transform(content) {
-              return modify(content, name, PACKAGE.version, process.env)
+              return modify(content, name, oauth, PACKAGE.version, process.env)
             }
           }
         ]

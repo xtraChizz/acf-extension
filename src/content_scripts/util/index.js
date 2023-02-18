@@ -4,6 +4,7 @@ export const sleep = async msec =>
   new Promise(resolve => {
     setTimeout(resolve, msec)
   })
+
 export const wait = async (time, type = '', ...args) => {
   if (time) {
     let waitTime = Number(time) * 1000
