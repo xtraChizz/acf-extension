@@ -51,7 +51,7 @@ jobs:
     - name: Build Extension
       run: |
         npm install
-        npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}"
+        npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}" oauth="${{secrets.OAUTH_CLIENT_ID}}"
         
     - name: Zip
       run: |
