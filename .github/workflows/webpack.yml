@@ -60,7 +60,6 @@ jobs:
         zip -r ../build/${NAME}.zip .
         
     - name: Set ${{vars.VARIANT}} Tag
-      if: ${{inputs.draft !== true}}
       uses: rickstaa/action-create-tag@v1
       with:
         force_push_tag: true
