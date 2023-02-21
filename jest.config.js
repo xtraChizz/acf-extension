@@ -1,7 +1,7 @@
 module.exports = {
   collectCoverageFrom: ['src/**/*.{js,jsx}', '!src/constant/**/*.{js,jsx}', '!src/helpers/browser.js', '!src/**/index.js', '!**/node_modules/**', '!**/vendor/**'],
   coveragePathIgnorePatterns: ['/node_modules/'],
-  coverageProvider: 'v8',
+  coverageProvider: 'babel',
   setupFilesAfterEnv: ['./jest.setup.js'],
   reporters: ['default'],
   testEnvironment: 'jsdom',

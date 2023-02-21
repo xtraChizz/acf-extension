@@ -49,16 +49,21 @@ const Batch = (() => {
   }
 
   const start = async (_batch, _actions, _sheets) => {
-    Logger.group(`${LOGGER_LETTER} #0`)
-    batch = _batch
-    actions = _actions
-    sheets = _sheets
-    await Actions.start(_actions, 0, sheets)
-    Logger.groupEnd(`${LOGGER_LETTER} #0`)
-    if (batch.refresh) {
-      refresh()
-    } else {
-      await checkRepeat()
+    try {
+      Logger.group(`${LOGGER_LETTER} #0`)
+      batch = _batch
+      actions = _actions
+      sheets = _sheets
+      await Actions.start(_actions, 0, sheets)
+      Logger.groupEnd(`${LOGGER_LETTER} #0`)
+      if (batch.refresh) {
+        refresh()
+      } else {
+        await checkRepeat()
+      }
+    } catch (error) {
+      Logger.groupEnd(`${LOGGER_LETTER} #0`)
+      throw error
     }
   }
 

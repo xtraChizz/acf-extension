@@ -25,23 +25,28 @@ const Action = (() => {
   }
 
   const start = async (action, batchRepeat, sheets, actions, index) => {
-    actionIndex = index
-    Logger.group(`${LOGGER_LETTER} #${actionIndex}`)
-    if (await Statement.check(actions, action.statement)) {
-      await wait(action.initWait, `${LOGGER_LETTER} initWait`)
-      if (await Addon.check(action.settings, batchRepeat, action.addon)) {
-        const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
-        elements = await Common.start(elementFinder, action.settings)
-        if (!elements) {
-          return ACTION_STATUS.SKIPPED
+    try {
+      actionIndex = index
+      Logger.group(`${LOGGER_LETTER} #${actionIndex}`)
+      if (await Statement.check(actions, action.statement)) {
+        await wait(action.initWait, `${LOGGER_LETTER} initWait`)
+        if (await Addon.check(action.settings, batchRepeat, action.addon)) {
+          const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+          elements = await Common.start(elementFinder, action.settings)
+          if (!elements) {
+            return ACTION_STATUS.SKIPPED
+          }
+          value = Value.getValue(action.value, batchRepeat, sheets)
+          await Events.check(value, elements)
+          return await repeatFunc(action.repeat, action.repeatInterval)
         }
-        value = Value.getValue(action.value, batchRepeat, sheets)
-        await Events.check(value, elements)
-        return await repeatFunc(action.repeat, action.repeatInterval)
       }
+      Logger.groupEnd(`${LOGGER_LETTER} #${actionIndex}`)
+      return ACTION_STATUS.SKIPPED
+    } catch (error) {
+      Logger.groupEnd(`${LOGGER_LETTER} #${actionIndex}`)
+      throw error
     }
-    Logger.groupEnd(`${LOGGER_LETTER} #${actionIndex}`)
-    return ACTION_STATUS.SKIPPED
   }
 
   return { start }

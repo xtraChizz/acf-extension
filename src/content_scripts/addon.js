@@ -29,13 +29,24 @@ const Addon = (() => {
         })
       }
     } else if (recheckOption === RECHECK_OPTIONS.STOP) {
-      throw new ConfigError('Not Matched', 'Action is STOP')
+      throw new ConfigError(`'${nodeValue}' ${condition} '${value}'`, "Addon didn't matched")
     }
     Logger.colorInfo('RecheckOption', recheckOption)
     return false
   }
 
-  const getNodeValue = (elements, valueExtractor) => {
+  const extractValue = (element, value, valueExtractor, valueExtractorFlags = '') => {
+    if (!valueExtractor) {
+      return value
+    }
+    if (/^@\w+(-\w+)?$/.test(valueExtractor)) {
+      return element.getAttribute(valueExtractor.replace('@', ''))
+    }
+    const matches = value.match(RegExp(valueExtractor, valueExtractorFlags))
+    return (matches && matches.join('')) || value
+  }
+
+  const getNodeValue = (elements, valueExtractor, valueExtractorFlags) => {
     const element = elements[0]
     let value
     if (SELECT_TEXTAREA_NODE_NAME.test(element.nodeName)) {
@@ -51,13 +62,7 @@ const Addon = (() => {
     } else {
       value = element.innerText
     }
-    if (valueExtractor) {
-      if (/^@\w+(-\w+)?$/.test(valueExtractor)) {
-        return element.getAttribute(valueExtractor.replace('@', ''))
-      }
-      const match = RegExp(valueExtractor).exec(value)
-      return (match && match[0]) || value
-    }
+    value = extractValue(element, value, valueExtractor, valueExtractorFlags)
     Logger.colorDebug('GetNodeValue', value)
     return value
   }
@@ -65,7 +70,7 @@ const Addon = (() => {
   const compare = (nodeValue, condition, value) => {
     Logger.colorDebug('Compare', { nodeValue, condition, value })
     if (/than/gi.test(condition) && (Number.isNaN(Number(nodeValue)) || Number.isNaN(Number(value)))) {
-      throw new ConfigError('Greater || Less can only compare number', 'Wrong Comparison')
+      throw new ConfigError(`Greater || Less can only compare number '${nodeValue}' '${value}'`, 'Wrong Comparison')
     }
     switch (condition) {
       case ADDON_CONDITIONS['= Equals']:
@@ -89,27 +94,32 @@ const Addon = (() => {
     }
   }
 
-  const start = async ({ elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat) => {
-    Logger.colorDebug('Start', { elementFinder, value, condition, valueExtractor })
-    let nodeValue
-    if (/^Func::/gi.test(elementFinder)) {
-      nodeValue = Common.stringFunction(elementFinder)
-    } else {
-      elementFinder = elementFinder.replaceAll('<batchRepeat>', batchRepeat)
-      const elements = await Common.start(elementFinder, settings)
-      if (elements) {
-        nodeValue = getNodeValue(elements, valueExtractor)
+  const start = async ({ elementFinder, value, condition, valueExtractor, valueExtractorFlags, ...props }, settings, batchRepeat) => {
+    try {
+      Logger.colorDebug('Start', { elementFinder, value, condition, valueExtractor, valueExtractorFlags })
+      let nodeValue
+      if (/^Func::/gi.test(elementFinder)) {
+        nodeValue = Common.stringFunction(elementFinder)
+      } else {
+        elementFinder = elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+        const elements = await Common.start(elementFinder, settings)
+        if (elements) {
+          nodeValue = getNodeValue(elements, valueExtractor, valueExtractorFlags)
+        }
       }
-    }
-    if (nodeValue !== undefined) {
-      value = value.replaceAll('<batchRepeat>', batchRepeat)
-      const result = compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
-      Logger.colorDebug('Compare Result', result)
+      if (nodeValue !== undefined) {
+        value = value.replaceAll('<batchRepeat>', batchRepeat)
+        const result = compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
+        Logger.colorDebug('Compare Result', result)
+        Logger.groupEnd(LOGGER_LETTER)
+        return result
+      }
       Logger.groupEnd(LOGGER_LETTER)
-      return result
+      return false
+    } catch (error) {
+      Logger.groupEnd(LOGGER_LETTER)
+      throw error
     }
-    Logger.groupEnd(LOGGER_LETTER)
-    return false
   }
 
   const check = async (actionSettings, batchRepeat, { elementFinder, value, condition, ...props } = {}) => {
@@ -120,7 +130,7 @@ const Addon = (() => {
     return true
   }
 
-  return { check }
+  return { check, extractValue }
 })(Common)
 
 export default Addon

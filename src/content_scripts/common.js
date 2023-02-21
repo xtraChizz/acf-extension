@@ -114,29 +114,34 @@ const Common = (() => {
   }
 
   const start = async (elementFinder, settings = {}) => {
-    if (!elementFinder) {
-      throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
-    }
-    Logger.groupCollapsed(LOGGER_LETTER)
-    const { retryOption, retryInterval, retry, checkiFrames, iframeFirst } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
-    let elements
-    if (iframeFirst) {
-      elements = await checkIframe(elementFinder, retry, retryInterval)
-    } else {
-      elements = await main(elementFinder, retry, retryInterval)
-    }
-    if (!elements || elements.length === 0) {
-      if (iframeFirst) {
-        elements = await main(elementFinder, retry, retryInterval)
-      } else if (checkiFrames) {
-        elements = await checkIframe(elementFinder, retry, retryInterval)
+    try {
+      if (!elementFinder) {
+        throw new ConfigError('elementFinder can not be empty!', 'Element Finder')
       }
+      Logger.groupCollapsed(LOGGER_LETTER)
+      const { retryOption, retryInterval, retry, checkiFrames, iframeFirst } = { ...DataStore.getInst().getItem(LOCAL_STORAGE_KEY.SETTINGS), ...settings }
+      let elements
+      if (iframeFirst) {
+        elements = await checkIframe(elementFinder, retry, retryInterval)
+      } else {
+        elements = await main(elementFinder, retry, retryInterval)
+      }
+      if (!elements || elements.length === 0) {
+        if (iframeFirst) {
+          elements = await main(elementFinder, retry, retryInterval)
+        } else if (checkiFrames) {
+          elements = await checkIframe(elementFinder, retry, retryInterval)
+        }
+      }
+      if (!elements || elements.length === 0) {
+        checkRetryOption(retryOption, elementFinder)
+      }
+      Logger.groupEnd(LOGGER_LETTER)
+      return elements
+    } catch (error) {
+      Logger.groupEnd(LOGGER_LETTER)
+      throw error
     }
-    if (!elements || elements.length === 0) {
-      checkRetryOption(retryOption, elementFinder)
-    }
-    Logger.groupEnd(LOGGER_LETTER)
-    return elements
   }
   return { start, stringFunction, getElements }
 })()

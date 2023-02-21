@@ -39,7 +39,7 @@ const Config = (() => {
     } catch (e) {
       if (e instanceof ConfigError) {
         const error = { title: e.title, message: `url : ${config.url}\n${e.message}` }
-        Logger.colorError('ConfigError', error)
+        Logger.colorError(e.title, e.message)
         ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [220, 53, 69, 1] })
         ActionService.setBadgeText(chrome.runtime.id, { text: 'Error' })
         if (onError) {

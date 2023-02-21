@@ -1,1 +1,1 @@
-Object.assign(global, require('jest-chrome'), { mode: { env: '_test' } })
+Object.assign(global, require('jest-chrome'))

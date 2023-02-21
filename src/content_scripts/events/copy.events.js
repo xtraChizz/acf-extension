@@ -26,14 +26,19 @@ export const CopyEvents = (() => {
   }
 
   const start = (elements, value) => {
-    Logger.groupCollapsed(LOGGER_LETTER)
-    Logger.colorDebug('Start', value)
-    const text = getValue(elements[0])
-    Logger.colorDebug('Text', text)
-    const result = applyFilter(text, value.replace(/copy::/gi, ''))
-    Logger.colorDebug('Result', result)
-    localStorage.setItem(LOCAL_STORAGE_COPY, result)
-    Logger.groupEnd(LOGGER_LETTER)
+    try {
+      Logger.groupCollapsed(LOGGER_LETTER)
+      Logger.colorDebug('Start', value)
+      const text = getValue(elements[0])
+      Logger.colorDebug('Text', text)
+      const result = applyFilter(text, value.replace(/copy::/gi, ''))
+      Logger.colorDebug('Result', result)
+      localStorage.setItem(LOCAL_STORAGE_COPY, result)
+      Logger.groupEnd(LOGGER_LETTER)
+    } catch (error) {
+      Logger.groupEnd(LOGGER_LETTER)
+      throw error
+    }
   }
 
   return { start }
