@@ -10,9 +10,9 @@ async function loadConfig(loadType) {
         const { settings = defaultSettings } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
         DataStore.getInst().setItem(LOCAL_STORAGE_KEY.SETTINGS, settings)
         if ((config.loadType || settings.loadType || LOAD_TYPES.WINDOW) === loadType) {
-          Logger.color(undefined, undefined, LOGGER_COLOR.PRIMARY, document.location.host, loadType)
+          //Logger.color(undefined, undefined, LOGGER_COLOR.PRIMARY, document.location.host, loadType)
           await Config.checkStartType(settings, config)
-          Logger.color(undefined, undefined, LOGGER_COLOR.PRIMARY, document.location.host, 'END')
+          //Logger.color(undefined, undefined, LOGGER_COLOR.PRIMARY, document.location.host, 'END')
         }
       }
     })
