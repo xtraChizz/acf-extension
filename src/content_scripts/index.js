@@ -1,5 +1,5 @@
 import { LOAD_TYPES, LOCAL_STORAGE_KEY, RUNTIME_MESSAGE_ACF, defaultSettings } from '@dhruv-techapps/acf-common'
-import { DataStore, LOGGER_COLOR, Logger } from '@dhruv-techapps/core-common'
+import { DataStore, Logger } from '@dhruv-techapps/core-common'
 
 import Config from './config'
 
