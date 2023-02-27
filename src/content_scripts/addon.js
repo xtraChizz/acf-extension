@@ -9,14 +9,14 @@ import { RADIO_CHECKBOX_NODE_NAME, SELECT_TEXTAREA_NODE_NAME } from '../common/c
 const LOGGER_LETTER = 'Addon'
 
 const Addon = (() => {
-  const recheckFunc = async ({ nodeValue, elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat) => {
+  const recheckFunc = async ({ nodeValue, elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor, valueExtractorFlags }, settings, batchRepeat) => {
     if (recheck > 0 || recheck < -1) {
       recheck -= 1
       ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [13, 202, 240, 1] })
       ActionService.setBadgeText(chrome.runtime.id, { text: 'Recheck' })
       await wait(recheckInterval, `${LOGGER_LETTER} Recheck`, recheck, '<interval>')
       // eslint-disable-next-line no-use-before-define
-      return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor }, settings, batchRepeat)
+      return await start({ elementFinder, value, condition, recheck, recheckInterval, recheckOption, valueExtractor, valueExtractorFlags }, settings, batchRepeat)
     }
     // eslint-disable-next-line no-console
     console.table([{ elementFinder, value, condition, nodeValue }])
@@ -109,7 +109,7 @@ const Addon = (() => {
       }
       if (nodeValue !== undefined) {
         value = value.replaceAll('<batchRepeat>', batchRepeat)
-        const result = compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, ...props }, settings, batchRepeat))
+        const result = compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, valueExtractorFlags, ...props }, settings, batchRepeat))
         Logger.colorDebug('Compare Result', result)
         Logger.groupEnd(LOGGER_LETTER)
         return result
