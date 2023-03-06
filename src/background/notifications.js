@@ -2,12 +2,8 @@ import { Logger } from '@dhruv-techapps/core-common'
 
 export default function registerNotifications(optionsPageUrl) {
   chrome.notifications.onClicked.addListener(notificationId => {
-    switch (notificationId) {
-      case 'error':
-        chrome.tabs.create({ url: optionsPageUrl })
-        break
-      default:
-        Logger.colorInfo('Notification onClicked', notificationId)
+    if (notificationId === 'error') {
+      chrome.tabs.create({ url: optionsPageUrl })
     }
   })
 

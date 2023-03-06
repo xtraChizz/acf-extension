@@ -1,4 +1,4 @@
-import { AUTO_BACKUP, LOCAL_STORAGE_KEY } from '@dhruv-techapps/acf-common'
+import { AUTO_BACKUP, LOCAL_STORAGE_KEY, defaultConfig, defaultSettings } from '@dhruv-techapps/acf-common'
 import { CHROME } from '@dhruv-techapps/core-common'
 
 const BACKUP_ALARM = 'backupAlarm'
@@ -77,9 +77,9 @@ export default class Backup {
 
   async backup(now) {
     try {
-      const { configs } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
+      const { configs = [{ ...defaultConfig }] } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.CONFIGS)
       if (configs) {
-        const { settings } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
+        const { settings = { ...defaultSettings } } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SETTINGS)
         const { files } = await this.list()
         const fileIds = files.reduce((a, file) => ({ ...a, [file.name]: file.id }), {})
         await this.createOrUpdate(BACKUP_FILE_NAMES.CONFIGS, configs, fileIds[BACKUP_FILE_NAMES.CONFIGS])

@@ -1,6 +1,6 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "3.4.17",
+  "version": "3.4.18",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "copy-webpack-plugin": "^9.0.1",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.29.0",
@@ -50,7 +51,7 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^5.0.2",
+    "@dhruv-techapps/acf-common": "^5.0.5",
     "@dhruv-techapps/core-common": "^5.0.13",
     "@dhruv-techapps/core-extension": "^5.0.10",
     "@dhruv-techapps/core-services": "^5.0.10",

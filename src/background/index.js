@@ -13,6 +13,7 @@ import { TabsMessenger } from './tab'
 import { Blog } from './check-blog'
 import { ACTION_POPUP } from '../common/constant'
 import { OPTIONS_PAGE_URL, UNINSTALL_URL } from '../common/environments'
+import DiscordOauth2 from './discord-oauth2'
 
 try {
   /**
@@ -80,6 +81,7 @@ try {
    */
   const onMessageListener = {
     [RUNTIME_MESSAGE.DISCORD_MESSAGING]: new DiscordMessaging(),
+    [RUNTIME_MESSAGE_ACF.DISCORD_LOGIN]: new DiscordOauth2(),
     [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(),
     [RUNTIME_MESSAGE_ACF.SAVE_CONFIG]: new SaveConfig(),
     [RUNTIME_MESSAGE_ACF.BACKUP]: new Backup()

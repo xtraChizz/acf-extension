@@ -1,6 +1,9 @@
-/* eslint-disable no-console */
 import { ACTION_CONDITION_OPR, ACTION_RUNNING, ACTION_STATUS } from '@dhruv-techapps/acf-common'
 import Statement from '../../src/content_scripts/statement'
+
+beforeAll(() => {
+  global.console.debug = jest.fn(() => {})
+})
 
 describe('Statement.conditionResult', () => {
   const { SKIPPED, DONE } = ACTION_STATUS
