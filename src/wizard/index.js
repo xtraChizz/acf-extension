@@ -2,6 +2,7 @@
 import { ACTION_POPUP } from '../common/constant'
 import { Action } from './action'
 import { Config } from './config'
+import { IndividualField } from './individual-field'
 import { Popup } from './popup'
 
 chrome.runtime.onMessage.addListener(async msg => {
@@ -12,10 +13,12 @@ chrome.runtime.onMessage.addListener(async msg => {
     } else {
       const config = await Config.setup()
       await Popup.setup(config)
-      await Action.setup()
+      Action.setup()
     }
   }
 })
+
+IndividualField.setup()
 
 fetch(chrome.runtime.getURL('/html/wizard-popup.html'))
   .then(r => r.text())
