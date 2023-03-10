@@ -89,6 +89,7 @@ const CommonEvents = (() => {
     code = '',
     location = 0,
     ctrlKey = false,
+    bubbles = true,
     shiftKey = false,
     altKey = false,
     metaKey = false,
@@ -97,7 +98,7 @@ const CommonEvents = (() => {
     charCode = 0,
     keyCode = 0,
     which = 0
-  }) => ({ key, code, location, ctrlKey, shiftKey, altKey, metaKey, repeat, isComposing, charCode, keyCode, which })
+  }) => ({ key, code, location, ctrlKey, shiftKey, altKey, metaKey, bubbles, repeat, isComposing, charCode, keyCode, which })
 
   return { getFillEvent, getMouseEvent, getMouseEventProperties, getKeyboardEventProperties, loopElements, getVerifiedEvents, getTouchEvent, getTouchEventProperties, getTouch }
 })()
@@ -109,6 +110,7 @@ export const EVENTS = {
   TOUCH_EVENTS: 'touchevents',
   FORM_EVENTS: 'formevents',
   KEY_EVENTS: 'keyevents',
+  KEYBOARD_EVENTS: 'keyboardevents',
   ATTR: 'attr',
   CLASS: 'class',
   COPY: 'copy',

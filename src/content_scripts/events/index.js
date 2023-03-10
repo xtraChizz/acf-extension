@@ -16,6 +16,7 @@ import { FormEvents } from './form.events'
 import { KeyEvents } from './key.events'
 import { LocationCommandEvents } from './location-command.events'
 import { PlainEvents } from './plain.events'
+import { KeyboardEvents } from './keyboard.events'
 
 const DEFAULT_EVENT = ['mouseover', 'mousedown', 'mouseup', 'click']
 
@@ -72,6 +73,9 @@ const Events = (() => {
           break
         case EVENTS.PREPEND:
           PrependEvents.start(elements, value)
+          break
+        case EVENTS.KEYBOARD_EVENTS:
+          KeyboardEvents.start(elements, value)
           break
         default:
           PlainEvents.start(elements, value)
