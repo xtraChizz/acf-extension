@@ -1,9 +1,12 @@
 import { Logger } from '@dhruv-techapps/core-common'
 import { RADIO_CHECKBOX_NODE_NAME } from '../../common/constant'
+import Common from '../common'
 import CommonEvents from './common.events'
 
 const LOCAL_STORAGE_COPY = 'auto-clicker-copy'
 const CHANGE_EVENT = ['input', 'change']
+
+const LOGGER_LETTER = 'PasteEvents'
 
 export const PasteEvents = (() => {
   const checkNode = (element, value) => {
@@ -20,9 +23,19 @@ export const PasteEvents = (() => {
   }
 
   const start = (elements, value) => {
-    value = value.replace(/paste::/i, localStorage.getItem(LOCAL_STORAGE_COPY))
-    Logger.colorDebug(`PasteEvents`, value)
-    CommonEvents.loopElements(elements, value, checkNode)
+    try {
+      Logger.groupCollapsed(LOGGER_LETTER)
+      Logger.colorDebug('Start', value)
+      const copyContent = localStorage.getItem(LOCAL_STORAGE_COPY)
+      Logger.colorDebug('Copy Content', copyContent)
+      value = value.replace(/paste::/i, '')
+      value = Common.stringFunction(value, copyContent)
+      Logger.colorDebug('value', value)
+      CommonEvents.loopElements(elements, value, checkNode)
+    } catch (error) {
+      Logger.groupEnd(LOGGER_LETTER)
+      throw error
+    }
   }
 
   return { start }

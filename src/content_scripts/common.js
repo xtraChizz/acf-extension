@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { DataStore, Logger } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 import { ActionService } from '@dhruv-techapps/core-services'
@@ -18,21 +19,27 @@ const Common = (() => {
 
   // eslint-disable-next-line no-eval
   const stringFunction = (stringFunc, parent = window) => {
+    if (!stringFunc) {
+      return parent
+    }
     const functions = stringFunc.replace(/^func::/gi, '').split('.')
     if (functions[0].includes('new')) {
       const newFunc = functions.shift()
-      switch (newFunc) {
-        case 'new Date()':
-          parent = new Date()
-          break
-        default:
-          throw new ConfigError(`${newFunc} is not available contact extension developer`, 'Invalid Addon Func')
+      if (newFunc === 'new Date()') {
+        parent = new Date()
+      } else {
+        throw new ConfigError(`${newFunc} is not available contact extension developer`, 'Invalid Addon Func')
       }
     }
     return functions.reduce((acc, current) => {
       if (current.includes('(')) {
-        const values = current.split('(')[1].replace(')', '').split(',')
-        return acc[current.replace(/\(.*\)/, '')](values)
+        const values = current
+          .split('(')[1]
+          .replace(')', '')
+          .replace(/(["'].+?['"])/g, group => group.replace(',', '&sbquo;'))
+          .split(',')
+          .map(value => value.replace('&sbquo;', ',').trim().replace(/["']/g, ''))
+        return acc[current.replace(/\(.*\)/, '')](...values)
       }
       return acc[current]
     }, parent)
