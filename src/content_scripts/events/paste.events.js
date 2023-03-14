@@ -32,6 +32,7 @@ export const PasteEvents = (() => {
       value = Common.stringFunction(value, copyContent)
       Logger.colorDebug('value', value)
       CommonEvents.loopElements(elements, value, checkNode)
+      Logger.groupEnd(LOGGER_LETTER)
     } catch (error) {
       Logger.groupEnd(LOGGER_LETTER)
       throw error
