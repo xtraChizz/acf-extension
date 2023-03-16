@@ -1,10 +1,10 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "3.4.22",
+  "version": "3.4.23",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch --env name=\"Auto Clicker - AutoFill [LOCAL]\" devtool=source-map variant=DEV oauth=1068181857899-s9nt53dmtv98tebm91a8jofn0de8777j.apps.googleusercontent.com",
+    "start": "webpack --watch --env name=\"Auto Clicker - AutoFill [LOCAL]\" devtool=source-map variant=DEV oauth=1068181857899-u8kurrhqoph1ht9d4psotb25ivvjhhft.apps.googleusercontent.com",
     "lint": "eslint --cache --format stylish --ext mjs,js src",
     "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
     "test": "jest --verbose",
@@ -51,7 +51,7 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "@dhruv-techapps/acf-common": "^5.0.5",
+    "@dhruv-techapps/acf-common": "^5.0.8",
     "@dhruv-techapps/core-common": "^5.0.13",
     "@dhruv-techapps/core-extension": "^5.0.10",
     "@dhruv-techapps/core-services": "^5.0.10",

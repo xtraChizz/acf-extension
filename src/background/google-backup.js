@@ -1,5 +1,6 @@
-import { AUTO_BACKUP, LOCAL_STORAGE_KEY, defaultConfig, defaultSettings } from '@dhruv-techapps/acf-common'
-import { CHROME } from '@dhruv-techapps/core-common'
+import { AUTO_BACKUP, GOOGLE_SCOPES, GOOGLE_SCOPES_KEY, LOCAL_STORAGE_KEY, defaultConfig, defaultSettings } from '@dhruv-techapps/acf-common'
+import GoogleOauth2 from './google-oauth2'
+import { NotificationHandler } from './notifications'
 
 const BACKUP_ALARM = 'backupAlarm'
 const BACKUP_FILE_NAMES = {
@@ -8,8 +9,10 @@ const BACKUP_FILE_NAMES = {
 }
 const MINUTES_IN_DAY = 1440
 
-/* eslint-disable no-console */
-export default class Backup {
+const NOTIFICATIONS_TITLE = 'Google Drive Backup'
+const NOTIFICATIONS_ID = 'sheets'
+
+export default class GoogleBackup {
   async processPortMessage({ autoBackup, restore }) {
     if (restore) {
       this.restore()
@@ -18,14 +21,6 @@ export default class Backup {
     } else {
       this.backup(true)
     }
-  }
-
-  async getHeaders() {
-    if (!this.ACCESS_TOKEN) {
-      const { token } = await chrome.identity.getAuthToken({ interactive: true })
-      this.ACCESS_TOKEN = token
-    }
-    return new Headers({ Authorization: `Bearer ${this.ACCESS_TOKEN}` })
   }
 
   async setAlarm(autoBackup) {
@@ -42,36 +37,22 @@ export default class Backup {
         alarmInfo.periodInMinutes = MINUTES_IN_DAY * 30
         break
       case AUTO_BACKUP.OFF:
-        this.notify('Configuration Backup', 'Auto backup off', false)
+        NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, 'Auto backup off', false)
         return
       default:
         break
     }
-    this.notify('Configuration Backup', `Auto backup set ${autoBackup}`, false)
+    NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, `Auto backup set ${autoBackup}`, false)
     chrome.alarms.create(BACKUP_ALARM, alarmInfo)
-  }
-
-  async notify(title, message, requireInteraction = true) {
-    const { action } = await chrome.runtime.getManifest()
-    const defaultOptions = {
-      type: CHROME.NOTIFICATIONS_OPTIONS.TYPE.BASIC,
-      iconUrl: action.default_icon,
-      title,
-      message,
-      requireInteraction,
-      silent: false
-    }
-    chrome.notifications.create('backup', { ...defaultOptions })
   }
 
   async checkInvalidCredentials(message) {
     if (message === 'Invalid Credentials' || message.includes('invalid authentication credentials')) {
-      await chrome.identity.removeCachedAuthToken({ token: this.ACCESS_TOKEN })
-      this.ACCESS_TOKEN = null
-      this.notify('Configuration Backup Error', 'Token expired reauthenticate!')
+      await GoogleOauth2.removeCachedAuthToken()
+      NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, 'Token expired reauthenticate!')
       return true
     }
-    this.notify('Configuration Backup Error', message)
+    NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, message)
     return false
   }
 
@@ -87,7 +68,7 @@ export default class Backup {
         settings.backup.lastBackup = new Date().toLocaleString()
         chrome.storage.local.set({ [LOCAL_STORAGE_KEY.SETTINGS]: settings })
         if (now) {
-          this.notify('Configurations Backup', `Configurations are backup on Google Drive at ${settings.backup.lastBackup}`)
+          NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, `Configurations are backup on Google Drive at ${settings.backup.lastBackup}`)
         }
       }
     } catch ({ message }) {
@@ -102,7 +83,7 @@ export default class Backup {
     try {
       const { files } = await this.list()
       if (files.length === 0) {
-        this.notify('Configuration Restore', 'No configurations found on google drive for your account')
+        NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, 'No configurations found on google drive for your account')
       } else {
         files.forEach(async file => {
           const fileContent = await this.get(file.id)
@@ -112,7 +93,7 @@ export default class Backup {
             }
             if (file.name === BACKUP_FILE_NAMES.CONFIGS) {
               chrome.storage.local.set({ [LOCAL_STORAGE_KEY.CONFIGS]: fileContent })
-              this.notify('Configurations Restored', 'Configurations are restored from Google Drive. Refresh configurations page to load content.')
+              NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, 'Configurations are restored from Google Drive. Refresh configurations page to load content.')
             }
           }
         })
@@ -136,7 +117,7 @@ export default class Backup {
     form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }))
     form.append('file', new Blob([JSON.stringify(data)], { type: 'plain/text' }))
 
-    const headers = await this.getHeaders()
+    const headers = await GoogleOauth2.getHeaders()
     const options = {
       headers,
       method: fileId ? 'PATCH' : 'POST',
@@ -155,7 +136,8 @@ export default class Backup {
   }
 
   async list() {
-    const headers = await this.getHeaders()
+    await GoogleOauth2.addScope(GOOGLE_SCOPES[GOOGLE_SCOPES_KEY.DRIVE])
+    const headers = await GoogleOauth2.getHeaders()
     const response = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id%2C%20name)&pageSize=10', { headers })
     if (response.status === 401) {
       const { error } = await response.json()
@@ -166,7 +148,7 @@ export default class Backup {
   }
 
   async get(fileId) {
-    const headers = await this.getHeaders()
+    const headers = await GoogleOauth2.getHeaders()
     const result = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, { headers })
     const file = await result.json()
     return file
@@ -178,6 +160,6 @@ export default class Backup {
  */
 chrome.alarms.onAlarm.addListener(({ name }) => {
   if (name === BACKUP_ALARM) {
-    new Backup().backup()
+    new GoogleBackup().backup()
   }
 })

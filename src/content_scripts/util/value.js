@@ -2,10 +2,10 @@ import { Logger } from '@dhruv-techapps/core-common'
 import { ConfigError } from '../error'
 
 export const VALUE_MATCHER = {
-  SHEET: /^Sheet::[\w|-]+::\w[$|\d]$/i,
+  GOOGLE_SHEETS: /^GoogleSheets::/i,
   QUERY_PARAM: /^Query::/i,
   RANDOM: /<random(\[.+?\])?(\{(\d+),?(\d+)?\})?>/gi,
-  BATCH_REPEAT: /<batchRepeat>/
+  BATCH_REPEAT: /<batchRepeat>|<batchCount>/
 }
 
 /*
@@ -64,20 +64,25 @@ const Value = (() => {
       return result
     })
 
+  const getBatchRepeat = (value, batchRepeat) => {
+    value = value.replaceAll('<batchRepeat>', batchRepeat).replaceAll('<batchCount>', batchRepeat + 1)
+    Logger.colorDebug('GetBatchRepeat', value)
+    return value
+  }
+
   const getSheetValue = (value, batchRepeat, sheets) => {
-    const [, sheetName, sheetCol] = value.split('::')
-    const rowIndex = sheetCol[1] === '$' ? batchRepeat : parseInt(sheetCol[1], 10)
-    const colIndex = sheetCol[0].charCodeAt(0) - 65
-    if (!sheets[sheetName]) {
+    const [sheetName, range] = value.split('::')[1].split('!')
+    const [, column, row] = /(\D+)(\d+)/.exec(getBatchRepeat(range, batchRepeat))
+    const colIndex = column.split('').reduce((a, c, i) => a + c.charCodeAt(0) - 65 + i * 26, 0)
+    const rowIndex = row
+    if (!sheets || !sheets[sheetName]) {
       throw new ConfigError(`Sheet: "${sheetName}" not found!`, 'Sheet not found')
     } else if (!sheets[sheetName][rowIndex]) {
       throw new ConfigError(`Sheet "${sheetName}" do not have Row ${rowIndex}`, 'Sheet row not found')
-    } else if (colIndex < 0 || colIndex > 25) {
-      throw new ConfigError(`Invalid column letter "${sheetCol[0]}" in value:${value}`, 'Sheet column invalid')
     } else {
       value = sheets[sheetName][rowIndex][colIndex]
     }
-    Logger.colorDebug('GetSheetValue', value)
+    Logger.colorDebug('Google Sheet Value', value)
     return value
   }
 
@@ -91,20 +96,15 @@ const Value = (() => {
     return value
   }
 
-  const getBatchRepeat = (value, batchRepeat) => {
-    value = value.replaceAll('<batchRepeat>', batchRepeat)
-    Logger.colorDebug('GetBatchRepeat', value)
-    return value
-  }
-
   const getValue = (value, batchRepeat, sheets) => {
     /// For select box value is boolean true
     if (typeof value !== 'string') {
       Logger.colorDebug('Value', value)
       return value
     }
+
     switch (true) {
-      case VALUE_MATCHER.SHEET.test(value):
+      case VALUE_MATCHER.GOOGLE_SHEETS.test(value):
         return getSheetValue(value, batchRepeat, sheets)
       case VALUE_MATCHER.QUERY_PARAM.test(value):
         return getQueryParam(value)

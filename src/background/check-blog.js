@@ -3,7 +3,7 @@ import { TabsMessenger } from './tab'
 const LOCAL_STORAGE_VERSION = 'version'
 export class Blog {
   static async check(optionsPageUrl) {
-    fetch('https://blog.getautoclicker.com/index.xml')
+    fetch('https://blog.getautoclicker.com/feed.xml')
       .then(response => response.text())
       .then(async response => {
         const version = /\d+\.\d+\.\d+/.exec(response)[0]

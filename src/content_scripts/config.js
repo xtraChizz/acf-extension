@@ -1,18 +1,14 @@
 import { ActionService, DiscordMessagingService, NotificationsService } from '@dhruv-techapps/core-services'
 import { Logger } from '@dhruv-techapps/core-common'
-import { LOCAL_STORAGE_KEY, START_TYPES, defaultConfig } from '@dhruv-techapps/acf-common'
+import { START_TYPES, defaultConfig } from '@dhruv-techapps/acf-common'
 import { wait } from './util'
 import Batch from './batch'
 import { ConfigError } from './error'
 import { Hotkey } from './hotkey'
+import GoogleSheets from './util/google-sheets'
 
 const LOGGER_LETTER = 'Config'
 const Config = (() => {
-  const processSheets = async () => {
-    const { sheets = [] } = await chrome.storage.local.get(LOCAL_STORAGE_KEY.SHEETS)
-    return sheets.reduce((accumulator, currentValue) => ({ ...accumulator, [currentValue.name]: currentValue.rows }), {})
-  }
-
   const getFields = config => {
     Logger.colorDebug('GetFields', { url: config.url, name: config.name })
     const fields = [{ name: 'URL', value: config.url }]
@@ -25,9 +21,9 @@ const Config = (() => {
   const start = async (config, notifications) => {
     Logger.colorDebug('Config Start')
     const { onConfig, onError, sound, discord } = notifications
-
+    const sheets = await GoogleSheets.getValues(config)
     try {
-      await Batch.start(config.batch, config.actions, await processSheets())
+      await Batch.start(config.batch, config.actions, sheets)
       ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [25, 135, 84, 1] })
       ActionService.setBadgeText(chrome.runtime.id, { text: 'Done' })
       if (onConfig) {

@@ -31,7 +31,7 @@ const Action = (() => {
       if (await Statement.check(actions, action.statement)) {
         await wait(action.initWait, `${LOGGER_LETTER} initWait`)
         if (await Addon.check(action.settings, batchRepeat, action.addon)) {
-          const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat)
+          const elementFinder = action.elementFinder.replaceAll('<batchRepeat>', batchRepeat).replaceAll('<batchCount>', batchRepeat + 1)
           elements = await Common.start(elementFinder, action.settings)
           if (!elements) {
             return ACTION_STATUS.SKIPPED

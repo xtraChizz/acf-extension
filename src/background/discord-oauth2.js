@@ -1,9 +1,10 @@
 import { LOCAL_STORAGE_KEY, RESPONSE_CODE } from '@dhruv-techapps/acf-common'
-import { CHROME } from '@dhruv-techapps/core-common'
 import { DISCORD_CLIENT_ID } from '../common/environments'
+import { NotificationHandler } from './notifications'
 import { getRandomValues } from './util'
 
-export const NOTIFICATIONS_TITLE = 'Discord Authentication'
+const NOTIFICATIONS_TITLE = 'Discord Authentication'
+const NOTIFICATIONS_ID = 'discord'
 
 export default class DiscordOauth2 {
   async processPortMessage({ login, remove }) {
@@ -36,37 +37,24 @@ export default class DiscordOauth2 {
       url += `&nonce=${encodeURIComponent(getRandomValues())}`
       const responseUrl = await chrome.identity.launchWebAuthFlow({ url, interactive: true })
       if (chrome.runtime.lastError || responseUrl.includes('access_denied')) {
-        this.notify(NOTIFICATIONS_TITLE, chrome.runtime.lastError || responseUrl)
+        NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, chrome.runtime.lastError || responseUrl)
         return RESPONSE_CODE.ERROR
       }
-      const response = await this.getCurrentUser(responseUrl.match(/token=(.+?)&/)[1])
-      chrome.storage.local.set({ [LOCAL_STORAGE_KEY.DISCORD]: response })
-      return response
+      return await this.getCurrentUser(responseUrl.match(/token=(.+?)&/)[1])
     } catch (error) {
-      this.notify(NOTIFICATIONS_TITLE, error.message)
+      NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, error.message)
       return RESPONSE_CODE.ERROR
     }
   }
 
-  async notify(title, message, requireInteraction = true) {
-    const { action } = await chrome.runtime.getManifest()
-    const defaultOptions = {
-      type: CHROME.NOTIFICATIONS_OPTIONS.TYPE.BASIC,
-      iconUrl: action.default_icon,
-      title,
-      message,
-      requireInteraction,
-      silent: false
-    }
-    chrome.notifications.create('discord', { ...defaultOptions })
-  }
-
   async getCurrentUser(token) {
-    const response = await fetch('https://discord.com/api/users/@me', {
+    let response = await fetch('https://discord.com/api/users/@me', {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    return response.json()
+    response = await response.json()
+    chrome.storage.local.set({ [LOCAL_STORAGE_KEY.DISCORD]: response })
+    return response
   }
 }

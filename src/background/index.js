@@ -7,13 +7,14 @@ import registerContextMenus from './context-menu'
 import registerNotifications from './notifications'
 import Config from './config'
 import DiscordMessaging from './discord-messaging'
-import Backup from './backup'
 import SaveConfig from './save-config'
+import DiscordOauth2 from './discord-oauth2'
+import GoogleSheets from './google-sheets'
+import GoogleBackup from './google-backup'
 import { TabsMessenger } from './tab'
 import { Blog } from './check-blog'
 import { ACTION_POPUP } from '../common/constant'
 import { OPTIONS_PAGE_URL, UNINSTALL_URL } from '../common/environments'
-import DiscordOauth2 from './discord-oauth2'
 
 try {
   /**
@@ -84,7 +85,8 @@ try {
     [RUNTIME_MESSAGE_ACF.DISCORD_LOGIN]: new DiscordOauth2(),
     [RUNTIME_MESSAGE_ACF.CONFIG]: new Config(),
     [RUNTIME_MESSAGE_ACF.SAVE_CONFIG]: new SaveConfig(),
-    [RUNTIME_MESSAGE_ACF.BACKUP]: new Backup()
+    [RUNTIME_MESSAGE_ACF.GOOGLE_BACKUP]: new GoogleBackup(),
+    [RUNTIME_MESSAGE_ACF.GOOGLE_SHEETS]: new GoogleSheets()
   }
   Runtime.onMessageExternal(onMessageListener)
   Runtime.onMessage(onMessageListener)
