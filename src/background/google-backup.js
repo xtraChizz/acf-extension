@@ -65,6 +65,9 @@ export default class GoogleBackup {
         const fileIds = files.reduce((a, file) => ({ ...a, [file.name]: file.id }), {})
         await this.createOrUpdate(BACKUP_FILE_NAMES.CONFIGS, configs, fileIds[BACKUP_FILE_NAMES.CONFIGS])
         await this.createOrUpdate(BACKUP_FILE_NAMES.SETTINGS, settings, fileIds[BACKUP_FILE_NAMES.SETTINGS])
+        if (!settings.backup) {
+          settings.backup = {}
+        }
         settings.backup.lastBackup = new Date().toLocaleString()
         chrome.storage.local.set({ [LOCAL_STORAGE_KEY.SETTINGS]: settings })
         if (now) {
