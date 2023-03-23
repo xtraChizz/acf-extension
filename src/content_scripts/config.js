@@ -21,7 +21,8 @@ const Config = (() => {
   const start = async (config, notifications) => {
     Logger.colorDebug('Config Start')
     const { onConfig, onError, sound, discord } = notifications
-    const sheets = await GoogleSheets.getValues(config)
+    const sheets = await new GoogleSheets().getValues(config)
+    Logger.colorDebug('Google Sheets', sheets)
     try {
       await Batch.start(config.batch, config.actions, sheets)
       ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [25, 135, 84, 1] })

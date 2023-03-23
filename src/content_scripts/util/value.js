@@ -72,16 +72,22 @@ const Value = (() => {
 
   const getSheetValue = (value, batchRepeat, sheets) => {
     const [sheetName, range] = value.split('::')[1].split('!')
-    const [, column, row] = /(\D+)(\d+)/.exec(getBatchRepeat(range, batchRepeat))
-    const colIndex = column.split('').reduce((a, c, i) => a + c.charCodeAt(0) - 65 + i * 26, 0)
-    const rowIndex = row
     if (!sheets || !sheets[sheetName]) {
       throw new ConfigError(`Sheet: "${sheetName}" not found!`, 'Sheet not found')
-    } else if (!sheets[sheetName][rowIndex]) {
-      throw new ConfigError(`Sheet "${sheetName}" do not have Row ${rowIndex}`, 'Sheet row not found')
-    } else {
-      value = sheets[sheetName][rowIndex][colIndex]
     }
+    const { startRange, values } = sheets[sheetName]
+    if (!values) {
+      throw new ConfigError(`Sheet "${sheetName}" do not have value in ${startRange}`, 'Sheet values not found')
+    }
+
+    const [, column, row] = /(\D+)(\d+)/.exec(getBatchRepeat(range, batchRepeat))
+    const colIndex = column.split('').reduce((a, c, i) => a + c.charCodeAt(0) - startRange.charCodeAt(0) + i * 26, 0)
+    const rowIndex = row - Number(startRange[1])
+
+    if (!values[rowIndex] || !values[rowIndex][colIndex]) {
+      throw new ConfigError(`Sheet "${sheetName}" do not have value in ${column}${row}`, 'Sheet row not found')
+    }
+    value = values[rowIndex][colIndex]
     Logger.colorDebug('Google Sheet Value', value)
     return value
   }

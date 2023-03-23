@@ -61,16 +61,14 @@ export default class GoogleSheets {
     }
     try {
       const headers = await GoogleOauth2.getHeaders()
-      const response = []
-      ranges.forEach(async range => {
-        const result = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}`, { headers }).then(r => r.json())
+      const response = await Promise.all(ranges.map(range => fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}`, { headers }).then(r => r.json())))
+      return response.filter(result => {
         if (result.error) {
           NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, result.error.message)
-        } else {
-          response.push(result)
+          return false
         }
+        return true
       })
-      return response
     } catch (error) {
       NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, error.messag)
       await GoogleOauth2.removeCachedAuthToken()
