@@ -101,14 +101,14 @@ const Addon = (() => {
       if (/^Func::/gi.test(elementFinder)) {
         nodeValue = Common.stringFunction(elementFinder)
       } else {
-        elementFinder = elementFinder.replaceAll('<batchRepeat>', batchRepeat).replaceAll('<batchCount>', batchRepeat + 1)
+        elementFinder = elementFinder.replaceAll('<batchRepeat>', batchRepeat)
         const elements = await Common.start(elementFinder, settings)
         if (elements) {
           nodeValue = getNodeValue(elements, valueExtractor, valueExtractorFlags)
         }
       }
       if (nodeValue !== undefined) {
-        value = value.replaceAll('<batchRepeat>', batchRepeat).replaceAll('<batchCount>', batchRepeat + 1)
+        value = value.replaceAll('<batchRepeat>', batchRepeat)
         const result = compare(nodeValue, condition, value) || (await recheckFunc({ nodeValue, elementFinder, value, condition, valueExtractor, valueExtractorFlags, ...props }, settings, batchRepeat))
         Logger.colorDebug('Compare Result', result)
         Logger.groupEnd(LOGGER_LETTER)

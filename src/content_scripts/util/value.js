@@ -5,7 +5,7 @@ export const VALUE_MATCHER = {
   GOOGLE_SHEETS: /^GoogleSheets::/i,
   QUERY_PARAM: /^Query::/i,
   RANDOM: /<random(\[.+?\])?(\{(\d+),?(\d+)?\})?>/gi,
-  BATCH_REPEAT: /<batchRepeat>|<batchCount>/
+  BATCH_REPEAT: /<batchRepeat>/
 }
 
 /*
@@ -65,7 +65,7 @@ const Value = (() => {
     })
 
   const getBatchRepeat = (value, batchRepeat) => {
-    value = value.replaceAll('<batchRepeat>', batchRepeat).replaceAll('<batchCount>', batchRepeat + 1)
+    value = value.replaceAll('<batchRepeat>', batchRepeat)
     Logger.colorDebug('GetBatchRepeat', value)
     return value
   }
@@ -75,15 +75,17 @@ const Value = (() => {
     if (!sheets || !sheets[sheetName]) {
       throw new ConfigError(`Sheet: "${sheetName}" not found!`, 'Sheet not found')
     }
-    const { startRange, values } = sheets[sheetName]
+    const { startRange, values, sessionCount } = sheets[sheetName]
     if (!values) {
       throw new ConfigError(`Sheet "${sheetName}" do not have value in ${startRange}`, 'Sheet values not found')
     }
-
-    const [, column, row] = /(\D+)(\d+)/.exec(getBatchRepeat(range, batchRepeat))
+    const currentRange = range.replaceAll('<batchRepeat>', batchRepeat + 1).replaceAll('<sessionCount>', sessionCount)
+    if (!/(\D+)(\d+)/.test(currentRange)) {
+      throw new ConfigError(`Sheet range is not valid${range}`, 'Sheet range invalid')
+    }
+    const [, column, row] = /(\D+)(\d+)/.exec(currentRange)
     const colIndex = column.split('').reduce((a, c, i) => a + c.charCodeAt(0) - startRange.charCodeAt(0) + i * 26, 0)
     const rowIndex = row - Number(startRange[1])
-
     if (!values[rowIndex] || !values[rowIndex][colIndex]) {
       throw new ConfigError(`Sheet "${sheetName}" do not have value in ${column}${row}`, 'Sheet row not found')
     }
