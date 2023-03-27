@@ -16,7 +16,7 @@ export default class GoogleSheets {
           ranges.add(range.replace('<batchRepeat>', 1))
           ranges.add(range.replace('<batchRepeat>', batchHighestRepeat + 1))
         } else if (value.includes('<sessionCount>')) {
-          sessionCount = Session.getCount()
+          sessionCount = sessionCount || (sessionCount = Session.getCount())
           ranges.add(range.replace('<sessionCount>', sessionCount))
         } else {
           ranges.add(range)
