@@ -1,0 +1,63 @@
+name: Pull Request
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: master
+
+env:
+    UNINSTALL_URL: ${{vars.UNINSTALL_URL}}
+    TRACKING_ID: ${{vars.TRACKING_ID}}
+    OPTIONS_PAGE_URL: ${{vars.OPTIONS_PAGE_URL}}
+    FUNCTION_URL: ${{vars.FUNCTION_URL}}
+    VARIANT: ${{vars.VARIANT}}
+    DISCORD_CLIENT_ID: ${{vars.DISCORD_CLIENT_ID}}
+    NAME: ${{vars.NAME}}
+    
+jobs:
+  test:
+    uses: dhruv-techapps/ci-cd/.github/workflows/test.yml@main
+  build:
+    needs: [test] 
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+      url: ${{ fromJSON(steps.release.outputs.assets)[0].browser_download_url }}
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: Setup Env
+      uses: actions/setup-node@v3
+      with:
+         always-auth: true
+         node-version: 16
+         registry-url: https://npm.pkg.github.com
+         scope: "@dhruv-techapps"
+         cache: "npm"
+         
+    - run: |
+        echo "NAME=${NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
+        echo "${NAME}"
+        
+    - name: Build Extension
+      run: |
+        npm install
+        npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}" oauth="${{secrets.OAUTH_CLIENT_ID}}"
+    
+    - id: package
+      uses: martinbeentjes/npm-get-version-action@main
+      
+    - name: Zip
+      run: |
+        mkdir -p build
+        cd dist
+        zip -r ../build/${NAME}-${steps.package.outputs.current-version}.zip .
+        
+    - name: Set ${{vars.VARIANT}} Tag
+      uses: rickstaa/action-create-tag@v1
+      with:
+        force_push_tag: true
+        tag: "${{vars.VARIANT}}"
+        
+   
