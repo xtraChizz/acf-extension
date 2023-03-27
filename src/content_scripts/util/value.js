@@ -84,10 +84,11 @@ const Value = (() => {
       throw new ConfigError(`Sheet range is not valid${range}`, 'Sheet range invalid')
     }
     const [, column, row] = /(\D+)(\d+)/.exec(currentRange)
-    const colIndex = column.split('').reduce((a, c, i) => a + c.charCodeAt(0) - startRange.charCodeAt(0) + i * 26, 0)
-    const rowIndex = row - Number(startRange[1])
+    const [, columnStart, rowStart] = /(\D+)(\d+)/.exec(startRange)
+    const colIndex = column.split('').reduce((a, c, i) => a + c.charCodeAt(0) - columnStart.charCodeAt(0) + i * 26, 0)
+    const rowIndex = row - Number(rowStart)
     if (!values[rowIndex] || !values[rowIndex][colIndex]) {
-      throw new ConfigError(`Sheet "${sheetName}" do not have value in ${column}${row}`, 'Sheet row not found')
+      throw new ConfigError(`Sheet "${sheetName}" do not have value in ${column}${row}`, 'Sheet cell not found')
     }
     value = values[rowIndex][colIndex]
     Logger.colorDebug('Google Sheet Value', value)
