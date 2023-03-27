@@ -7,7 +7,8 @@
     "start": "webpack --watch --env name=\"Auto Clicker - AutoFill [LOCAL]\" devtool=source-map variant=DEV oauth=1068181857899-u8kurrhqoph1ht9d4psotb25ivvjhhft.apps.googleusercontent.com",
     "lint": "eslint --cache --format stylish --ext mjs,js src",
     "lint:fix": "eslint --cache --format stylish --ext mjs,js src --fix",
-    "test": "jest --verbose",
+    "test": "jest",
+    "test:verbose": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage=true --maxWorkers=2",
     "build": "webpack --env name=\"Auto Clicker - AutoFill\" variant=PROD"

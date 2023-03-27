@@ -1,7 +1,7 @@
 import { LOCAL_STORAGE_KEY, RESPONSE_CODE } from '@dhruv-techapps/acf-common'
 import { CHROME } from '@dhruv-techapps/core-common'
 import { manifest } from '../common'
-import DiscordOauth2, { NOTIFICATIONS_TITLE } from '../../src/background/discord-oauth2'
+import DiscordOauth2, { NOTIFICATIONS_ID, NOTIFICATIONS_TITLE } from '../../src/background/discord-oauth2'
 
 beforeAll(() => {
   chrome.runtime.getManifest.mockImplementation(() => manifest)
@@ -110,7 +110,7 @@ describe('DiscordOauth2 ', () => {
       expect(chrome.identity.launchWebAuthFlow).toBeCalled()
       expect(getCurrentUserSpy).not.toBeCalled()
       expect(chrome.notifications.create).toBeCalled()
-      expect(chrome.notifications.create).toBeCalledWith('discord', {
+      expect(chrome.notifications.create).toBeCalledWith(NOTIFICATIONS_ID, {
         type: CHROME.NOTIFICATIONS_OPTIONS.TYPE.BASIC,
         title: NOTIFICATIONS_TITLE,
         message: 'https://getautoclicker.com/?access_denied=true',

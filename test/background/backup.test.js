@@ -1,17 +1,17 @@
 import { manifest } from '../common'
-import Backup from '../../src/background/backup'
+import GoogleBackup from '../../src/background/google-backup'
 
 beforeAll(() => {
   chrome.runtime.getManifest.mockImplementation(() => manifest)
   chrome.storage.local.get.mockImplementation(async name => ({ [name]: { id: 123 } }))
 })
 
-describe.skip('Backup ', () => {
+describe.skip('GoogleBackup ', () => {
   describe('processPortMessage', () => {
     test('post discord notify', async () => {
       global.fetch = jest.fn(() => {})
 
-      await new Backup().processPortMessage({ notification: { title: 'title', fields: [], color: 'green' } })
+      await new GoogleBackup().processPortMessage({ notification: { title: 'title', fields: [], color: 'green' } })
       expect(global.fetch).toBeCalled()
     })
   })

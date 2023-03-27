@@ -3,8 +3,8 @@ import { DISCORD_CLIENT_ID } from '../common/environments'
 import { NotificationHandler } from './notifications'
 import { getRandomValues } from './util'
 
-const NOTIFICATIONS_TITLE = 'Discord Authentication'
-const NOTIFICATIONS_ID = 'discord'
+export const NOTIFICATIONS_TITLE = 'Discord Authentication'
+export const NOTIFICATIONS_ID = 'discord'
 
 export default class DiscordOauth2 {
   async processPortMessage({ login, remove }) {
