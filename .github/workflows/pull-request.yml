@@ -52,7 +52,7 @@ jobs:
       run: |
         mkdir -p build
         cd dist
-        zip -r ../build/${NAME}-${steps.package.outputs.current-version}.zip .
+        zip -r ../build/${NAME}-${{steps.package.outputs.current-version}}.zip .
         
     - name: Set ${{vars.VARIANT}} Tag
       uses: rickstaa/action-create-tag@v1
