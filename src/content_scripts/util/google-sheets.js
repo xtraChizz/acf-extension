@@ -1,4 +1,5 @@
 import { RUNTIME_MESSAGE_ACF } from '@dhruv-techapps/acf-common'
+import { Logger } from '@dhruv-techapps/core-common'
 import { Service } from '@dhruv-techapps/core-services'
 import Session from './session'
 
@@ -71,12 +72,14 @@ export default class GoogleSheets {
       const batchHighestRepeat = config.batch.repeat
       const { sheets, sessionCount } = this.getSheets(config, batchHighestRepeat)
       this.transformSheets(sheets)
-      const result = await Service.message(chrome.runtime.id, {
+      let result = await Service.message(chrome.runtime.id, {
         action: RUNTIME_MESSAGE_ACF.GOOGLE_SHEETS,
         spreadsheetId: config.spreadsheetId,
         ranges: Array.from(sheets, ([sheetName, range]) => `${sheetName}!${range}`)
       })
-      return this.transformResult(result, sessionCount)
+      result = this.transformResult(result, sessionCount)
+      Logger.colorDebug('Google Sheets', result)
+      return result
     }
     return null
   }

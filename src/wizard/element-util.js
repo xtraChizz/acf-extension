@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { defaultAction } from '@dhruv-techapps/acf-common'
 import { BUTTON_NODE_NAME, RADIO_CHECKBOX_NODE_NAME } from '../common/constant'
 import { xPath } from './dom-path'

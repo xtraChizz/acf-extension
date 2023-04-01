@@ -54,7 +54,7 @@ const Events = (() => {
           CopyEvents.start(elements, value)
           break
         case EVENTS.PASTE:
-          PasteEvents.start(elements, value)
+          await PasteEvents.start(elements, value)
           break
         case EVENTS.WINDOW_COMMAND:
           WindowCommandEvents.start(value)
@@ -63,7 +63,7 @@ const Events = (() => {
           LocationCommandEvents.start(value)
           break
         case EVENTS.FUNC:
-          FuncEvents.start(value)
+          await FuncEvents.start(elements, value)
           break
         case EVENTS.REPLACE:
           ReplaceEvents.start(elements, value)
@@ -88,6 +88,7 @@ const Events = (() => {
         })
       })
     }
+    return true
   }
 
   return { check }

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export class AutoClickerAutoFillPopup extends HTMLElement {
   autoHideCount = 3
 

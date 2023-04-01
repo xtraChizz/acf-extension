@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Auto } from './auto'
 import { WizardElementUtil } from './element-util'
 import { ACTION_ACTIONS, store } from './store'

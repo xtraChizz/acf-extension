@@ -4,6 +4,7 @@ Object.assign(global, require('jest-chrome'), { process: { env: { FUNCTION_URL: 
 
 Object.defineProperty(global, 'crypto', {
   value: {
-    getRandomValues: arr => crypto.randomBytes(arr.length)
+    getRandomValues: arr => crypto.randomBytes(arr.length),
+    randomUUID: () => crypto.randomUUID
   }
 })

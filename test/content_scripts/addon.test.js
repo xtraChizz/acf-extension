@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Addon from '../../src/content_scripts/addon'
 import { getInput } from '../util/html'
 

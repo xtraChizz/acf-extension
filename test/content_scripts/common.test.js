@@ -1,78 +1,144 @@
-/* eslint-disable no-console */
 import Common from '../../src/content_scripts/common'
+import Sandbox from '../../src/content_scripts/sandbox'
 
-describe('Common.stringFunction', () => {
+beforeAll(() => {
+  Sandbox.init()
+})
+
+describe('Common.sandboxEval', () => {
   test('Date Function', () => {
-    expect(Common.stringFunction('new Date().getHours()')).toBe(new Date().getHours())
+    Common.sandboxEval('new Date().getHours()').then(result => {
+      expect(result).toBe(new Date().getHours())
+    })
   })
   test('Window', () => {
-    expect(Common.stringFunction('location.href', { location: { href: 'Dharmesh' } })).toBe('Dharmesh')
+    Common.sandboxEval('location.href', { location: { href: 'Dharmesh' } }).then(result => {
+      expect(result).toBe('Dharmesh')
+    })
   })
   describe('String Operation', () => {
     const sentence = 'The quick brown fox jumps over the lazy dog.'
     test('Blank', () => {
-      expect(Common.stringFunction('', sentence)).toBe(sentence)
+      Common.sandboxEval('', sentence).then(result => {
+        expect(result).toBe(sentence)
+      })
     })
     test('at', () => {
-      expect(Common.stringFunction('at(5)', sentence)).toBe('u')
-      expect(Common.stringFunction('at(-4)', sentence)).toBe('d')
+      Common.sandboxEval('at(5)', sentence).then(result => {
+        expect(result).toBe('u')
+      })
+      Common.sandboxEval('at(-4)', sentence).then(result => {
+        expect(result).toBe('d')
+      })
     })
     test('charAt', () => {
-      expect(Common.stringFunction('charAt(4)', sentence)).toBe('q')
+      Common.sandboxEval('charAt(4)', sentence).then(result => {
+        expect(result).toBe('q')
+      })
     })
     test('concat', () => {
       const str1 = 'Hello'
-      expect(Common.stringFunction('concat(" ", "World")', str1)).toBe('Hello World')
-      expect(Common.stringFunction('concat(" ","World")', str1)).toBe('Hello World')
-      expect(Common.stringFunction('concat(", ", "Hello")', str1)).toBe('Hello, Hello')
-      expect(Common.stringFunction("concat(', ', 'Hello')", str1)).toBe('Hello, Hello')
+      Common.sandboxEval('concat(" ", "World")', str1).then(result => {
+        expect(result).toBe('Hello World')
+      })
+      Common.sandboxEval('concat(" ","World")', str1).then(result => {
+        expect(result).toBe('Hello World')
+      })
+      Common.sandboxEval('concat(", ", "Hello")', str1).then(result => {
+        expect(result).toBe('Hello, Hello')
+      })
+
+      Common.sandboxEval("concat(', ', 'Hello')", str1).then(result => {
+        expect(result).toBe('Hello, Hello')
+      })
     })
-    test.skip('match', () => {
-      expect(Common.stringFunction('match(/[A-Z]/g)', sentence)).toBe(['T', 'I'])
-      expect(Common.stringFunction('match(/[A-Z]/g).join("")', sentence)).toBe('TI')
-      expect(Common.stringFunction('match(/[A-Z]/g).join(",")', sentence)).toBe('T,I')
+    test('match', () => {
+      Common.sandboxEval('match(/[A-Z]/g)', sentence).then(result => {
+        expect(result).toBe(['T', 'I'])
+      })
+      Common.sandboxEval('match(/[A-Z]/g).join("")', sentence).then(result => {
+        expect(result).toBe('TI')
+      })
+      Common.sandboxEval('match(/[A-Z]/g).join(",")', sentence).then(result => {
+        expect(result).toBe('T,I')
+      })
     })
     test('replace', () => {
       const p = 'The quick brown fox jumps over the lazy dog. If the dog reacted, was it really lazy?'
-      expect(Common.stringFunction('replace("dog", "monkey")', p)).toBe('The quick brown fox jumps over the lazy monkey. If the dog reacted, was it really lazy?')
-      // expect(Common.stringFunction('replace(/Dog/i, "ferret")', p)).toBe('The quick brown fox jumps over the lazy ferret. If the dog reacted, was it really lazy?')
+      Common.sandboxEval('replace("dog", "monkey")', p).then(result => {
+        expect(result).toBe('The quick brown fox jumps over the lazy monkey. If the dog reacted, was it really lazy?')
+      })
+      Common.sandboxEval('replace(/Dog/i, "ferret")', p).then(result => {
+        expect(result).toBe('The quick brown fox jumps over the lazy ferret. If the dog reacted, was it really lazy?')
+      })
     })
     test('replaceAll', () => {
       const p = 'The quick brown fox jumps over the lazy dog. If the dog reacted, was it really lazy?'
-      expect(Common.stringFunction('replaceAll("dog", "monkey")', p)).toBe('The quick brown fox jumps over the lazy monkey. If the monkey reacted, was it really lazy?')
-      // expect(Common.stringFunction('replaceAll(/Dog/i, "ferret")', p)).toBe('The quick brown fox jumps over the lazy ferret. If the ferret reacted, was it really lazy?')
+      Common.sandboxEval('replaceAll("dog", "monkey")', p).then(result => {
+        expect(result).toBe('The quick brown fox jumps over the lazy monkey. If the monkey reacted, was it really lazy?')
+      })
+
+      Common.sandboxEval('replaceAll(/Dog/i, "ferret")', p).then(result => {
+        expect(result).toBe('The quick brown fox jumps over the lazy ferret. If the ferret reacted, was it really lazy?')
+      })
     })
     test('slice', () => {
-      expect(Common.stringFunction('slice(31)', sentence)).toBe('the lazy dog.')
-      expect(Common.stringFunction('slice(4,19)', sentence)).toBe('quick brown fox')
-      expect(Common.stringFunction('slice(-4)', sentence)).toBe('dog.')
-      expect(Common.stringFunction('slice(-9,-5)', sentence)).toBe('lazy')
+      Common.sandboxEval('slice(31)', sentence).then(result => {
+        expect(result).toBe('the lazy dog.')
+      })
+      Common.sandboxEval('slice(4,19)', sentence).then(result => {
+        expect(result).toBe('quick brown fox')
+      })
+      Common.sandboxEval('slice(-4)', sentence).then(result => {
+        expect(result).toBe('dog.')
+      })
+      Common.sandboxEval('slice(-9,-5)', sentence).then(result => {
+        expect(result).toBe('lazy')
+      })
     })
-    test.skip('split', () => {
-      expect(Common.stringFunction('split(" ")[3]', sentence)).toBe('fox')
-      expect(Common.stringFunction('split("")[3]', sentence)).toBe('k')
+    test('split', () => {
+      Common.sandboxEval('split(" ")[3]', sentence).then(result => {
+        expect(result).toBe('fox')
+      })
+      Common.sandboxEval('split("")[3]', sentence).then(result => {
+        expect(result).toBe('k')
+      })
     })
     test('substring', () => {
-      expect(Common.stringFunction('substring(1, 3)', 'Dhruv')).toBe('hr')
-      expect(Common.stringFunction('substring(2)', 'Dhruv')).toBe('ruv')
+      Common.sandboxEval('substring(1, 3)', 'Dhruv').then(result => {
+        expect(result).toBe('hr')
+      })
+      Common.sandboxEval('substring(2)', 'Dhruv').then(result => {
+        expect(result).toBe('ruv')
+      })
     })
     test('toLowerCase', () => {
-      expect(Common.stringFunction('toLowerCase()', sentence)).toBe('the quick brown fox jumps over the lazy dog.')
+      Common.sandboxEval('toLowerCase()', sentence).then(result => {
+        expect(result).toBe('the quick brown fox jumps over the lazy dog.')
+      })
     })
     test('toUpperCase', () => {
-      expect(Common.stringFunction('toUpperCase()', sentence)).toBe('THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.')
+      Common.sandboxEval('toUpperCase()', sentence).then(result => {
+        expect(result).toBe('THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.')
+      })
     })
     test('trim', () => {
       const greeting = '   Hello world!   '
-      expect(Common.stringFunction('trim()', greeting)).toBe('Hello world!')
+      Common.sandboxEval('trim()', greeting).then(result => {
+        expect(result).toBe('Hello world!')
+      })
     })
     test('trimStart', () => {
       const greeting = '   Hello world!   '
-      expect(Common.stringFunction('trimStart()', greeting)).toBe('Hello world!   ')
+      Common.sandboxEval('trimStart()', greeting).then(result => {
+        expect(result).toBe('Hello world!   ')
+      })
     })
     test('trimEnd', () => {
       const greeting = '   Hello world!   '
-      expect(Common.stringFunction('trimEnd()', greeting)).toBe('   Hello world!')
+      Common.sandboxEval('trimEnd()', greeting).then(result => {
+        expect(result).toBe('   Hello world!')
+      })
     })
   })
 })

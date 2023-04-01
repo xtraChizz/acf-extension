@@ -2,6 +2,7 @@ import { LOCAL_STORAGE_KEY, RESPONSE_CODE } from '@dhruv-techapps/acf-common'
 import { CHROME } from '@dhruv-techapps/core-common'
 import { manifest } from '../common'
 import DiscordOauth2, { NOTIFICATIONS_ID, NOTIFICATIONS_TITLE } from '../../src/background/discord-oauth2'
+import { NotificationHandler } from '../../src/background/notifications'
 
 beforeAll(() => {
   chrome.runtime.getManifest.mockImplementation(() => manifest)
@@ -25,11 +26,11 @@ describe('DiscordOauth2 ', () => {
 
   describe('notify', () => {
     test('check notify function is getting called', () => {
-      discord.notify('TITLE', 'MESSAGE', true).then(() => {
+      NotificationHandler.notify(NOTIFICATIONS_ID, NOTIFICATIONS_TITLE, 'MESSAGE', true).then(() => {
         expect(chrome.notifications.create).toBeCalled()
         expect(chrome.notifications.create).toBeCalledWith('discord', {
           type: CHROME.NOTIFICATIONS_OPTIONS.TYPE.BASIC,
-          title: 'TITLE',
+          title: NOTIFICATIONS_TITLE,
           message: 'MESSAGE',
           iconUrl: manifest.action.default_icon,
           requireInteraction: true,

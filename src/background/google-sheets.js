@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { GOOGLE_SCOPES, GOOGLE_SCOPES_KEY, LOCAL_STORAGE_KEY, RESPONSE_CODE } from '@dhruv-techapps/acf-common'
 import GoogleOauth2 from './google-oauth2'
 import { NotificationHandler } from './notifications'

@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 import { DataStore, Logger } from '@dhruv-techapps/core-common'
 import { LOCAL_STORAGE_KEY, RETRY_OPTIONS } from '@dhruv-techapps/acf-common'
 import { ActionService } from '@dhruv-techapps/core-services'
 import { ConfigError } from './error/config-error'
 import { wait } from './util'
+import Sandbox from './sandbox'
 
 const LOGGER_LETTER = 'Common'
 const Common = (() => {
@@ -17,7 +17,22 @@ const Common = (() => {
     return false
   }
 
+  const sandboxEval = async (code, context) => {
+    const name = crypto.randomUUID()
+    try {
+      return await Sandbox.sendMessage({ command: 'eval', name, context: context ? `${context}.${code}` : code })
+    } catch (error) {
+      throw new ConfigError(error.message, `Invalid ${code}`)
+    }
+  }
+
   // eslint-disable-next-line no-eval
+  /**
+   * @deprecated since 31/10/2020
+   * @param {*} stringFunc
+   * @param {*} parent
+   * @returns
+   */
   const stringFunction = (stringFunc, parent = window) => {
     if (!stringFunc) {
       return parent
@@ -150,7 +165,7 @@ const Common = (() => {
       throw error
     }
   }
-  return { start, stringFunction, getElements }
+  return { start, stringFunction, getElements, sandboxEval }
 })()
 
 export default Common

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { LOCAL_STORAGE_KEY, defaultConfig } from '@dhruv-techapps/acf-common'
 import { store } from './store'
 

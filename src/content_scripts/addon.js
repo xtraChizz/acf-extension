@@ -99,7 +99,7 @@ const Addon = (() => {
       Logger.colorDebug('Start', { elementFinder, value, condition, valueExtractor, valueExtractorFlags })
       let nodeValue
       if (/^Func::/gi.test(elementFinder)) {
-        nodeValue = Common.stringFunction(elementFinder)
+        nodeValue = await Common.sandboxEval(elementFinder.replace(/^Func::/gi, ''))
       } else {
         elementFinder = elementFinder.replaceAll('<batchRepeat>', batchRepeat)
         const elements = await Common.start(elementFinder, settings)
@@ -131,6 +131,6 @@ const Addon = (() => {
   }
 
   return { check, extractValue }
-})(Common)
+})()
 
 export default Addon

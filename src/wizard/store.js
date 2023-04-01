@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createStore } from 'redux'
 import { WizardElementUtil } from './element-util'
 

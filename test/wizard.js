@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const config = {
   name: 'A very long text to be verified for the ellipssis anad now its fone',
   actions: [

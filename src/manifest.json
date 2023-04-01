@@ -43,6 +43,9 @@
     "client_id": "",
     "scopes": ["https://www.googleapis.com/auth/drive.appdata"]
   },
+  "sandbox": {
+    "pages": ["html/sandbox.html"]
+  },
   "web_accessible_resources": [
     {
       "resources": ["assets/*", "css/*", "html/*"],

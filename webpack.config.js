@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
@@ -79,6 +78,7 @@ module.exports = ({ name, variant, oauth, devtool = false, WEBPACK_WATCH }) => {
           { from: './_locales', to: './_locales' },
           { from: `./assets/${variant}`, to: './assets' },
           { from: `./*.html`, to: './html', context: 'src/wizard/popup' },
+          { from: `./*.html`, to: './html', context: 'src/sandbox' },
           { from: './node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js', to: './node_modules' },
           {
             from: './src/manifest.json',

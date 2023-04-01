@@ -1,6 +1,6 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "3.4.26",
+  "version": "3.4.27",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ACTION_POPUP } from '../common/constant'
 import { Action } from './action'
 import { Config } from './config'

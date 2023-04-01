@@ -22,7 +22,7 @@ const Config = (() => {
     Logger.colorDebug('Config Start')
     const { onConfig, onError, sound, discord } = notifications
     const sheets = await new GoogleSheets().getValues(config)
-    Logger.colorDebug('Google Sheets', sheets)
+
     try {
       await Batch.start(config.batch, config.actions, sheets)
       ActionService.setBadgeBackgroundColor(chrome.runtime.id, { color: [25, 135, 84, 1] })
@@ -100,25 +100,5 @@ const Config = (() => {
 
   return { checkStartType }
 })()
-
-// :TODO: Need to check later
-/* const _processIndex = (record) => {
-  dataStore.setItem(DATA_ENTRY_INDEX, -1)
-
-  const entryIndexSession = sessionStorage.getItem(DATA_ENTRY_INDEX)
-  if (entryIndexSession) {
-    dataStore.setItem(DATA_ENTRY_INDEX, Number(entryIndexSession))
-  }
-
-  if (record.main) {
-    let dataEntryIndex = dataStore.getItem(DATA_ENTRY_INDEX)
-    dataEntryIndex++
-    dataStore.setItem(DATA_ENTRY_INDEX, dataEntryIndex)
-    sessionStorage.setItem(DATA_ENTRY_INDEX, dataEntryIndex)
-    return dataEntryIndex < record.rows
-  }
-
-  return true
-} */
 
 export default Config

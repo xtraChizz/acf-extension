@@ -22,17 +22,17 @@ export const PasteEvents = (() => {
     element.focus()
   }
 
-  const start = (elements, value) => {
+  const start = async (elements, value) => {
     try {
       Logger.groupCollapsed(LOGGER_LETTER)
-      Logger.colorDebug('Start', value)
       const copyContent = localStorage.getItem(LOCAL_STORAGE_COPY)
       Logger.colorDebug('Copy Content', copyContent)
       value = value.replace(/paste::/i, '')
-      value = Common.stringFunction(value, copyContent)
-      Logger.colorDebug('value', value)
+      Logger.colorDebug('Value', value)
+      value = await Common.sandboxEval(value, `'${copyContent}'`)
       CommonEvents.loopElements(elements, value, checkNode)
       Logger.groupEnd(LOGGER_LETTER)
+      return true
     } catch (error) {
       Logger.groupEnd(LOGGER_LETTER)
       throw error
