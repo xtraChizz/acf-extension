@@ -3,7 +3,7 @@ name: Pull Request
 on:
   workflow_dispatch:
   pull_request:
-    branches: master
+    branches: main
 
 env:
     UNINSTALL_URL: ${{vars.UNINSTALL_URL}}
