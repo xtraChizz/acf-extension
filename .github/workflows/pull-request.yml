@@ -6,14 +6,14 @@ on:
     branches: main
 
 env:
-    UNINSTALL_URL: ${{vars.UNINSTALL_URL}}
-    TRACKING_ID: ${{vars.TRACKING_ID}}
-    OPTIONS_PAGE_URL: ${{vars.OPTIONS_PAGE_URL}}
-    FUNCTION_URL: ${{vars.FUNCTION_URL}}
-    VARIANT: ${{vars.VARIANT}}
-    DISCORD_CLIENT_ID: ${{vars.DISCORD_CLIENT_ID}}
-    NAME: ${{vars.NAME}}
-    
+  UNINSTALL_URL: ${{vars.UNINSTALL_URL}}
+  TRACKING_ID: ${{vars.TRACKING_ID}}
+  OPTIONS_PAGE_URL: ${{vars.OPTIONS_PAGE_URL}}
+  FUNCTION_URL: ${{vars.FUNCTION_URL}}
+  VARIANT: ${{vars.VARIANT}}
+  DISCORD_CLIENT_ID: ${{vars.DISCORD_CLIENT_ID}}
+  NAME: ${{vars.NAME}}
+
 jobs:
   eslint:
     uses: dhruv-techapps/ci-cd/.github/workflows/eslint.yml@main
@@ -26,40 +26,40 @@ jobs:
     environment:
       name: Development
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-      
-    - name: Setup Env
-      uses: actions/setup-node@v3
-      with:
-         always-auth: true
-         node-version: 16
-         registry-url: https://npm.pkg.github.com
-         scope: "@dhruv-techapps"
-         cache: "npm"
-         
-    - run: |
-        echo "NAME=${NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
-        echo "${NAME}"
-        
-    - name: Build Extension
-      run: |
-        npm install
-        npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}" oauth="${{secrets.OAUTH_CLIENT_ID}}"
-    
-    - id: package
-      uses: martinbeentjes/npm-get-version-action@main
-      
-    - name: Zip
-      run: |
-        mkdir -p build
-        cd dist
-        zip -r ../build/${NAME}-${{steps.package.outputs.current-version}}.zip .
-        
-    - uses: actions/upload-artifact@v3
-      with:
-        name: browser-extension-dev
-        path: build/
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Env
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: 16
+          registry-url: https://npm.pkg.github.com
+          scope: '@dhruv-techapps'
+          cache: 'npm'
+
+      - run: |
+          echo "NAME=${NAME//[^[:alnum:]]/_}" >>${GITHUB_ENV}
+          echo "${NAME}"
+
+      - name: Build Extension
+        run: |
+          npm install
+          npx webpack --env name="${{vars.NAME}}" devtool="${{vars.DEV_TOOL}}" variant="${{vars.VARIANT}}" oauth="${{secrets.OAUTH_CLIENT_ID}}"
+
+      - id: package
+        uses: martinbeentjes/npm-get-version-action@main
+
+      - name: Zip
+        run: |
+          mkdir -p build
+          cd dist
+          zip -r ../build/${NAME}-${{steps.package.outputs.current-version}}.zip .
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: browser-extension-dev
+          path: build/
 
   release:
     needs: build
@@ -67,20 +67,24 @@ jobs:
     environment:
       name: Development
     steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: browser-extension-dev
+      - uses: actions/download-artifact@v3
+        with:
+          name: browser-extension-dev
+          path: build
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: build
 
-    - name: Upload & release
-      uses: mnao305/chrome-extension-upload@v4.0.1
-      with:
-        file-path: browser-extension-dev/*.zip
-        extension-id: hogefuga(${{vars.EXTENSION_ID}})
-        client-id: ${{ secrets.CHROME_WEBSTORE_CLIENT_ID }}
-        client-secret: ${{ secrets.CHROME_WEBSTORE_CLIENT_SECRET }}
-        refresh-token: ${{ secrets.CHROME_WEBSTORE_REFRESH_TOKEN }}
-        glob: true
-        publish: false
+      - name: Upload & release
+        uses: mnao305/chrome-extension-upload@v4.0.1
+        with:
+          file-path: build/*.zip
+          extension-id: ${{vars.EXTENSION_ID}}
+          client-id: ${{ secrets.CHROME_WEBSTORE_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_WEBSTORE_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_WEBSTORE_REFRESH_TOKEN }}
+          glob: true
+          publish: false
 
   tag:
     needs: release
@@ -88,10 +92,8 @@ jobs:
     environment:
       name: Development
     steps:
-    - name: Set ${{vars.VARIANT}} Tag
-      uses: rickstaa/action-create-tag@v1
-      with:
-        force_push_tag: true
-        tag: "${{vars.VARIANT}}"
-        
-   
+      - name: Set ${{vars.VARIANT}} Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          force_push_tag: true
+          tag: '${{vars.VARIANT}}'

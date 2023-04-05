@@ -1,6 +1,6 @@
 {
   "name": "@dhruv-techapps/acf-extension",
-  "version": "3.4.27",
+  "version": "3.4.29",
   "description": "auto click fill extension",
   "main": "index.js",
   "scripts": {
@@ -53,9 +53,9 @@
   },
   "dependencies": {
     "@dhruv-techapps/acf-common": "^5.0.8",
-    "@dhruv-techapps/core-common": "^5.0.14",
-    "@dhruv-techapps/core-extension": "^5.0.10",
-    "@dhruv-techapps/core-services": "^5.0.10",
+    "@dhruv-techapps/core-common": "^5.0.18",
+    "@dhruv-techapps/core-extension": "^5.0.11",
+    "@dhruv-techapps/core-services": "^5.0.11",
     "@webcomponents/webcomponentsjs": "^2.7.0",
     "redux": "^4.2.1",
     "sass": "^1.43.4",
