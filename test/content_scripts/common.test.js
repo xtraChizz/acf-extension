@@ -140,5 +140,18 @@ describe('Common.sandboxEval', () => {
         expect(result).toBe('   Hello world!')
       })
     })
+    test('toFixed', () => {
+      Common.sandboxEval('toFixed(2)', 1.234).then(result => {
+        expect(result).toBe('1.23')
+      })
+    })
+    test('Without Code', () => {
+      Common.sandboxEval(undefined, 'string').then(result => {
+        expect(result).toBe('string')
+      })
+      Common.sandboxEval(undefined, 123).then(result => {
+        expect(result).toBe(123)
+      })
+    })
   })
 })

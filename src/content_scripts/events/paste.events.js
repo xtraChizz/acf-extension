@@ -29,7 +29,7 @@ export const PasteEvents = (() => {
       Logger.colorDebug('Copy Content', copyContent)
       value = value.replace(/paste::/i, '')
       Logger.colorDebug('Value', value)
-      value = await Common.sandboxEval(value, `'${copyContent}'`)
+      value = await Common.sandboxEval(value, copyContent)
       CommonEvents.loopElements(elements, value, checkNode)
       Logger.groupEnd(LOGGER_LETTER)
       return true

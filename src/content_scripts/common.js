@@ -18,9 +18,12 @@ const Common = (() => {
   }
 
   const sandboxEval = async (code, context) => {
+    if (!code) {
+      return context
+    }
     const name = crypto.randomUUID()
     try {
-      return await Sandbox.sendMessage({ command: 'eval', name, context: context ? `${context}.${code}` : code })
+      return await Sandbox.sendMessage({ command: 'eval', name, context: context ? `'${context}'.${code}` : code })
     } catch (error) {
       throw new ConfigError(error.message, `Invalid ${code}`)
     }
