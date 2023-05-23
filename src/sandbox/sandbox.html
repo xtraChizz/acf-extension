@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <script>
-  console.log('Auto Clicker Auto Fill Sandbox initialized')
+  window.onload = () => {
+    // console.log('Auto Clicker Auto Fill Sandbox initialized')
+    window.parent.postMessage({ type: 'sandbox-initialized' }, '*')
+  }
   window.addEventListener('message', event => {
     const { command, context, name } = event.data
+    console.log('Sandbox', command, '>>', context, name)
     if (command === 'eval') {
       try {
         // eslint-disable-next-line no-eval

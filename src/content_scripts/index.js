@@ -2,7 +2,6 @@ import { LOAD_TYPES, LOCAL_STORAGE_KEY, RUNTIME_MESSAGE_ACF, defaultSettings } f
 import { DataStore, LOGGER_COLOR, Logger } from '@dhruv-techapps/core-common'
 
 import Config from './config'
-import Sandbox from './sandbox'
 import Session from './util/session'
 
 async function loadConfig(loadType) {
@@ -29,7 +28,6 @@ async function loadConfig(loadType) {
 
 document.addEventListener('DOMContentLoaded', () => {
   Session.check()
-  Sandbox.init()
   loadConfig(LOAD_TYPES.DOCUMENT)
 })
 

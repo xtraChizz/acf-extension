@@ -1,9 +1,4 @@
 import Common from '../../src/content_scripts/common'
-import Sandbox from '../../src/content_scripts/sandbox'
-
-beforeAll(() => {
-  Sandbox.init()
-})
 
 describe('Common.sandboxEval', () => {
   test('Date Function', () => {
